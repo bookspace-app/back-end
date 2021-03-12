@@ -1,4 +1,4 @@
-package com.bookspaceapp.bookspaceapp;
+package com.bookspaceapp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
