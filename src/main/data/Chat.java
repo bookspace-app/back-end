@@ -18,7 +18,7 @@ public class Chat {
     public Chat() {   
     }
 
-    public Char(Date nacimiento, Idioma idioma, Usuario usuario1, Usuario usuario2) {
+    public Chat(Date nacimiento, Idioma idioma, Usuario usuario1, Usuario usuario2) {
         this.nacimiento = nacimiento;
         this.idioma = idioma;
         this.usuario1 = usuario1;
