@@ -6,8 +6,8 @@ public class Mensaje {
 
     private final String contenido;
     private final Date fecha;
-    private final Usuario usuario;
-    private final Chat chat;
+    private final Usuario usuario = new Usuario();
+    private final Chat chat = new Chat();
 
     public Mensaje() {
     }

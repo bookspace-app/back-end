@@ -10,8 +10,8 @@ enum Idioma {
 
 public class Chat {
 
-    private final Usuario usuario1;
-    private final Usuario usuario2;
+    private final Usuario usuario1 = new Usuario();
+    private final Usuario usuario2 = new Usuario();
     private final Date nacimiento;
     private Idioma idioma;
 
