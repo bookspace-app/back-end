@@ -1,13 +1,13 @@
-package com.bookspaceapp;
+package com.bookspace.bookspace;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BookspaceAppApplication {
+public class BookspaceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BookspaceAppApplication.class, args);
+		SpringApplication.run(BookspaceApplication.class, args);
 	}
 
 }
