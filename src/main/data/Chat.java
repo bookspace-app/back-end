@@ -3,9 +3,7 @@ package main.data;
 import java.util.Date;
 
 enum Idioma {
-    CATALAN,
-    ESPAÑOL,
-    INGLES
+    CATALAN, ESPAÑOL, INGLES
 }
 
 public class Chat {
@@ -15,7 +13,7 @@ public class Chat {
     private final Date nacimiento;
     private Idioma idioma;
 
-    public Chat() {   
+    public Chat() {
     }
 
     public Chat(Date nacimiento, Idioma idioma, Usuario usuario1, Usuario usuario2) {
