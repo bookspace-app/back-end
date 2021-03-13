@@ -1,14 +1,16 @@
+import java.util.Date;
+
 public class Publication {
 
     private final String title;
     private final String content;
     private final Date date; 
 
-    private final User owner;
-    private final Collection<User> votedBy;
-    private final Collection<Comment> comments;
-    private final Theme theme;
-    private final Collection<Chat> chats;
+    // private final User owner;
+    // private final Collection<User> votedBy;
+    // private final Collection<Comment> comments;
+    // private final Theme theme;
+    // private final Collection<Chat> chats;
 
 
 
