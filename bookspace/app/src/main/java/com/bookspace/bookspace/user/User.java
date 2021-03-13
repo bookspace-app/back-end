@@ -14,6 +14,13 @@ public class User {
     private final Rank rank; 
     private final Date register; 
 
+    private final Collection<Publication> publications;
+    private final Collection<Publication> voted_publications;
+    private final Collection<Comment> comments;
+    private final Collection<Comment> voted_comments;
+    private final Collection<Message> messages;
+    private final Collection<Chat> chats;
+
 
     public User() {
     }

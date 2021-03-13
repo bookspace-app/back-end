@@ -4,6 +4,13 @@ public class Publication {
     private final String content;
     private final Date date; 
 
+    private final User owner;
+    private final Collection<User> votedBy;
+    private final Collection<Comment> comments;
+    private final Theme theme;
+    private final Collection<Chat> chats;
+
+
 
     public Publication() {
     }
