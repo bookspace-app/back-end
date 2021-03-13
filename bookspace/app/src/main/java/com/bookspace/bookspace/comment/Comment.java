@@ -1,44 +1,32 @@
-package main.data;
+public class Comment {
+    
+    private final String content;
+    private final Date date;
 
-import java.util.Date;
-
-public class Comentario {
-
-    private int id;
-    private String contenido;
-    private Date fecha;
-
-    public Comentario() {
+    public Comment() {
     }
 
-    public Comentario(int id, String contenido, Date fecha) {
-        this.id = id;
-        this.contenido = contenido;
-        this.fecha = fecha;
+    public Comment(String content, Date date) {
+        this.content = content;
+        this.date = date;
     }
 
-    public int getId() {
-        return this.id;
+    public String getContent() {
+        return this.content;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public String getContenido() {
-        return this.contenido;
+
+    public Date getDate() {
+        return this.date;
     }
 
-    public void setContenido(String contenido) {
-        this.contenido = contenido;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
-    public Date getFecha() {
-        return this.fecha;
-    }
-
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
-    }
-
+    
 }

@@ -1,26 +1,30 @@
-package main.data;
+public class Theme {
 
-enum Tema {
-    FICCION,
-    MISTERIO
-}
-public class Tematica {
+    enum theme {
+        ACTION, 
+        LOVE, 
+        WAR, 
+        POTENTIAL
+    }
+
+    private final theme theme;
+
+    public Theme() {
+    }
+
+    public Theme(theme theme) {
+        this.theme = theme;
+    }
+
+    public theme getTheme() {
+        return this.theme;
+    }
+
+    public theme setTheme(String newTheme) {
+        throw new Exception("This function is not implemented yet");
+    }
+
+
+
     
-    private Tema tema;
-
-    public Tematica() {
-    }
-
-    public Tematica(Tema tema) {
-        this.tema = tema;
-    }
-
-    public Tema getTema() {
-        return this.tema;
-    }
-
-    public boolean setTema(Tema tema) {
-        return this.tema = tema;
-    }
 }
-

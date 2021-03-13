@@ -1,81 +1,68 @@
-package main.data;
+public class User {
 
-import java.util.Date;
-
-/**
- * Usuario
- */
-public class Usuario {
-
-    enum Rango {
+     enum Rank {
+            QUEEN,
+            HAREM, 
+            SOLDIER, 
+            WORKER
 
     }
 
-    private String email;
-    private String nombre;
-    private Date nacimiento;
-    private Rango rang;
-    private Date registro;
-    private int edad;
+    private final String email; 
+    private final String name;
+    private final Date dov;
+    private final Rank rank; 
+    private final Date register; 
 
-    public Usuario(String email, String nombre, Date nacimiento, Rango rang, Date registro, int edad) {
+
+    public User() {
+    }
+    
+
+    public User(String email, String name, Date dov, Rank rank, Date register) {
         this.email = email;
-        this.nombre = nombre;
-        this.nacimiento = nacimiento;
-        this.rang = rang;
-        this.registro = registro;
-        this.edad = edad;
-    }
-
-    public Usuario() {
+        this.name = name;
+        this.dov = dov;
+        this.rank = rank;
+        this.register = register;
     }
 
     public String getEmail() {
         return this.email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+
+    public String getName() {
+        return this.name;
     }
 
-    public String getNombre() {
-        return this.nombre;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public Date getDov() {
+        return this.dov;
     }
 
-    public Date getNacimiento() {
-        return this.nacimiento;
+    public void setDov(Date dov) {
+        this.dov = dov;
     }
 
-    public void setNacimiento(Date nacimiento) {
-        this.nacimiento = nacimiento;
+    public Rank getRank() {
+        return this.rank;
     }
 
-    public Rango getRang() {
-        return this.rang;
+    public void setRank(Rank rank) {
+        this.rank = rank;
     }
 
-    public void setRang(Rango rang) {
-        this.rang = rang;
+    public Date getRegister() {
+        return this.register;
     }
 
-    public Date getRegistro() {
-        return this.registro;
+    public void setRegister(Date register) {
+        this.register = register;
     }
-
-    public void setRegistro(Date registro) {
-        this.registro = registro;
-    }
-
-    public int getEdad() {
-        return this.edad;
-    }
-
-    public void setEdad(int edad) {
-        this.edad = edad;
-    }
+    
 
 }

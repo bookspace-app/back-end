@@ -1,53 +1,29 @@
-package main.data;
+public class Message {
 
-import java.util.Date;
+    private final String content;
+    private final Date date; 
 
-public class Mensaje {
-
-    private final String contenido;
-    private final Date fecha;
-    private final Usuario usuario = new Usuario();
-    private final Chat chat = new Chat();
-
-    public Mensaje() {
+    public Message() {
     }
 
-    public Mensaje(String contenido, Date fecha, Usuario usuario, Chat chat) {
-        this.contenido = contenido;
-        this.fecha = fecha;
-        this.usuario = usuario;
-        this.chat = chat;
+    public Message(String content, Date date) {
+        this.content = content;
+        this.date = date;
     }
 
-    public String getContenido() {
-        return this.contenido;
+    public String getContent() {
+        return this.content;
     }
 
-    public Date getFecha() {
-        return this.fecha;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public Usuario getUsuario() {
-        return this.usuario;
+    public Date getDate() {
+        return this.date;
     }
 
-    public Chat getChat() {
-        return this.chat;
-    }
-
-    public boolean setContenido(String contenido) {
-        return this.contenido = contenido;
-    }
-
-    public boolean setFecha(Date fecha) {
-        return this.fecha = fecha;
-    }
-
-    public boolean setUsuario(Usuario usuario) {
-        return this.usuario = usuario;
-    }
-
-    public boolean setChat(Chat chat) {
-        return this.chat = chat;
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

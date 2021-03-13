@@ -1,54 +1,42 @@
-package main.data;
+public class Publication {
 
-import java.util.Date;
+    private final String title;
+    private final String content;
+    private final Date date; 
 
-public class Publicacion {
 
-    private int id;
-    private String titulo;
-    private String contenido;
-    private Date publicacion;
-
-    public Publicacion(int id, String titulo, String contenido, Date publicacion) {
-        this.id = id;
-        this.titulo = titulo;
-        this.contenido = contenido;
-        this.publicacion = publicacion;
+    public Publication() {
     }
 
-    public Publicacion() {
+    public Publication(String title, String content, Date date) {
+        this.title = title;
+        this.content = content;
+        this.date = date;
     }
 
-    public int getId() {
-        return this.id;
+
+    public String getTitle() {
+        return this.title;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getTitulo() {
-        return this.titulo;
+    public String getContent() {
+        return this.content;
     }
 
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public String getContenido() {
-        return this.contenido;
+    public Date getDate() {
+        return this.date;
     }
 
-    public void setContenido(String contenido) {
-        this.contenido = contenido;
+    public void setDate(Date date) {
+        this.date = date;
     }
-
-    public Date getPublicacion() {
-        return this.publicacion;
-    }
-
-    public void setPublicacion(Date publicacion) {
-        this.publicacion = publicacion;
-    }
-
+    
 }
