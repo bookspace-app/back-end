@@ -1,23 +1,26 @@
-import java.util.Date;
+package com.bookspace.bookspace.publication;
+
+import java.time.LocalDate;
+
 
 public class Publication {
 
-    private final String title;
-    private final String content;
-    private final Date date; 
+    private String title;
+    private String content;
+    private LocalDate date; 
 
-    // private final User owner;
-    // private final Collection<User> votedBy;
-    // private final Collection<Comment> comments;
-    // private final Theme theme;
-    // private final Collection<Chat> chats;
+    // private User owner;
+    // private Collection<User> votedBy;
+    // private Collection<Comment> comments;
+    // private Theme theme;
+    // private Collection<Chat> chats;
 
 
 
     public Publication() {
     }
 
-    public Publication(String title, String content, Date date) {
+    public Publication(String title, String content, LocalDate date) {
         this.title = title;
         this.content = content;
         this.date = date;
@@ -40,11 +43,11 @@ public class Publication {
         this.content = content;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return this.date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
     

@@ -1,3 +1,8 @@
+package com.bookspace.bookspace.chat;
+
+import java.time.LocalDate;
+
+
 public class Chat {
 
     enum language {
@@ -5,42 +10,46 @@ public class Chat {
         ESPAÑOL, 
         CATALAN
     }
-    private final Date date;
-    private final Publication publication;
-    private final Collecion<User> participants;
-    private final Collection<Message> record;
+    private LocalDate date;
+    // private Publication publication;
+    // private Collecion<User> participants;
+    // private Collection<Message> record;
 
-    public Chat() {
+    public Chat() {};
+
+
+    public Chat(LocalDate date) {
+        this.date = date;
     }
 
-    public Chat(Date date, Publication publication, Collecion<User> participants, Collection<Message> record) {
-        this.date = date;
-        this.publication = publication;
-        this.participants = participants;
-        this.record = record;
-    }  
+    // public Chat(Date date, Publication publication, Collecion<User> participants, Collection<Message> record) {
+    //     this.date = date;
+    //     this.publication = publication;
+    //     this.participants = participants;
+    //     this.record = record;
+    // }  
     
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return this.date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
-    public Publication getPublication() {
-        return this.publication;
-    }
+    // public Publication getPublication() {
+    //     return this.publication;
+    // }
 
 
-    public Collecion<User> getParticipants() {
-        return this.participants;
-    }
+    // public Collecion<User> getParticipants() {
+    //     return this.participants;
+    // }
 
 
-    public Collection<Message> getRecord() {
-        return this.record;
-    }
+    // public Collection<Message> getRecord() {
+    //     return this.record;
+    // }
 
 }

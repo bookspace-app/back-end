@@ -1,5 +1,12 @@
+package com.bookspace.bookspace.user;
+
 import java.util.Collection;
 import java.util.Date;
+
+import com.bookspace.bookspace.chat.Chat;
+import com.bookspace.bookspace.comment.Comment;
+import com.bookspace.bookspace.message.Message;
+import com.bookspace.bookspace.publication.Publication;
 
 
 
@@ -13,18 +20,18 @@ public class User {
 
     }
 
-    private final String email; 
-    private final String name;
-    private final Date dov;
-    private final Rank rank; 
-    private final Date register; 
+    private String email; 
+    private String name;
+    private Date dov;
+    private Rank rank; 
+    private Date register; 
 
-    private final Collection<Publication> publications;
-    private final Collection<Publication> voted_publications;
-    private final Collection<Comment> comments;
-    private final Collection<Comment> voted_comments;
-    private final Collection<Message> messages;
-    private final Collection<Chat> chats;
+    private Collection<Publication> publications;
+    private Collection<Publication> voted_publications;
+    private Collection<Comment> comments;
+    private Collection<Comment> voted_comments;
+    private Collection<Message> messages;
+    private Collection<Chat> chats;
 
 
     public User() {
@@ -38,6 +45,22 @@ public class User {
         this.rank = rank;
         this.register = register;
     }
+
+
+    public User(String email, String name, Date dov, Rank rank, Date register, Collection<Publication> publications, Collection<Publication> voted_publications, Collection<Comment> comments, Collection<Comment> voted_comments, Collection<Message> messages, Collection<Chat> chats) {
+        this.email = email;
+        this.name = name;
+        this.dov = dov;
+        this.rank = rank;
+        this.register = register;
+        this.publications = publications;
+        this.voted_publications = voted_publications;
+        this.comments = comments;
+        this.voted_comments = voted_comments;
+        this.messages = messages;
+        this.chats = chats;
+    }
+
 
     public String getEmail() {
         return this.email;
@@ -75,6 +98,59 @@ public class User {
     public void setRegister(Date register) {
         this.register = register;
     }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Collection<Publication> getPublications() {
+        return this.publications;
+    }
+
+    public void setPublications(Collection<Publication> publications) {
+        this.publications = publications;
+    }
+
+    public Collection<Publication> getVoted_publications() {
+        return this.voted_publications;
+    }
+
+    public void setVoted_publications(Collection<Publication> voted_publications) {
+        this.voted_publications = voted_publications;
+    }
+
+    public Collection<Comment> getComments() {
+        return this.comments;
+    }
+
+    public void setComments(Collection<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public Collection<Comment> getVoted_comments() {
+        return this.voted_comments;
+    }
+
+    public void setVoted_comments(Collection<Comment> voted_comments) {
+        this.voted_comments = voted_comments;
+    }
+
+    public Collection<Message> getMessages() {
+        return this.messages;
+    }
+
+    public void setMessages(Collection<Message> messages) {
+        this.messages = messages;
+    }
+
+    public Collection<Chat> getChats() {
+        return this.chats;
+    }
+
+    public void setChats(Collection<Chat> chats) {
+        this.chats = chats;
+    }
+
     
 
 }

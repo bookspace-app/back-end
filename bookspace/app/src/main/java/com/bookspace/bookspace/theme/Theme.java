@@ -1,3 +1,9 @@
+package com.bookspace.bookspace.theme;
+
+import java.util.Collection;
+
+import com.bookspace.bookspace.publication.Publication;
+
 public class Theme {
 
     enum theme {
@@ -7,8 +13,8 @@ public class Theme {
         POTENTIAL
     }
 
-    private final theme theme;
-    private final Collection<Publication> themed_publications;
+    private theme theme;
+    private Collection<Publication> themed_publications;
 
     public Theme() {
     }
@@ -22,7 +28,7 @@ public class Theme {
         return this.theme;
     }
 
-    public theme setTheme(String newTheme) {
+    public theme setTheme(String newTheme) throws Exception {
         throw new Exception("This function is not implemented yet");
     }
 
