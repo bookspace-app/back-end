@@ -22,7 +22,7 @@ public class ChatController {
     @GetMapping    
 	public String getChat() {
 
-        return "Hello chatss";
+        return "Hello chats";
 	}
     
 }
