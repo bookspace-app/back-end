@@ -73,6 +73,6 @@ public class Chat {
     public void setRecord(Collection<Message> record) {
         this.record = record;
     }
-
-
 }
+
+
