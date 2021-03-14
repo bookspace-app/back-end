@@ -25,8 +25,9 @@ public class Chat {
         this.date = date;
     }
 
-    public Chat(LocalDate date, Publication publication, Collection<User> participants, Collection<Message> record) {
+    public Chat(LocalDate date, Language language, Publication publication, Collection<User> participants, Collection<Message> record) {
         this.date = date;
+        this.language = language;
         this.publication = publication;
         this.participants = participants;
         this.record = record;
@@ -54,5 +55,24 @@ public class Chat {
     public Collection<Message> getRecord() {
         return this.record;
     }
+
+
+    public Language getLanguage() {
+        return this.language;
+    }
+
+    public void setLanguage(Language language) {
+        this.language = language;
+    }
+    public void setPublication(Publication publication) {
+        this.publication = publication;
+    }
+    public void setParticipants(Collection<User> participants) {
+        this.participants = participants;
+    }
+    public void setRecord(Collection<Message> record) {
+        this.record = record;
+    }
+
 
 }
