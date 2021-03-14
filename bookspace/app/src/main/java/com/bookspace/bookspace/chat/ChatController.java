@@ -20,9 +20,8 @@ public class ChatController {
     }
 
     @GetMapping    
-	public String getChat() {
-
-        return "Hello chatss";
+	public List<String> getChat() {
+        return chatService.getChats();
 	}
     
 }

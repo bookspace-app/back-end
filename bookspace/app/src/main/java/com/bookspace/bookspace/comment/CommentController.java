@@ -20,9 +20,9 @@ public class CommentController {
     }
 
     @GetMapping    
-	public String getComment() {
+	public List<String> getComment() {
 
-        return "Hello comments";
+       return commentService.getComments();
 	}
     
 }

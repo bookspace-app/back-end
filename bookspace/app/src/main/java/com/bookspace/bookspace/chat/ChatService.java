@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChatService {
     
-    public List<Chat> getChats() {
-        return null;
+    public List<String> getChats() {
+        return List.of("Hello", "chats");
    
     }
 }
