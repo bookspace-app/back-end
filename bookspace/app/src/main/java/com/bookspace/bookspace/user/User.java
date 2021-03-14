@@ -1,10 +1,10 @@
 package com.bookspace.bookspace.user;
 
+import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Date;
-
 import com.bookspace.bookspace.chat.Chat;
 import com.bookspace.bookspace.comment.Comment;
+import com.bookspace.bookspace.enums.Rank;
 import com.bookspace.bookspace.message.Message;
 import com.bookspace.bookspace.publication.Publication;
 
@@ -12,19 +12,11 @@ import com.bookspace.bookspace.publication.Publication;
 
 public class User {
 
-     enum Rank {
-            QUEEN,
-            HAREM, 
-            SOLDIER, 
-            WORKER
-
-    }
-
     private String email; 
     private String name;
-    private Date dov;
+    private LocalDate dov;
     private Rank rank; 
-    private Date register; 
+    private LocalDate register; 
 
     private Collection<Publication> publications;
     private Collection<Publication> voted_publications;
@@ -38,7 +30,7 @@ public class User {
     }
     
 
-    public User(String email, String name, Date dov, Rank rank, Date register) {
+    public User(String email, String name, LocalDate dov, Rank rank, LocalDate register) {
         this.email = email;
         this.name = name;
         this.dov = dov;
@@ -47,7 +39,7 @@ public class User {
     }
 
 
-    public User(String email, String name, Date dov, Rank rank, Date register, Collection<Publication> publications, Collection<Publication> voted_publications, Collection<Comment> comments, Collection<Comment> voted_comments, Collection<Message> messages, Collection<Chat> chats) {
+    public User(String email, String name, LocalDate dov, Rank rank, LocalDate register, Collection<Publication> publications, Collection<Publication> voted_publications, Collection<Comment> comments, Collection<Comment> voted_comments, Collection<Message> messages, Collection<Chat> chats) {
         this.email = email;
         this.name = name;
         this.dov = dov;
@@ -75,11 +67,11 @@ public class User {
         this.name = name;
     }
 
-    public Date getDov() {
+    public LocalDate getDov() {
         return this.dov;
     }
 
-    public void setDov(Date dov) {
+    public void setDov(LocalDate dov) {
         this.dov = dov;
     }
 
@@ -91,11 +83,11 @@ public class User {
         this.rank = rank;
     }
 
-    public Date getRegister() {
+    public LocalDate getRegister() {
         return this.register;
     }
 
-    public void setRegister(Date register) {
+    public void setRegister(LocalDate register) {
         this.register = register;
     }
 

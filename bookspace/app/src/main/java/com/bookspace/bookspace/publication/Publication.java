@@ -1,6 +1,12 @@
 package com.bookspace.bookspace.publication;
 
 import java.time.LocalDate;
+import java.util.Collection;
+
+import com.bookspace.bookspace.chat.Chat;
+import com.bookspace.bookspace.comment.Comment;
+import com.bookspace.bookspace.theme.Theme;
+import com.bookspace.bookspace.user.User;
 
 
 public class Publication {
@@ -9,11 +15,11 @@ public class Publication {
     private String content;
     private LocalDate date; 
 
-    // private User owner;
-    // private Collection<User> votedBy;
-    // private Collection<Comment> comments;
-    // private Theme theme;
-    // private Collection<Chat> chats;
+    private User owner;
+    private Collection<User> votedBy;
+    private Collection<Comment> comments;
+    private Theme theme;
+    private Collection<Chat> chats;
 
 
 
