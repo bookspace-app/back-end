@@ -21,7 +21,7 @@ public class ChatController {
 
     @GetMapping    
 	public List<String> getChat() {
-        return chatService.getChats();
+        return chatService.getChats(); //restaurar mensaje commit
 	}
     
 }
