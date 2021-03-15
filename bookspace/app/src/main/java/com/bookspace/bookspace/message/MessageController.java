@@ -33,9 +33,4 @@ public class MessageController {
 	public Boolean deleteMessage(@RequestBody Message messageDetails) {
         return messageService.deleteMessage(messageDetails);
 	}
-
-    @DeleteMapping  
-	public String deleteMessage() {
-        return "MS";
-	}
 }

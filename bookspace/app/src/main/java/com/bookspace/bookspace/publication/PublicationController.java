@@ -20,17 +20,17 @@ public class PublicationController {
     }
 
     @GetMapping    
-	public String getPublication() {
-        return "MS";
+	public List<Publication> getPublication() {
+        return publicationService.getPublication();
 	}
 
-    @PutMapping    
-	public String putPublication() {
-        return "MS";
+    @PutMapping
+	public Boolean putPublication(@RequestBody Publication publicationDetails) {
+        return publicationService.putPublication(publicationDetails);
 	}
 
-    @DeleteMapping  
-	public String deletePublication() {
-        return "MS";
+    @DeleteMapping
+	public Boolean deletePublication(@RequestBody Publication publicationDetails) {
+        return publicationService.deletePublication(publicationDetails);
 	}
 }

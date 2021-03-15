@@ -8,6 +8,14 @@ import org.springframework.stereotype.Service;
 public class PublicationService {
 
     public List<Publication> getPublication() {
-        return null;
+        return List.of(new Publication());
+    }
+
+    public Boolean putPublication(Publication publicationDetails) {
+        //return BD.instertPublication(publicationDetails);
+    }
+
+    public Boolean deletePublication(Publication publicationDetails) {
+        //return BD.deletePublication(publicationDetails);
     }
 }
