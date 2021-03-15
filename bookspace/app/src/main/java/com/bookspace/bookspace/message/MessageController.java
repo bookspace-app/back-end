@@ -20,13 +20,18 @@ public class MessageController {
     }
 
     @GetMapping    
-	public String getMessage() {
-        return "MS";
+	public List<Message> getMessage() {
+        return messageService.getMessage();
 	}
 
-    @PutMapping    
-	public String putMessage() {
-        return "MS";
+    @PutMapping
+	public Boolean putMessage(@RequestBody Message messageDetails) {
+        return messageService.putMessage(messageDetails);
+	}
+
+    @DeleteMapping
+	public Boolean deleteMessage(@RequestBody Message messageDetails) {
+        return messageService.deleteMessage(messageDetails);
 	}
 
     @DeleteMapping  
