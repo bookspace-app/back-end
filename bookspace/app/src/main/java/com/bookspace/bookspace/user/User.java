@@ -25,7 +25,6 @@ import com.bookspace.bookspace.publication.Publication;
 import com.bookspace.bookspace.tags.Tag;
 
 import org.hibernate.type.ImageType;
-import org.springframework.core.metrics.StartupStep.Tags;
 
 
 
@@ -139,7 +138,7 @@ public class User{
         joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "name_tag")
     )
-    private Set<Tags> prefered_tags;
+    private Set<Tag> prefered_tags;
 
     
     // private Collection<Message> messages;
@@ -295,11 +294,11 @@ public class User{
     }
 
 
-    public Set<Tags> getPrefered_tags() {
+    public Set<Tag> getPrefered_tags() {
         return this.prefered_tags;
     }
 
-    public void setPrefered_tags(Set<Tags> prefered_tags) {
+    public void setPrefered_tags(Set<Tag> prefered_tags) {
         this.prefered_tags = prefered_tags;
     }
     
