@@ -1,4 +1,4 @@
-package com.bookspace.bookspace.Configuration;
+package com.bookspace.bookspace.configuration;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
