@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -18,6 +19,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.bookspace.bookspace.comment.Comment;
+import com.bookspace.bookspace.tags.Tag;
+import com.bookspace.bookspace.theme.Category;
 import com.bookspace.bookspace.user.User;
 
 @Entity
@@ -37,13 +40,13 @@ public class Publication {
     )
     private Long id;
 
-    @Column(name = "title")
+    @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "content")
+    @Column(name = "content", nullable = false)
     private String content;
 
-    @Column(name = "dop")
+    @Column(name = "dop", nullable = false)
     private LocalDate dop; 
 
     @ManyToOne
@@ -55,7 +58,20 @@ public class Publication {
 
     @OneToMany(mappedBy = "parent_publication", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Comment> comments;
-    // private Theme theme;
+
+    @ManyToOne
+    @JoinColumn(name = "category_publication")
+    private Category category;
+
+
+    @ManyToMany
+    @JoinTable (
+        name = "tagged_publications", 
+        joinColumns = @JoinColumn(name = "publication_id"), 
+        inverseJoinColumns = @JoinColumn(name = "tag_name")
+
+    )
+    private Set<Tag> tags;
     // private Collection<Chat> chats;
 
 
@@ -63,23 +79,20 @@ public class Publication {
     public Publication() {
     }
 
-    public Publication(String title, String content, LocalDate date) {
+    public Publication(String title, String content) {
         this.title = title;
         this.content = content;
-        this.dop = date;
+        this.dop = LocalDate.now();
     }
 
-    // public Publication(String title, String content, LocalDate date, User owner, Collection<User> votedBy, Collection<Comment> comments, Theme theme, Collection<Chat> chats) {
-    //     this.title = title;
-    //     this.content = content;
-    //     this.date = date;
-    //     this.owner = owner;
-    //     this.votedBy = votedBy;
-    //     this.comments = comments;
-    //     this.theme = theme;
-    //     this.chats = chats;
-    // }
 
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return this.title;
@@ -97,15 +110,13 @@ public class Publication {
         this.content = content;
     }
 
-    public LocalDate getDate() {
+    public LocalDate getDop() {
         return this.dop;
     }
 
-    public void setDate(LocalDate date) {
-        this.dop = date;
+    public void setDop(LocalDate dop) {
+        this.dop = dop;
     }
-
-
 
     public User getOwner() {
         return this.owner;
@@ -115,36 +126,42 @@ public class Publication {
         this.owner = owner;
     }
 
-    // public Collection<User> getVotedBy() {
-    //     return this.votedBy;
-    // }
+    public Set<User> getVotedBy() {
+        return this.votedBy;
+    }
 
-    // public void setVotedBy(Collection<User> votedBy) {
-    //     this.votedBy = votedBy;
-    // }
+    public void setVotedBy(Set<User> votedBy) {
+        this.votedBy = votedBy;
+    }
 
-    // public Collection<Comment> getComments() {
-    //     return this.comments;
-    // }
+    public Set<Comment> getComments() {
+        return this.comments;
+    }
 
-    // public void setComments(Collection<Comment> comments) {
-    //     this.comments = comments;
-    // }
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
+    }
 
-    // public Theme getTheme() {
-    //     return this.theme;
-    // }
+    public Category getCategory() {
+        return this.category;
+    }
 
-    // public void setTheme(Theme theme) {
-    //     this.theme = theme;
-    // }
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 
-    // public Collection<Chat> getChats() {
-    //     return this.chats;
-    // }
+    public Set<Tag> getTags() {
+        return this.tags;
+    }
 
-    // public void setChats(Collection<Chat> chats) {
-    //     this.chats = chats;
-    // }
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
+
+
+ 
+
+
+    
     
 }
