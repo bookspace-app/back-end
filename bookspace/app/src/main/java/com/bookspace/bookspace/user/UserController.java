@@ -24,7 +24,9 @@ public class UserController {
 	public List<User> getStudent() {
 
         return userService.getStudents();
-	}
+    }
+    
+    
 
     
 }

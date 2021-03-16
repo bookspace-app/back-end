@@ -3,14 +3,17 @@ package com.bookspace.bookspace.comment;
 import java.time.LocalDate;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -47,11 +50,15 @@ public class Comment {
     private Set<User> votedBy;
 
     @ManyToOne
-    @JoinColumn(name = "parent_publication")
+    @JoinColumn(name = "parent_publications")
     private Publication parent_publication;
 
-    // private Comment parent;
-    // private Collection<Comment> answers;
+    @ManyToOne
+    @JoinColumn(name = "parent_comment")
+    private Comment parent_comment;
+
+    @OneToMany(mappedBy = "parent_comment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Comment> children;
 
 
     public Comment() {

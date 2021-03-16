@@ -18,6 +18,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.bookspace.bookspace.comment.Comment;
+import com.bookspace.bookspace.theme.Category;
 import com.bookspace.bookspace.user.User;
 
 @Entity
@@ -55,7 +56,10 @@ public class Publication {
 
     @OneToMany(mappedBy = "parent_publication", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Comment> comments;
-    // private Theme theme;
+
+    @ManyToOne
+    @JoinColumn(name = "category_publication")
+    private Category category;
     // private Collection<Chat> chats;
 
 
