@@ -1,6 +1,5 @@
 package com.bookspace.bookspace.message;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -13,10 +12,12 @@ public class MessageService {
     }
 
     public Boolean putMessage(Message messageDetails) {
+        return null;
         //return BD.instertMessage(messageDetails);
     }
 
     public Boolean deleteMessage(Message messageDetails) {
+        return null;
         //return BD.deleteMessage(messageDetails);
     }
 }

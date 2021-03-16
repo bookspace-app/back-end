@@ -1,6 +1,5 @@
 package com.bookspace.bookspace.comment;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;

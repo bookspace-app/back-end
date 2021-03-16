@@ -12,10 +12,13 @@ public class PublicationService {
     }
 
     public Boolean putPublication(Publication publicationDetails) {
+        return null;
         //return BD.instertPublication(publicationDetails);
+        
     }
 
     public Boolean deletePublication(Publication publicationDetails) {
+        return null;
         //return BD.deletePublication(publicationDetails);
     }
 }
