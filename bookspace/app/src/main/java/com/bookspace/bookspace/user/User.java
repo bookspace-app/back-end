@@ -1,16 +1,25 @@
 package com.bookspace.bookspace.user;
 
 import java.time.LocalDate;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.bookspace.bookspace.comment.Comment;
 import com.bookspace.bookspace.enums.Rank;
+import com.bookspace.bookspace.publication.Publication;
 
 
 @Entity 
@@ -46,12 +55,31 @@ public class User{
     @Column(name = "dor")
     private LocalDate dor; 
 
-    // @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    // private Set<Publication> publications;
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Publication> publications;
     
-    // private Collection<Publication> voted_publications;
-    // private Collection<Comment> comments;
-    // private Collection<Comment> voted_comments;
+    @ManyToMany
+    @JoinTable (
+        name = "voted_publications", 
+        joinColumns = @JoinColumn(name = "user_id"), 
+        inverseJoinColumns = @JoinColumn(name = "publication_id")
+
+    )
+    private Set<Publication> voted_publications;
+
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Comment> comments;
+
+    @ManyToMany
+    @JoinTable (
+        name = "voted_comments", 
+        joinColumns = @JoinColumn(name = "user_id"), 
+        inverseJoinColumns = @JoinColumn(name = "comment_id")
+
+    )
+    private Set<Comment> voted_comments;
+
+    
     // private Collection<Message> messages;
     // private Collection<Chat> chats;
 
