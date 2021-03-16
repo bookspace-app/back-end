@@ -3,8 +3,6 @@ package com.bookspace.bookspace.user;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.bookspace.bookspace.enums.Rank;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,9 +18,9 @@ public class UserConfig {
             User demo = new User(
                 "email",
                 "demo",
+                "username",
                 LocalDate.now(),
-                Rank.QUEEN,
-                LocalDate.now()
+                "description"
             );
             repository.saveAll(List.of(demo));
 
