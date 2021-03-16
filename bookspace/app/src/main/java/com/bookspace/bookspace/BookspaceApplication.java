@@ -11,4 +11,5 @@ public class BookspaceApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(BookspaceApplication.class, args);
 	}
+
 }

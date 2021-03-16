@@ -22,8 +22,10 @@ import javax.persistence.Transient;
 import com.bookspace.bookspace.comment.Comment;
 import com.bookspace.bookspace.enums.Rank;
 import com.bookspace.bookspace.publication.Publication;
+import com.bookspace.bookspace.tags.Tag;
 
 import org.hibernate.type.ImageType;
+import org.springframework.core.metrics.StartupStep.Tags;
 
 
 
@@ -45,27 +47,27 @@ public class User{
     )
     private Long id;
 
-    @Column(name = "email", unique = true)
+    @Column(name = "email", unique = true, nullable = false)
     private String email; 
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "username", unique = true)
+    @Column(name = "username", unique = true, nullable = false)
     private String username;
 
     //date of birth
-    @Column(name = "dob")
+    @Column(name = "dob", nullable = false)
     private LocalDate dob;
 
-    @Column(name = "description")
+    @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "rank")
+    @Column(name = "rank", nullable = false)
     private Rank rank; 
 
     //date of register
-    @Column(name = "dor")
+    @Column(name = "dor", nullable = false)
     private LocalDate dor; 
 
     /*
@@ -127,15 +129,21 @@ public class User{
     @Column(name = "profile_pic")
     private ImageType profile_pic;
 
+    @Column(name = "tags_created")
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Tag> tags_created;
+
+    @ManyToMany
+    @JoinTable (
+        name = "prefered_tags", 
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "name_tag")
+    )
+    private Set<Tags> prefered_tags;
+
     
     // private Collection<Message> messages;
     // private Collection<Chat> chats;
-
-
-    public User() {
-    }
-
-    
 
 
     public User(String email, String name, String username, LocalDate dob, String description) {
@@ -253,6 +261,49 @@ public class User{
     public void setDescription(String description) {
         this.description = description;
     }
+
+
+    public Set<User> getBlocked_users() {
+        return this.blocked_users;
+    }
+
+    public void setBlocked_users(Set<User> blocked_users) {
+        this.blocked_users = blocked_users;
+    }
+
+    public ImageType getProfile_pic() {
+        return this.profile_pic;
+    }
+
+    public void setProfile_pic(ImageType profile_pic) {
+        this.profile_pic = profile_pic;
+    }
+
+    public Set<Tag> getTags_created() {
+        return this.tags_created;
+    }
+
+    public void setTags_created(Set<Tag> tags_created) {
+        this.tags_created = tags_created;
+    }
+
+
+    public void votePublication(Publication p) throws Exception {
+
+        if (!this.publications.contains(p))  this.voted_publications.add(p);        
+        else throw new Exception("A User can not vote it's own publication");
+    }
+
+
+    public Set<Tags> getPrefered_tags() {
+        return this.prefered_tags;
+    }
+
+    public void setPrefered_tags(Set<Tags> prefered_tags) {
+        this.prefered_tags = prefered_tags;
+    }
+    
+
 
        
 
