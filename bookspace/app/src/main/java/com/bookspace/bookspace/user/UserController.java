@@ -46,10 +46,10 @@ public class UserController {
     @PutMapping(path = "{userId}") 
     public void updateUser(@PathVariable("userId") Long id,
                                       @RequestParam(required = false) String name,
-                                      @RequestParam(required = false) String desc,
+                                      @RequestParam(required = false) String description,
                                       @RequestParam(required = false) String email,
                                       @RequestParam(required = false) String username){
-        userService.updateUser(id,name,desc,email,username);
+        userService.updateUser(id,name,description,email,username);
     }
 
     @DeleteMapping(path = "{userId}")
