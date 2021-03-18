@@ -1,24 +1,20 @@
 package com.bookspace.bookspace.publication;
 
-import java.util.List;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PublicationService {
 
-    public List<Publication> getPublication() {
-        return List.of(new Publication());
+    private final PublicationRepository publicationRepository;
+
+    @Autowired
+    public PublicationService(PublicationRepository publicationRepository) {
+        this.publicationRepository = publicationRepository;
     }
 
-    public Boolean putPublication(Publication publicationDetails) {
-        return null;
-        //return BD.instertPublication(publicationDetails);
-        
-    }
 
-    public Boolean deletePublication(Publication publicationDetails) {
-        return null;
-        //return BD.deletePublication(publicationDetails);
-    }
+    
+
+    
 }
