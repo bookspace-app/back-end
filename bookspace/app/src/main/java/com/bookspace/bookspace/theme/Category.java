@@ -44,9 +44,9 @@ public class Category {
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Publication> category_publications;
-
     
-
-    
-    
+    //TEST
+    public Category() {
+        this.theme = theme.WAR;
+    }
 }
