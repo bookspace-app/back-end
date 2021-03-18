@@ -49,7 +49,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public void updateUser(Long id, String description, String email, String username) {
+	public void updateUser(Long id, String name, String description, String email, String username) {
 		User user = userRepository.findById(id)
 					.orElseThrow(() -> new IllegalStateException(
 						"User with id " + id + " does not exist"));
@@ -59,13 +59,18 @@ public class UserService {
 				user.setDescription(description);
 			}
 		
-		if (email != null && email.length() > 0 &&
+			if (email != null && email.length() > 0 &&
 			!Objects.equals(user.getEmail(), email)){
 				Optional<User> userOptional = userRepository.findUserByEmail(email);
 				if(userOptional.isPresent()){
 					throw new IllegalStateException("email already taken");
 				}
 				user.setEmail(email);
+			}
+
+		if (name != null && name.length() > 0 &&
+			!Objects.equals(user.getName(), name)){
+				user.setName(name);
 			}
 
 		if (username != null && username.length() > 0 &&
