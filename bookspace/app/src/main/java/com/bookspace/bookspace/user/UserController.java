@@ -48,8 +48,9 @@ public class UserController {
                                       @RequestParam(required = false) String name,
                                       @RequestParam(required = false) String description,
                                       @RequestParam(required = false) String email,
-                                      @RequestParam(required = false) String username){
-        userService.updateUser(id,name,description,email,username);
+                                      @RequestParam(required = false) String username,
+                                      @RequestParam(required = false) LocalDate dob){
+        userService.updateUser(id,name,description,email,username,dob);
     }
 
     @DeleteMapping(path = "{userId}")
