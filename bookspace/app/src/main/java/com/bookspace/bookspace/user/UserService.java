@@ -1,7 +1,11 @@
 package com.bookspace.bookspace.user;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,6 +46,37 @@ public class UserService {
 		}
 		userRepository.deleteById(userId);
 
+	}
+
+	@Transactional
+	public void updateUser(Long id, String description, String email, String username) {
+		User user = userRepository.findById(id)
+					.orElseThrow(() -> new IllegalStateException(
+						"User with id " + id + " does not exist"));
+		
+		if (description != null && description.length() > 0 &&
+			!Objects.equals(user.getDescription(), description)){
+				user.setDescription(description);
+			}
+		
+		if (email != null && email.length() > 0 &&
+			!Objects.equals(user.getEmail(), email)){
+				Optional<User> userOptional = userRepository.findUserByEmail(email);
+				if(userOptional.isPresent()){
+					throw new IllegalStateException("email already taken");
+				}
+				user.setEmail(email);
+			}
+
+		if (username != null && username.length() > 0 &&
+			!Objects.equals(user.getUsername(), username)){
+				Optional<User> userOptional = userRepository.findUserByUsername(username);
+				if(userOptional.isPresent()){
+					throw new IllegalStateException("username already taken");
+				}
+				user.setUsername(username);
+			}
+		userRepository.save(user);
 	}
     
 }
