@@ -1,5 +1,7 @@
 package com.bookspace.bookspace.publication;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public class PublicationRepository {
+
+public interface PublicationRepository extends JpaRepository<Publication, Long> {
 
 }
