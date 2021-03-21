@@ -26,14 +26,12 @@ public class Category {
         sequenceName = "user_sequence", 
         allocationSize = 1
     )
-
     @GeneratedValue(
         strategy = GenerationType.SEQUENCE, 
         generator = "user_sequence"
     )
     private Long id;
     
-
     @Column(name = "theme", unique = true)
     private CategoryEnum category;
 

@@ -1,6 +1,8 @@
 package com.bookspace.bookspace.category;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +16,15 @@ public class CategoryService {
 		this.categoryRepository = categoryRepository;
 	}
 
-	public List<Category> getCategory(){
+	public List<Category> getCategories(){
 		return categoryRepository.findAll();
 	}
+
+	public Optional<Category> getCategory(Long Id) {
+		boolean exists = categoryRepository.existsById(Id);
+		if(!exists) throw new IllegalStateException("The Category with Id " + Id + " does not exist");
+        return categoryRepository.findById(Id);
+    }
 
 	public void deleteCategory(Long categoryId){
 		boolean b = categoryRepository.existsById(categoryId);

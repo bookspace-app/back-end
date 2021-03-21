@@ -67,6 +67,12 @@ public class Tag {
         this.prefered_tags = prefered_tags;
     }
 
-
+    //Test constructor
+    public Tag() {
+        this.tag = "Tag1";
+        this.owner = null;
+        this.tagged_publications = null;
+        this.prefered_tags = null;
+    }
 
 }
