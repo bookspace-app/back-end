@@ -1,4 +1,4 @@
-package com.bookspace.bookspace.theme;
+package com.bookspace.bookspace.category;
 
 import java.util.Set;
 
@@ -13,6 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.bookspace.bookspace.enums.CategoryEnum;
 import com.bookspace.bookspace.publication.Publication;
 
 @Entity
@@ -25,28 +26,22 @@ public class Category {
         sequenceName = "user_sequence", 
         allocationSize = 1
     )
-
     @GeneratedValue(
         strategy = GenerationType.SEQUENCE, 
         generator = "user_sequence"
     )
     private Long id;
     
-    enum theme {
-        ACTION, 
-        LOVE, 
-        WAR, 
-        POTENTIAL
-    }
-
     @Column(name = "theme", unique = true)
-    private theme theme;
+    private CategoryEnum category;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Publication> category_publications;
 
-    
-
-    
-    
+    //Test constructor
+    public Category() {
+        this.id = 1L;
+        this.category = CategoryEnum.WAR;
+        this.category_publications = null;
+    }
 }

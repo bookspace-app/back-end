@@ -18,9 +18,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.bookspace.bookspace.category.Category;
 import com.bookspace.bookspace.comment.Comment;
 import com.bookspace.bookspace.tags.Tag;
-import com.bookspace.bookspace.theme.Category;
 import com.bookspace.bookspace.user.User;
 
 @Entity
@@ -77,6 +77,7 @@ public class Publication {
 
 
     public Publication() {
+        
     }
 
     public Publication(String title, String content) {

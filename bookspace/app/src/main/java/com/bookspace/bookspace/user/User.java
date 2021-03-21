@@ -33,6 +33,8 @@ import org.hibernate.type.ImageType;
 
 public class User{
 
+    public User(){}
+
     @Id
     @SequenceGenerator(
         name = "user_sequence", 
