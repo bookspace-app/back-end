@@ -20,7 +20,7 @@ import javax.persistence.Table;
 
 import com.bookspace.bookspace.comment.Comment;
 import com.bookspace.bookspace.tags.Tag;
-import com.bookspace.bookspace.theme.Category;
+import com.bookspace.bookspace.category.*;
 import com.bookspace.bookspace.user.User;
 
 @Entity
