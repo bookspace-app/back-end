@@ -13,6 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.bookspace.bookspace.enums.CategoryEnum;
 import com.bookspace.bookspace.publication.Publication;
 
 @Entity
@@ -32,15 +33,9 @@ public class Category {
     )
     private Long id;
     
-    enum theme {
-        ACTION, 
-        LOVE, 
-        WAR, 
-        POTENTIAL
-    }
 
     @Column(name = "theme", unique = true)
-    private theme theme;
+    private CategoryEnum category;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Publication> category_publications;
@@ -48,7 +43,7 @@ public class Category {
     //Test constructor
     public Category() {
         this.id = 1L;
-        this.theme = theme.WAR;
+        this.category = CategoryEnum.WAR;
         this.category_publications = null;
     }
 }
