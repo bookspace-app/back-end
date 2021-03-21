@@ -32,11 +32,13 @@ public class PublicationService {
     }
 
     @Transactional
-    public Boolean updatePublication(Publication publicationDetails) {
-        //Si no existe la publicacion throw error
-        return null;
-
+    public void updatePublication(Publication publicationDetails) {
+        Publication publication = publicationRepository.findById(publicationDetails.getId())
+					.orElseThrow(() -> new IllegalStateException(
+						"Publication with id " + publicationDetails.getId() + " does not exist"));
         
+        publication = publicationDetails;
+        publicationRepository.save(publication);     
         
         
 

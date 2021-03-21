@@ -41,9 +41,9 @@ public class PublicationController {
     }
 
     @PutMapping(path = "{publicationId}")
-    public Boolean putPublication(@PathVariable("publicationId")Long id,
+    public void putPublication(@PathVariable("publicationId")Long id,
                                                 @RequestBody Publication publicationDetails) {
-        return publicationService.updatePublication(publicationDetails);
+        publicationService.updatePublication(publicationDetails);
 	}
 
     @DeleteMapping(path = "{publicationId}")
