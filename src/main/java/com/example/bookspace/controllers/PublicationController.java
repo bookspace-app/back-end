@@ -37,9 +37,10 @@ public class PublicationController {
 	public List<Publication> getAllPublications() {
         return publicationService.getPublications();
     }
+
     @PostMapping
-    public void registerNewPublication(@RequestBody Publication publication) {
-        publicationService.addNewPublication(publication);
+    public void registerNewPublication(@RequestBody Publication p) {
+        publicationService.addNewPublication(p);
     }
     
     @GetMapping(path = "{publicationId}")

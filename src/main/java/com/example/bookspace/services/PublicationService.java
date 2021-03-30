@@ -35,7 +35,8 @@ public class PublicationService {
     }
 
     public void addNewPublication(Publication publication) {
-        publicationRepository.save(publication);
+        Publication p = new Publication(publication.getTitle(), publication.getContent());
+        publicationRepository.save(p);
     }
 
     @Transactional

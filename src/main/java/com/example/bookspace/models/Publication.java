@@ -83,6 +83,12 @@ public class Publication {
         this.title = title;
         this.content = content;
         this.dop = LocalDate.now();
+        this.author = null;
+        this.votedBy = null;
+        this.favouriteBy = null;
+        this.comments = null;
+        this.category = null;
+        this.tags = null;
     }
 
 
