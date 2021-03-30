@@ -72,7 +72,7 @@ public class User{
     User publication    
     Cascade deletion 
     */
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY) 
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY) 
     private Set<Publication> publications;
  
     /*

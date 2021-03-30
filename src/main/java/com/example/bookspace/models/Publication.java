@@ -47,8 +47,8 @@ public class Publication {
     private LocalDate dop; 
 
     @ManyToOne
-    @JoinColumn(name = "publication_owner")
-    private User owner;
+    @JoinColumn(name = "publication_author")
+    private User author;
 
     @ManyToMany(mappedBy = "voted_publications")
     private Set<User> votedBy;
@@ -119,11 +119,11 @@ public class Publication {
     }
 
     public User getOwner() {
-        return this.owner;
+        return this.author;
     }
 
     public void setOwner(User owner) {
-        this.owner = owner;
+        this.author = owner;
     }
 
     public Set<User> getVotedBy() {
@@ -157,11 +157,22 @@ public class Publication {
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
     }
+   
 
+    public User getAuthor() {
+        return this.author;
+    }
 
- 
+    public void setAuthor(User author) {
+        this.author = author;
+    }
 
+    public Set<User> getFavouriteBy() {
+        return this.favouriteBy;
+    }
 
-    
+    public void setFavouriteBy(Set<User> favouriteBy) {
+        this.favouriteBy = favouriteBy;
+    }
     
 }

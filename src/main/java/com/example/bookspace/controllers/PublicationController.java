@@ -2,8 +2,13 @@ package com.example.bookspace.controllers;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
+import javax.print.DocFlavor.STRING;
+
+import com.example.bookspace.models.Comment;
 import com.example.bookspace.models.Publication;
+import com.example.bookspace.models.User;
 import com.example.bookspace.services.PublicationService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,16 +37,15 @@ public class PublicationController {
 	public List<Publication> getAllPublications() {
         return publicationService.getPublications();
     }
-    
-    @GetMapping(path = "{publicationId}")
-    public Optional<Publication> getUserById(@PathVariable("publicationId") Long id) {
-        return publicationService.getPublication(id);
-    }
-
     @PostMapping
     public void registerNewPublication(@RequestBody Publication publication) {
         publicationService.addNewPublication(publication);
     }
+    
+    @GetMapping(path = "{publicationId}")
+    public Optional<Publication> getUserById(@PathVariable("publicationId") Long id) {
+        return publicationService.getPublication(id);
+    }    
 
     @PutMapping(path = "{publicationId}")
     public void putPublication(@PathVariable("publicationId")Long id,
@@ -53,4 +57,19 @@ public class PublicationController {
 	public Boolean deletePublication(@PathVariable("publicationId") Long publicationId) {
         return publicationService.deletePublication(publicationId);
 	}
+
+    @GetMapping(path="{publicationId}/votedBy")
+    public Set<User> getVotedByUsers (@PathVariable("publicationId") Long id) {
+        return publicationService.getVotedByUsers(id);
+    }
+
+    @GetMapping(path="{publicationId}/favouritesBy")
+    public Set<User> getFavouriteByUsers(@PathVariable("publicationId") Long id) {
+        return publicationService.getFavouriteByUsers(id);
+    }
+
+    @GetMapping(path="{publicationId}/comments")
+    public Set<Comment> getPublicationComments(@PathVariable("publicationId") Long id) {
+        return publicationService.getComments(id);
+    }
 }
