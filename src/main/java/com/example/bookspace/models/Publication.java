@@ -53,6 +53,9 @@ public class Publication {
     @ManyToMany(mappedBy = "voted_publications")
     private Set<User> votedBy;
 
+    @ManyToMany(mappedBy = "favourite_publications")
+    private Set<User> favouriteBy;
+
     @OneToMany(mappedBy = "parent_publication", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Comment> comments;
 
