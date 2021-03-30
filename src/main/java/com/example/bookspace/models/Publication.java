@@ -18,6 +18,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.example.bookspace.enums.Category;
+
 @Entity
 @Table(name = "publications")
 public class Publication {
@@ -54,8 +56,7 @@ public class Publication {
     @OneToMany(mappedBy = "parent_publication", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Comment> comments;
 
-    @ManyToOne
-    @JoinColumn(name = "category_publication")
+    @Column
     private Category category;
 
 
