@@ -1,16 +1,19 @@
 package com.example.bookspace.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
+import com.example.bookspace.models.Comment;
 import com.example.bookspace.services.CommentService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = "api/v1/comment")
+@RequestMapping(path = "api/comments")
 
 public class CommentController {
 
@@ -22,9 +25,12 @@ public class CommentController {
     }
 
     @GetMapping    
-	public List<String> getComment() {
-
+	public List<Comment> getComment() {
        return commentService.getComments();
 	}
-    
+
+    @GetMapping(path = "{commentId}")   
+	public Optional<Comment> getCommentById(@PathVariable("commentId") Long commentId) {
+        return commentService.getComment(commentId);
+    }
 }
