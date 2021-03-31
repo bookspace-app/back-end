@@ -18,6 +18,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.example.bookspace.enums.Category;
+
 @Entity
 @Table(name = "publications")
 public class Publication {
@@ -45,17 +47,19 @@ public class Publication {
     private LocalDate dop; 
 
     @ManyToOne
-    @JoinColumn(name = "publication_owner")
-    private User owner;
+    @JoinColumn(name = "publication_author")
+    private User author;
 
     @ManyToMany(mappedBy = "voted_publications")
     private Set<User> votedBy;
 
+    @ManyToMany(mappedBy = "favourite_publications")
+    private Set<User> favouriteBy;
+
     @OneToMany(mappedBy = "parent_publication", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Comment> comments;
 
-    @ManyToOne
-    @JoinColumn(name = "category_publication")
+    @Column
     private Category category;
 
 
@@ -75,10 +79,16 @@ public class Publication {
         
     }
 
-    public Publication(String title, String content) {
+    public Publication(String title, String content, User author) {
         this.title = title;
         this.content = content;
         this.dop = LocalDate.now();
+        this.author = author;
+        this.votedBy = null;
+        this.favouriteBy = null;
+        this.comments = null;
+        this.category = null;
+        this.tags = null;
     }
 
 
@@ -115,11 +125,11 @@ public class Publication {
     }
 
     public User getOwner() {
-        return this.owner;
+        return this.author;
     }
 
     public void setOwner(User owner) {
-        this.owner = owner;
+        this.author = owner;
     }
 
     public Set<User> getVotedBy() {
@@ -153,11 +163,22 @@ public class Publication {
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
     }
+   
 
+    public User getAuthor() {
+        return this.author;
+    }
 
- 
+    public void setAuthor(User author) {
+        this.author = author;
+    }
 
+    public Set<User> getFavouriteBy() {
+        return this.favouriteBy;
+    }
 
-    
+    public void setFavouriteBy(Set<User> favouriteBy) {
+        this.favouriteBy = favouriteBy;
+    }
     
 }

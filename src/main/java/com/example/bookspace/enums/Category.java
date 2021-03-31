@@ -1,6 +1,6 @@
 package com.example.bookspace.enums;
 
-public enum CategoryEnum {
+public enum Category {
     ACTION, 
     LOVE, 
     WAR, 

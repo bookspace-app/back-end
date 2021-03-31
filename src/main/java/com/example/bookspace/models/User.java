@@ -72,11 +72,11 @@ public class User{
     User publication    
     Cascade deletion 
     */
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY) 
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY) 
     private Set<Publication> publications;
  
     /*
-    User publications
+    User voted publications
     New table is created
     */
     @ManyToMany
@@ -87,6 +87,19 @@ public class User{
 
     )
     private Set<Publication> voted_publications;
+
+    /*
+    User favourite publications
+    New table is created
+    */
+    @ManyToMany
+    @JoinTable (
+        name = "favourite_publications", 
+        joinColumns = @JoinColumn(name = "user_id"), 
+        inverseJoinColumns = @JoinColumn(name = "publication_id")
+
+    )
+    private Set<Publication> favourite_publications;
 
 
     /*
@@ -130,6 +143,7 @@ public class User{
     @Column(name = "tags_created")
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Tag> tags_created;
+
 
     @ManyToMany
     @JoinTable (
