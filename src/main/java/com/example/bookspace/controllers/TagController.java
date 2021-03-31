@@ -2,7 +2,6 @@ package com.example.bookspace.controllers;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import com.example.bookspace.models.Publication;
 import com.example.bookspace.models.Tag;
@@ -42,10 +41,10 @@ public class TagController {
 
     @PutMapping(path = "{IdTag}") 
     public void updateTag(@PathVariable("IdTag") String IdTag,
-                                      @RequestParam(required = false) User owner,
-                                      @RequestParam(required = false) Set<Publication> tagged_publications,
-                                      @RequestParam(required = false) Set<User> prefered_tags){
-        tagService.updateTag(IdTag,owner,tagged_publications,prefered_tags);
+                                      @RequestParam(required = false) User author,
+                                      @RequestParam(required = false) List<Publication> tagged_publications,
+                                      @RequestParam(required = false) List<User> preferedTags){
+        tagService.updateTag(IdTag,author,tagged_publications,preferedTags);
     }
 
     @DeleteMapping(path = "{IdTag}")

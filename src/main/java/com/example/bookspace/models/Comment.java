@@ -1,7 +1,7 @@
 package com.example.bookspace.models;
 
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -40,22 +40,22 @@ public class Comment {
     private LocalDate dop;
 
     @ManyToOne
-    @JoinColumn(name = "comment_owner")
-    private User owner;
+    @JoinColumn(name = "author_id")
+    private User author;
 
-    @ManyToMany(mappedBy = "voted_comments")
-    private Set<User> votedBy;
-
-    @ManyToOne
-    @JoinColumn(name = "parent_publications")
-    private Publication parent_publication;
+    @ManyToMany(mappedBy = "votedComments")
+    private List<User> votedBy;
 
     @ManyToOne
-    @JoinColumn(name = "parent_comment")
-    private Comment parent_comment;
+    @JoinColumn(name = "publication_id")
+    private Publication publication;
 
-    @OneToMany(mappedBy = "parent_comment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Comment> children;
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    private Comment parent;
+
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Comment> answers;
 
 
     public Comment() {

@@ -1,7 +1,7 @@
 package com.example.bookspace.models;
 
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -19,6 +19,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.example.bookspace.enums.Category;
+
 
 @Entity
 @Table(name = "publications")
@@ -47,17 +48,17 @@ public class Publication {
     private LocalDate dop; 
 
     @ManyToOne
-    @JoinColumn(name = "publication_author")
+    @JoinColumn(name = "author_id")
     private User author;
 
-    @ManyToMany(mappedBy = "voted_publications")
-    private Set<User> votedBy;
+    @ManyToMany(mappedBy = "votedPublications")
+    private List<User> votedBy;
 
-    @ManyToMany(mappedBy = "favourite_publications")
-    private Set<User> favouriteBy;
+    @ManyToMany(mappedBy = "favouritePublications")
+    private List<User> favouriteBy;
 
-    @OneToMany(mappedBy = "parent_publication", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Comment> comments;
+    @OneToMany(mappedBy = "publication", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Comment> comments;
 
     @Column
     private Category category;
@@ -70,13 +71,12 @@ public class Publication {
         inverseJoinColumns = @JoinColumn(name = "tag_name")
 
     )
-    private Set<Tag> tags;
+    private List<Tag> tags;
     // private Collection<Chat> chats;
 
 
 
-    public Publication() {
-        
+    public Publication() {     
     }
 
     public Publication(String title, String content) {
@@ -124,27 +124,19 @@ public class Publication {
         this.dop = dop;
     }
 
-    public User getOwner() {
-        return this.author;
-    }
-
-    public void setOwner(User owner) {
-        this.author = owner;
-    }
-
-    public Set<User> getVotedBy() {
+    public List<User> getVotedBy() {
         return this.votedBy;
     }
 
-    public void setVotedBy(Set<User> votedBy) {
+    public void setVotedBy(List<User> votedBy) {
         this.votedBy = votedBy;
     }
 
-    public Set<Comment> getComments() {
+    public List<Comment> getComments() {
         return this.comments;
     }
 
-    public void setComments(Set<Comment> comments) {
+    public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
 
@@ -156,11 +148,11 @@ public class Publication {
         this.category = category;
     }
 
-    public Set<Tag> getTags() {
+    public List<Tag> getTags() {
         return this.tags;
     }
 
-    public void setTags(Set<Tag> tags) {
+    public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
    
@@ -173,11 +165,11 @@ public class Publication {
         this.author = author;
     }
 
-    public Set<User> getFavouriteBy() {
+    public List<User> getFavouriteBy() {
         return this.favouriteBy;
     }
 
-    public void setFavouriteBy(Set<User> favouriteBy) {
+    public void setFavouriteBy(List<User> favouriteBy) {
         this.favouriteBy = favouriteBy;
     }
     

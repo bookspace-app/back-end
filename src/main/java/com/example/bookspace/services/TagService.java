@@ -3,8 +3,6 @@ package com.example.bookspace.services;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
-
 import javax.transaction.Transactional;
 
 import com.example.bookspace.models.Publication;
@@ -44,14 +42,14 @@ public class TagService {
 	}
 
 	@Transactional
-	public void updateTag(String IdTag, User owner, Set<Publication> tagged_publications, Set<User> prefered_tags) {
+	public void updateTag(String IdTag, User author, List<Publication> tagged_publications, List<User> preferedTags) {
 		Tag tag = tagRepository.findById(IdTag)
 					.orElseThrow(() -> new IllegalStateException(
 						"Tag with IdTag " + IdTag + " does not exist"));
 		
-		if (owner != null &&
-			!Objects.equals(tag.getOwner(), owner)){
-				tag.setOwner(owner);
+		if (author != null &&
+			!Objects.equals(tag.getAuthor(), author)){
+				tag.setAuthor(author);
 			}
 
 		if (tagged_publications != null &&
@@ -59,9 +57,9 @@ public class TagService {
 				tag.setTagged_publications(tagged_publications);
 			}
 
-		if (prefered_tags != null &&
-			!Objects.equals(tag.getPrefered_tags(), prefered_tags)){
-				tag.setPrefered_tags(prefered_tags);
+		if (preferedTags != null &&
+			!Objects.equals(tag.getPreferedTags(), preferedTags)){
+				tag.setPrefered_tags(preferedTags);
 			}
 
 		tagRepository.save(tag);

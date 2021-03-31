@@ -2,7 +2,6 @@ package com.example.bookspace.controllers;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import com.example.bookspace.models.Comment;
 import com.example.bookspace.models.Publication;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -37,8 +37,8 @@ public class PublicationController {
     }
 
     @PostMapping
-    public void registerNewPublication(@RequestBody Publication p) {
-        publicationService.addNewPublication(p);
+    public void registerNewPublication(@RequestBody Publication publication) {
+        publicationService.addNewPublication(publication);
     }
     
     @GetMapping(path = "{publicationId}")
@@ -46,29 +46,31 @@ public class PublicationController {
         return publicationService.getPublication(id);
     }    
 
-    @PutMapping(path = "{publicationId}")
-    public void putPublication(@PathVariable("publicationId")Long id,
-                                                @RequestBody Publication publicationDetails) {
-        publicationService.updatePublication(publicationDetails);
-	}
+    @PutMapping(path = "{publicationId}") 
+    public void updateUser(@PathVariable("publicationId") Long id,
+                                      @RequestParam(required = false) String title,
+                                      @RequestParam(required = false) String content
+                                      ){
+        publicationService.updatePublication(id, title, content);
+    }
 
     @DeleteMapping(path = "{publicationId}")
-	public Boolean deletePublication(@PathVariable("publicationId") Long publicationId) {
-        return publicationService.deletePublication(publicationId);
+	public void deletePublication(@PathVariable("publicationId") Long publicationId) {
+        publicationService.deletePublication(publicationId);
 	}
 
     @GetMapping(path="{publicationId}/votedBy")
-    public Set<User> getVotedByUsers (@PathVariable("publicationId") Long id) {
+    public List<User> getVotedByUsers (@PathVariable("publicationId") Long id) {
         return publicationService.getVotedByUsers(id);
     }
 
     @GetMapping(path="{publicationId}/favouritesBy")
-    public Set<User> getFavouriteByUsers(@PathVariable("publicationId") Long id) {
+    public List<User> getFavouriteByUsers(@PathVariable("publicationId") Long id) {
         return publicationService.getFavouriteByUsers(id);
     }
 
     @GetMapping(path="{publicationId}/comments")
-    public Set<Comment> getPublicationComments(@PathVariable("publicationId") Long id) {
+    public List<Comment> getPublicationComments(@PathVariable("publicationId") Long id) {
         return publicationService.getComments(id);
     }
 }

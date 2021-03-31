@@ -1,8 +1,7 @@
 package com.example.bookspace.models;
 
 import java.time.LocalDate;
-import java.time.Period;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -73,7 +72,7 @@ public class User{
     Cascade deletion 
     */
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY) 
-    private Set<Publication> publications;
+    private List<Publication> publications;
  
     /*
     User voted publications
@@ -81,12 +80,12 @@ public class User{
     */
     @ManyToMany
     @JoinTable (
-        name = "voted_publications", 
-        joinColumns = @JoinColumn(name = "user_id"), 
+        name = "votedPublications", 
+        joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), 
         inverseJoinColumns = @JoinColumn(name = "publication_id")
 
     )
-    private Set<Publication> voted_publications;
+    private List<Publication> votedPublications;
 
     /*
     User favourite publications
@@ -94,20 +93,20 @@ public class User{
     */
     @ManyToMany
     @JoinTable (
-        name = "favourite_publications", 
-        joinColumns = @JoinColumn(name = "user_id"), 
+        name = "favouritePublications", 
+        joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), 
         inverseJoinColumns = @JoinColumn(name = "publication_id")
 
     )
-    private Set<Publication> favourite_publications;
+    private List<Publication> favouritePublications;
 
 
     /*
     User comments
     Cascade deletion
     */
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Comment> comments;
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Comment> comments;
 
 
     /*
@@ -116,23 +115,23 @@ public class User{
     */
     @ManyToMany
     @JoinTable (
-        name = "voted_comments", 
-        joinColumns = @JoinColumn(name = "user_id"), 
+        name = "votedComments", 
+        joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), 
         inverseJoinColumns = @JoinColumn(name = "comment_id")
 
     )
-    private Set<Comment> voted_comments;
+    private List<Comment> votedComments;
 
     /*
     Blocked users
     */
     @ManyToMany
     @JoinTable (
-        name = "blocked_users",
-        joinColumns = @JoinColumn(name="blocker"), 
+        name = "blockedUsers",
+        joinColumns = @JoinColumn(name="blocker", referencedColumnName = "id"), 
         inverseJoinColumns = @JoinColumn(name = "blocked")
     )
-    private Set<User> blocked_users;
+    private List<User> blockedUsers;
 
     @Transient //This attribute can be calculated from some other attributes
     private Integer age;
@@ -140,18 +139,18 @@ public class User{
     @Column(name = "profile_pic")
     private ImageType profile_pic;
 
-    @Column(name = "tags_created")
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Tag> tags_created;
+    @Column(name = "createdTags")
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Tag> createdTags;
 
 
     @ManyToMany
     @JoinTable (
-        name = "prefered_tags", 
-        joinColumns = @JoinColumn(name = "user_id"),
+        name = "preferedTags", 
+        joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
         inverseJoinColumns = @JoinColumn(name = "name_tag")
     )
-    private Set<Tag> prefered_tags;
+    private List<Tag> preferedTags;
 
     
     // private Collection<Message> messages;
@@ -169,6 +168,7 @@ public class User{
         
 
     }
+
 
     public Long getId() {
         return this.id;
@@ -210,6 +210,14 @@ public class User{
         this.dob = dob;
     }
 
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public Rank getRank() {
         return this.rank;
     }
@@ -226,61 +234,60 @@ public class User{
         this.dor = dor;
     }
 
-    public Set<Publication> getPublications() {
+    public List<Publication> getPublications() {
         return this.publications;
     }
 
-    public void setPublications(Set<Publication> publications) {
+    public void setPublications(List<Publication> publications) {
         this.publications = publications;
     }
 
-    public Set<Publication> getVoted_publications() {
-        return this.voted_publications;
+    public List<Publication> getVotedPublications() {
+        return this.votedPublications;
     }
 
-    public void setVoted_publications(Set<Publication> voted_publications) {
-        this.voted_publications = voted_publications;
+    public void setVotedPublications(List<Publication> votedPublications) {
+        this.votedPublications = votedPublications;
     }
 
-    public Set<Comment> getComments() {
+    public List<Publication> getFavouritePublications() {
+        return this.favouritePublications;
+    }
+
+    public void setFavouritePublications(List<Publication> favouritePublications) {
+        this.favouritePublications = favouritePublications;
+    }
+
+    public List<Comment> getComments() {
         return this.comments;
     }
 
-    public void setComments(Set<Comment> comments) {
+    public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
 
-    public Set<Comment> getVoted_comments() {
-        return this.voted_comments;
+    public List<Comment> getVotedComments() {
+        return this.votedComments;
     }
 
-    public void setVoted_comments(Set<Comment> voted_comments) {
-        this.voted_comments = voted_comments;
+    public void setVotedComments(List<Comment> votedComments) {
+        this.votedComments = votedComments;
+    }
+
+    public List<User> getBlockedUsers() {
+        return this.blockedUsers;
+    }
+
+    public void setBlockedUsers(List<User> blockedUsers) {
+        this.blockedUsers = blockedUsers;
     }
 
     public Integer getAge() {
-        return Period.between(this.dob, LocalDate.now()).getYears();
+        return this.age;
     }
 
     public void setAge(Integer age) {
         this.age = age;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-
-    public Set<User> getBlocked_users() {
-        return this.blocked_users;
-    }
-
-    public void setBlocked_users(Set<User> blocked_users) {
-        this.blocked_users = blocked_users;
     }
 
     public ImageType getProfile_pic() {
@@ -291,29 +298,31 @@ public class User{
         this.profile_pic = profile_pic;
     }
 
-    public Set<Tag> getTags_created() {
-        return this.tags_created;
+    public List<Tag> getCreatedTags() {
+        return this.createdTags;
     }
 
-    public void setTags_created(Set<Tag> tags_created) {
-        this.tags_created = tags_created;
+    public void setCreatedTags(List<Tag> createdTags) {
+        this.createdTags = createdTags;
     }
 
+    public List<Tag> getPreferedTags() {
+        return this.preferedTags;
+    }
+
+    public void setPreferedTags(List<Tag> preferedTags) {
+        this.preferedTags = preferedTags;
+    }
+   
 
     public void votePublication(Publication p) throws Exception {
 
-        if (!this.publications.contains(p))  this.voted_publications.add(p);        
+        if (!this.publications.contains(p))  this.votedPublications.add(p);        
         else throw new Exception("A User can not vote it's own publication");
     }
 
 
-    public Set<Tag> getPrefered_tags() {
-        return this.prefered_tags;
-    }
-
-    public void setPrefered_tags(Set<Tag> prefered_tags) {
-        this.prefered_tags = prefered_tags;
-    }
+    
     
 
 
