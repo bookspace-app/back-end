@@ -32,7 +32,6 @@ public class PublicationController {
         this.publicationService = publicationService;
     }
 
-
     @GetMapping    
 	public List<Publication> getAllPublications() {
         return publicationService.getPublications();

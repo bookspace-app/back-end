@@ -35,7 +35,7 @@ public class PublicationService {
     }
 
     public Optional<Publication> addNewPublication(Publication p) {
-        Publication publication = new Publication(p.getTitle(), p.getContent());
+        Publication publication = new Publication(p.getTitle(), p.getContent(), p.getAuthor());
         publicationRepository.save(publication);
         return publicationRepository.findById(publication.getId());
     

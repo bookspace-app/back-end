@@ -18,6 +18,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+
 import com.example.bookspace.enums.Rank;
 
 import org.hibernate.type.ImageType;
@@ -27,7 +28,7 @@ import org.hibernate.type.ImageType;
 @Entity 
 @Table(name = "users")
 
-public class User{
+public class User {
 
     public User(){}
 
