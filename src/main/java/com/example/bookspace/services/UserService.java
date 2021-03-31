@@ -1,12 +1,15 @@
 package com.example.bookspace.services;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import com.example.bookspace.Inputs.UserInput;
+import com.example.bookspace.Output.UserOutput;
 import com.example.bookspace.models.User;
 import com.example.bookspace.repositories.UserRepository;
 
@@ -23,23 +26,33 @@ public class UserService {
 		this.userRepository = userRepository;
 	}
 
-	public List<User> getUsers(){
-		return userRepository.findAll();
+	public List<UserOutput> getUsers(){
+
+		List<UserOutput> result = new ArrayList<>();
+		
+		for (User u: userRepository.findAll()) {
+			UserOutput uo = new UserOutput(u);
+			result.add(uo);
+		}
+		return result;
 	}
 
-    public Optional<User> getUser(Long id) {
+    public UserOutput getUser(Long id) {
 		boolean exists = userRepository.existsById(id);
 		if(!exists) throw new IllegalStateException("The user with id " + id + " does not exist");
-        return userRepository.findById(id);
+		User u = userRepository.getOne(id);
+		return new UserOutput(u);
     }
 
-    public void addNewUser(User user) {
+    public UserOutput addNewUser(UserInput userDetails) {
 		Optional<User> userByEmail = userRepository
-		.findUserByEmail(user.getEmail());
+		.findUserByEmail(userDetails.getEmail());
 		if(userByEmail.isPresent()){
 			throw new IllegalStateException("email taken");
 		}
+		User user = new User(userDetails);
 		userRepository.save(user);
+		return new UserOutput(user);
     }
 
 	public void deleteUser(Long userId){

@@ -1,11 +1,13 @@
 package com.example.bookspace.services;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import javax.transaction.Transactional;
 
-import com.example.bookspace.models.Comment;
+import com.example.bookspace.Inputs.PublicationInput;
+import com.example.bookspace.Output.PublicationOutput;
+import com.example.bookspace.Output.UserOutput;
 import com.example.bookspace.models.Publication;
 import com.example.bookspace.models.User;
 import com.example.bookspace.repositories.PublicationRepository;
@@ -26,30 +28,46 @@ public class PublicationService {
         this.userRepository = userRepository;
     }
 
-    public List<Publication> getPublications() {
-        return publicationRepository.findAll();
+     
+
+    public List<PublicationOutput> getPublications() {
+        List<PublicationOutput> result = new ArrayList<>();
+
+        for (Publication p: publicationRepository.findAll()) {
+            User author = userRepository.getOne(p.getAuthor().getId());
+            PublicationOutput po = new PublicationOutput(p, new UserOutput(author));
+            result.add(po);
+        }
+
+        return result;
     }
 
-    public Optional<Publication> getPublication(Long id) {
-        return publicationRepository.findById(id);
+    public PublicationOutput getPublication(Long id) {
+        Publication p = publicationRepository.getOne(id);
+        User u = userRepository.getOne(p.getAuthor().getId());
+        return new PublicationOutput(p, new UserOutput(u));
     }
 
-    public Optional<Publication> addNewPublication(Publication p) {
-        Publication publication = new Publication(p.getTitle(), p.getContent(), p.getAuthor());
+    public PublicationOutput addNewPublication(PublicationInput publicationDetails) {
+        User author = userRepository.findById(publicationDetails.getAuthor()).get();
+        Publication publication = new Publication(publicationDetails.getTitle(), publicationDetails.getContent(), author, publicationDetails.getCategory());
+        author.addPublication(publication);
         publicationRepository.save(publication);
-        return publicationRepository.findById(publication.getId());
+        userRepository.save(author);
+        return new PublicationOutput(publication, new UserOutput(author));
     
     }
 
     @Transactional
-	public void updatePublication(Long id, String title, String content) {
+	public void updatePublication(Long id, PublicationInput publicationDetails) {
 		Publication publication = publicationRepository.findById(id)
 					.orElseThrow(() -> new IllegalStateException(
 						"Publication with id " + id + " does not exist"));
 		
                 
-        publication.setTitle(title);		
-        publication.setContent(content);
+        publication = new Publication(publicationDetails);
+        User author = userRepository.getOne(publicationDetails.getAuthor());
+        publication.setAuthor(author);
         publicationRepository.save(publication);
 
 	}
@@ -63,43 +81,32 @@ public class PublicationService {
 
 	}
 
-    public List<User> getVotedByUsers(Long id) {
+
+
+    public List<UserOutput> getVotedByUsers(Long id) {
         Publication p = publicationRepository.getOne(id);
-        return p.getVotedBy();
+        List<UserOutput> result = new ArrayList<>();
 
+        for (User u: p.getVotedBy()) {
+            result.add(new UserOutput(u));
+        }
+        return result;
     }
 
-    public List<User> getFavouriteByUsers(Long id) {
-        Publication p = publicationRepository.getOne(id);
-        return p.getFavouriteBy();
-    }
 
-    public List<Comment> getComments(Long id) {
-        Publication p = publicationRepository.getOne(id);
-        return p.getComments();
-    }
 
-    public void addAuthor(Long publication_id, Long author_id) {
-        Publication publication = publicationRepository.getOne(publication_id);
-        User author = userRepository.getOne(author_id);
-        publication.setAuthor(author);
+    // public List<CommentOutput> getComments(Long id) {
+    //     Publication p = publicationRepository.getOne(id);
+    //     List<CommentOutput> result = new ArrayList<>();
 
-    }
+    //     for (User u: p.getComments()) {
+    //         result.add(new CommentOutput(u));
+    //     }
+    //     return result;
+    // }
 
-    public Publication assignAuthorToPublication(Long publicationId, Long authorId) {
-        User author = userRepository.findById(authorId).get();
-        Publication publication = publicationRepository.findById(publicationId).get();
-        
-        publication.setAuthor(author);
-        author.addPublication(publication);
+    
 
-        publicationRepository.save(publication);
-        userRepository.save(author);
-
-        return publication;
-        
-        
-    }   
 
 
     

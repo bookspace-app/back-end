@@ -1,11 +1,11 @@
 package com.example.bookspace.controllers;
 
 import java.util.List;
-import java.util.Optional;
 
-import com.example.bookspace.models.Comment;
-import com.example.bookspace.models.Publication;
-import com.example.bookspace.models.User;
+import com.example.bookspace.Inputs.PublicationInput;
+import com.example.bookspace.Output.PublicationOutput;
+import com.example.bookspace.Output.UserOutput;
+
 import com.example.bookspace.services.PublicationService;
 import com.example.bookspace.services.UserService;
 
@@ -32,32 +32,27 @@ public class PublicationController {
         this.publicationService = publicationService;
     }
 
-    @GetMapping    
-	public List<Publication> getAllPublications() {
+    @GetMapping
+	public List<PublicationOutput> getAllPublications() {
         return publicationService.getPublications();
     }
 
     @PostMapping
-    public void registerNewPublication(@RequestBody Publication publication) {
-        publicationService.addNewPublication(publication);
+    public void registerNewPublication(@RequestBody PublicationInput publicationDetails) {
+        publicationService.addNewPublication(publicationDetails);
     }
 
-    @PostMapping(path = "/{publicationId}/assignauthor")
-    public Publication assignAuthorTPublication(@RequestParam Long publicationId, @RequestParam Long authorId) {
-        return publicationService.assignAuthorToPublication(publicationId, authorId);
-    }
     
     @GetMapping(path = "{publicationId}")
-    public Optional<Publication> getUserById(@PathVariable("publicationId") Long id) {
+    public PublicationOutput getUserById(@PathVariable("publicationId") Long id) {
         return publicationService.getPublication(id);
     }    
 
     @PutMapping(path = "{publicationId}") 
     public void updatePublication(@PathVariable("publicationId") Long id,
-                                      @RequestParam(required = false) String title,
-                                      @RequestParam(required = false) String content
+                                      @RequestParam PublicationInput publicationDetails
                                       ){
-        publicationService.updatePublication(id, title, content);
+        publicationService.updatePublication(id, publicationDetails);
     }
 
     @DeleteMapping(path = "{publicationId}")
@@ -66,17 +61,17 @@ public class PublicationController {
 	}
 
     @GetMapping(path="{publicationId}/votedBy")
-    public List<User> getVotedByUsers (@PathVariable("publicationId") Long id) {
+    public List<UserOutput> getVotedByUsers (@PathVariable("publicationId") Long id) {
         return publicationService.getVotedByUsers(id);
     }
 
     @GetMapping(path="{publicationId}/favouritesBy")
-    public List<User> getFavouriteByUsers(@PathVariable("publicationId") Long id) {
-        return publicationService.getFavouriteByUsers(id);
+    public List<UserOutput> getFavouriteByUsers(@PathVariable("publicationId") Long id) {
+        return publicationService.getVotedByUsers(id);
     }
 
-    @GetMapping(path="{publicationId}/comments")
-    public List<Comment> getPublicationComments(@PathVariable("publicationId") Long id) {
-        return publicationService.getComments(id);
-    }
+    // @GetMapping(path="{publicationId}/comments")
+    // public List<Comment> getPublicationComments(@PathVariable("publicationId") Long id) {
+    //     return publicationService.getComments(id);
+    // }
 }

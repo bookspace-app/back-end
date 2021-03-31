@@ -18,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.example.bookspace.Inputs.PublicationInput;
 import com.example.bookspace.enums.Category;
 
 
@@ -79,7 +80,7 @@ public class Publication {
     public Publication() {     
     }
 
-    public Publication(String title, String content, User author) {
+    public Publication(String title, String content, User author, String category) {
         this.title = title;
         this.content = content;
         this.dop = LocalDate.now();
@@ -87,10 +88,22 @@ public class Publication {
         this.votedBy = null;
         this.favouriteBy = null;
         this.comments = null;
-        this.category = null;
+        this.category = Category.POTENTIAL;
         this.tags = null;
     }
 
+
+    public Publication(PublicationInput publicationDetails) {
+        this.title = publicationDetails.getTitle();
+        this.content = publicationDetails.getContent();
+        this.dop = LocalDate.now();
+        this.author = null;
+        this.votedBy = null;
+        this.favouriteBy = null;
+        this.comments = null;
+        this.category = Category.POTENTIAL;
+        this.tags = null;
+    }
 
     public Long getId() {
         return this.id;

@@ -1,6 +1,7 @@
 package com.example.bookspace.models;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -18,7 +19,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-
+import com.example.bookspace.Inputs.UserInput;
 import com.example.bookspace.enums.Rank;
 
 import org.hibernate.type.ImageType;
@@ -135,7 +136,7 @@ public class User {
     private List<User> blockedUsers;
 
     @Transient //This attribute can be calculated from some other attributes
-    private Integer age;
+    private int age;
 
     @Column(name = "profile_pic")
     private ImageType profile_pic;
@@ -157,7 +158,16 @@ public class User {
     // private Collection<Message> messages;
     // private Collection<Chat> chats;
 
-
+    public User (UserInput userDetails) {
+        this.email = userDetails.getEmail();
+        this.name = userDetails.getName();
+        this.username = userDetails.getUsername();
+        this.dob = userDetails.getDob();
+        this.description = userDetails.getDescription();
+        this.setDor(LocalDate.now());
+        this.setRank(Rank.HAREM);
+        this.setAge(dob);
+    }
     public User(String email, String name, String username, LocalDate dob, String description) {
         this.email = email;
         this.name = name;
@@ -166,10 +176,11 @@ public class User {
         this.description = description;
         this.setDor(LocalDate.now());
         this.setRank(Rank.WORKER);
+        this.setAge(dob);
+
         
 
     }
-
 
     public Long getId() {
         return this.id;
@@ -285,10 +296,11 @@ public class User {
 
     public Integer getAge() {
         return this.age;
-    }
+        }
 
-    public void setAge(Integer age) {
-        this.age = age;
+    public void setAge(LocalDate dob) {
+        Period period = Period.between(dob, LocalDate.now());
+        this.age = period.getYears();
     }
 
     public ImageType getProfile_pic() {

@@ -2,9 +2,9 @@ package com.example.bookspace.controllers;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
-import com.example.bookspace.models.User;
+import com.example.bookspace.Inputs.UserInput;
+import com.example.bookspace.Output.UserOutput;
 import com.example.bookspace.services.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,19 +31,19 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAllUsers(){
+    public List<UserOutput> getAllUsers(){
         return userService.getUsers();
     }
 
     
     @GetMapping(path = "{userId}")   
-	public Optional<User> getUserById(@PathVariable("userId") Long id) {
+	public UserOutput getUserById(@PathVariable("userId") Long id) {
         return userService.getUser(id);
     }
 
     @PostMapping
-    public void registerNewUser(@RequestBody User user){
-        userService.addNewUser(user);
+    public void registerNewUser(@RequestBody UserInput userDetails){
+        userService.addNewUser(userDetails);
     }
 
     @PutMapping(path = "{userId}") 
