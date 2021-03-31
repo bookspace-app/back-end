@@ -4,9 +4,9 @@ import java.time.LocalDate;
 
 import com.example.bookspace.models.User;
 
-public class UserOutput{
+public class UserOutput extends OutputManager{
 
-    private String self = "http://localhost:8080/api/users/";
+    private String self = getURL() + "/users/";
     private Long id;
     private String email;
     private String name;

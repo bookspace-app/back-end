@@ -4,8 +4,8 @@ import java.time.LocalDate;
 
 import com.example.bookspace.models.Publication;
 
-public class PublicationOutput { 
-    private String self = "http://localhost:8080/api/publications/";
+public class PublicationOutput extends OutputManager{ 
+    private String self = getURL() + "/publications/";
     private Long id;
     private String title;
     private String content;
