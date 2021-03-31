@@ -7,6 +7,7 @@ import com.example.bookspace.models.Comment;
 import com.example.bookspace.models.Publication;
 import com.example.bookspace.models.User;
 import com.example.bookspace.services.PublicationService;
+import com.example.bookspace.services.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,9 +28,10 @@ public class PublicationController {
     private final PublicationService publicationService;
 
     @Autowired
-    public PublicationController(PublicationService publicationService) {
+    public PublicationController(PublicationService publicationService, UserService userService) {
         this.publicationService = publicationService;
     }
+
 
     @GetMapping    
 	public List<Publication> getAllPublications() {
@@ -39,6 +41,11 @@ public class PublicationController {
     @PostMapping
     public void registerNewPublication(@RequestBody Publication publication) {
         publicationService.addNewPublication(publication);
+    }
+
+    @PostMapping(path = "/{publicationId}/assignauthor")
+    public Publication assignAuthorTPublication(@RequestParam Long publicationId, @RequestParam Long authorId) {
+        return publicationService.assignAuthorToPublication(publicationId, authorId);
     }
     
     @GetMapping(path = "{publicationId}")

@@ -322,6 +322,11 @@ public class User{
     }
 
 
+    public void addPublication(Publication publication) {
+        this.publications.add(publication);
+    }
+
+
     
     
 

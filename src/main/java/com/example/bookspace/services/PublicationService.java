@@ -84,6 +84,21 @@ public class PublicationService {
         User author = userRepository.getOne(author_id);
         publication.setAuthor(author);
 
+    }
+
+    public Publication assignAuthorToPublication(Long publicationId, Long authorId) {
+        User author = userRepository.findById(authorId).get();
+        Publication publication = publicationRepository.findById(publicationId).get();
+        
+        publication.setAuthor(author);
+        author.addPublication(publication);
+
+        publicationRepository.save(publication);
+        userRepository.save(author);
+
+        return publication;
+        
+        
     }   
 
 
