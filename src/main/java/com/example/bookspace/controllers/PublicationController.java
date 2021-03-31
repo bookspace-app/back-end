@@ -47,7 +47,7 @@ public class PublicationController {
     }    
 
     @PutMapping(path = "{publicationId}") 
-    public void updateUser(@PathVariable("publicationId") Long id,
+    public void updatePublication(@PathVariable("publicationId") Long id,
                                       @RequestParam(required = false) String title,
                                       @RequestParam(required = false) String content
                                       ){
