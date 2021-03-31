@@ -4,10 +4,13 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 
@@ -16,6 +19,18 @@ import javax.persistence.Table;
 public class Tag {
 
     @Id
+    @SequenceGenerator(
+        name = "tag_sequence", 
+        sequenceName = "tag_sequence", 
+        allocationSize = 1
+    )
+
+    @GeneratedValue(
+        strategy = GenerationType.SEQUENCE, 
+        generator = "tag_sequence"
+    )
+    private Long id;
+    
     @Column(name = "tag", unique = true)
     private String tag;
 

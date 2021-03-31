@@ -79,11 +79,11 @@ public class Publication {
         
     }
 
-    public Publication(String title, String content, User author) {
+    public Publication(String title, String content) {
         this.title = title;
         this.content = content;
         this.dop = LocalDate.now();
-        this.author = author;
+        this.author = null;
         this.votedBy = null;
         this.favouriteBy = null;
         this.comments = null;
