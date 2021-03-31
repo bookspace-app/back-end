@@ -28,4 +28,12 @@ public class CommentService {
 		if(!exists) throw new IllegalStateException("The comment with id " + commentId + " does not exist");
         return commentRepository.findById(commentId);
     }
+
+    public Boolean deleteComment(Long commentId) {
+        if (!commentRepository.existsById(commentId)) {
+            commentRepository.deleteById(commentId);
+            return true;
+        }
+        else throw new IllegalStateException("Id: " + commentId + " does not belong to any comment");
+    }
 }
