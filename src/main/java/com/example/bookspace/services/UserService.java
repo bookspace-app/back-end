@@ -9,7 +9,9 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import com.example.bookspace.Inputs.UserInput;
+import com.example.bookspace.Output.PublicationOutput;
 import com.example.bookspace.Output.UserOutput;
+import com.example.bookspace.models.Publication;
 import com.example.bookspace.models.User;
 import com.example.bookspace.repositories.UserRepository;
 
@@ -103,5 +105,19 @@ public class UserService {
 			}
 		userRepository.save(user);
 	}
+
+    public List<PublicationOutput> getPublicationsUser(Long id) {
+		User author = userRepository.getOne(id);
+		List<Publication> publications = author.getPublications();
+		List<PublicationOutput> result = new ArrayList<>();
+		for (Publication p: publications) {
+			result.add(new PublicationOutput(p, new UserOutput(author)));
+		}
+
+		return result;
+		
+    }
+
+    
     
 }

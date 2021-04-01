@@ -1,6 +1,5 @@
 package com.example.bookspace.Output;
 
-import java.time.LocalDate;
 
 import com.example.bookspace.models.User;
 
@@ -43,7 +42,7 @@ public class UserOutput extends OutputManager{
         this.blockedUsers = this.self + "/blockedUsers";
         this.profilePic = this.self + "/profilePic";
         this.createdTags = this.self + "/tags";
-        this.preferedTags = this.self + "preferedTags";
+        this.preferedTags = this.self + "/preferedTags";
     }
 
 

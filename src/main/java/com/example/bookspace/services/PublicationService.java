@@ -95,6 +95,34 @@ public class PublicationService {
 
 
 
+    public List<UserOutput> getFavUsers(Long id) {
+        Publication p = publicationRepository.getOne(id);
+        List<UserOutput> result = new ArrayList<>();
+        for (User u: p.getFavouriteBy()) {
+            result.add(new UserOutput(u));
+        }
+
+        return result;
+    }
+
+
+
+    public UserOutput postFavUser(Long id, Long userId) {
+        Publication p = publicationRepository.getOne(id);
+        User favUser = userRepository.getOne(userId);
+
+        p.addFavUser(favUser);
+        favUser.addFavPublication(p);
+
+        publicationRepository.save(p);
+        userRepository.save(favUser);
+
+        return new UserOutput(favUser);
+
+    }
+
+
+
     // public List<CommentOutput> getComments(Long id) {
     //     Publication p = publicationRepository.getOne(id);
     //     List<CommentOutput> result = new ArrayList<>();

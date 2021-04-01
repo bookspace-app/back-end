@@ -10,10 +10,11 @@ public class PublicationOutput extends OutputManager{
     private String title;
     private String content;
     private LocalDate dop;
+    private String category; 
     private UserOutput author;
+    private String votedusers;
     private String favusers;
     private String comments;
-    private String category; 
     private String tags;
     
 
@@ -25,7 +26,8 @@ public class PublicationOutput extends OutputManager{
         this.content = p.getContent();
         this.dop = p.getDop();
         this.author = author;
-        this.favusers = self + "/favusers";
+        this.votedusers = self + "/votedusers";
+        this.favusers = self + "/favUsers";
         this.comments = self + "/comments";
         this.category = p.getCategory().name();
         this.tags = self + "/tags";
@@ -122,6 +124,14 @@ public class PublicationOutput extends OutputManager{
         this.tags = tags;
     }
     
+
+    public String getVotedusers() {
+        return this.votedusers;
+    }
+
+    public void setVotedusers(String votedusers) {
+        this.votedusers = votedusers;
+    }
 
     
 }
