@@ -48,6 +48,9 @@ public class Publication {
     @Column(name = "dop", nullable = false)
     private LocalDate dop; 
 
+    @Column(name = "views")
+    private Long views;
+
     @ManyToOne
     @JoinColumn(name = "author_id")
     private User author;
@@ -90,6 +93,7 @@ public class Publication {
         this.comments = null;
         this.category = Category.POTENTIAL;
         this.tags = null;
+        this.views = 0L;
     }
 
 
@@ -103,6 +107,7 @@ public class Publication {
         this.comments = null;
         this.category = Category.POTENTIAL;
         this.tags = null;
+        this.views = 0L;
     }
 
     public Long getId() {
@@ -189,5 +194,18 @@ public class Publication {
     public void addFavUser(User favUser) {
         this.favouriteBy.add(favUser);
     }
+
+    public Long getViews() {
+        return this.views;
+    }
+
+    public void setViews(Long views) {
+        this.views = views;
+    }
+
+    public void addView() {
+        this.views++;
+    }
+
     
 }

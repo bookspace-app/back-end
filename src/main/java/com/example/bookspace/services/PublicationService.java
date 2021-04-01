@@ -44,6 +44,8 @@ public class PublicationService {
 
     public PublicationOutput getPublication(Long id) {
         Publication p = publicationRepository.getOne(id);
+        p.addView();
+        publicationRepository.save(p);
         User u = userRepository.getOne(p.getAuthor().getId());
         return new PublicationOutput(p, new UserOutput(u));
     }

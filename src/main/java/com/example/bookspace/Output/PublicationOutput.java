@@ -10,6 +10,7 @@ public class PublicationOutput extends OutputManager{
     private String title;
     private String content;
     private LocalDate dop;
+    private Long views;
     private String category; 
     private UserOutput author;
     private String votedusers;
@@ -25,6 +26,7 @@ public class PublicationOutput extends OutputManager{
         this.title = p.getTitle();
         this.content = p.getContent();
         this.dop = p.getDop();
+        this.views = p.getViews();
         this.author = author;
         this.votedusers = self + "/votedusers";
         this.favusers = self + "/favUsers";
@@ -75,11 +77,7 @@ public class PublicationOutput extends OutputManager{
 
     public void setDop(LocalDate dop) {
         this.dop = dop;
-    }
-
-    
-
-    
+    }      
 
     public String getCategory() {
         return this.category;
@@ -131,6 +129,15 @@ public class PublicationOutput extends OutputManager{
 
     public void setVotedusers(String votedusers) {
         this.votedusers = votedusers;
+    }
+
+
+    public Long getViews() {
+        return this.views;
+    }
+
+    public void setViews(Long views) {
+        this.views = views;
     }
 
     
