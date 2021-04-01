@@ -10,5 +10,7 @@ public abstract class OutputManager {
     public void setURL(String URL) {
         this.URL = URL;
     }
+
+
     
 }

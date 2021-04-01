@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.example.bookspace.Inputs.UserInput;
+import com.example.bookspace.Output.PublicationOutput;
 import com.example.bookspace.Output.UserOutput;
 import com.example.bookspace.services.UserService;
 
@@ -39,6 +40,11 @@ public class UserController {
     @GetMapping(path = "{userId}")   
 	public UserOutput getUserById(@PathVariable("userId") Long id) {
         return userService.getUser(id);
+    }
+
+    @GetMapping (path = "{userId}/publications")
+    public List<PublicationOutput> getPublicationsUser(@PathVariable("userId") Long id) {
+        return userService.getPublicationsUser(id);
     }
 
     @PostMapping
