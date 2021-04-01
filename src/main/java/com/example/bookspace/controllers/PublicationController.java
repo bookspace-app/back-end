@@ -37,6 +37,18 @@ public class PublicationController {
         return publicationService.getPublications();
     }
 
+    @GetMapping("{publicationId}/favusers")
+    public List<UserOutput> getFavUsers(@PathVariable("publicationId")Long id) {
+        return publicationService.getFavUsers(id);
+        
+    }
+
+    @PostMapping("{publicationId}/favusers/{userId}")
+    public UserOutput postFaUser(@PathVariable("publicationId") Long id, @PathVariable("userId") Long userId) {
+        return publicationService.postFavUser(id, userId);
+        
+    }
+
     @PostMapping
     public void registerNewPublication(@RequestBody PublicationInput publicationDetails) {
         publicationService.addNewPublication(publicationDetails);

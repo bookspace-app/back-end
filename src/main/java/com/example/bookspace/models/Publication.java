@@ -185,5 +185,9 @@ public class Publication {
     public void setFavouriteBy(List<User> favouriteBy) {
         this.favouriteBy = favouriteBy;
     }
+
+    public void addFavUser(User favUser) {
+        this.favouriteBy.add(favUser);
+    }
     
 }

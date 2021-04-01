@@ -338,6 +338,9 @@ public class User {
     public void addPublication(Publication publication) {
         this.publications.add(publication);
     }
+    public void addFavPublication(Publication p) {
+        this.favouritePublications.add(p);
+    }
 
 
     
