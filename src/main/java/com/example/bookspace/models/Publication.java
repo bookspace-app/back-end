@@ -1,6 +1,7 @@
 package com.example.bookspace.models;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -91,29 +92,15 @@ public class Publication {
         this.content = content;
         this.dop = LocalDate.now();
         this.author = author;
-        this.votedBy = null;
-        this.favouriteBy = null;
-        this.comments = null;
+        this.votedBy = new ArrayList<>();
+        this.favouriteBy = new ArrayList<>();
+        this.comments = new ArrayList<>();
         this.category = Category.POTENTIAL;
-        this.tags = null;
+        this.tags = new ArrayList<>();
         this.views = 0L;
         this.likes = 0L;
     }
 
-
-    public Publication(PublicationInput publicationDetails) {
-        this.title = publicationDetails.getTitle();
-        this.content = publicationDetails.getContent();
-        this.dop = LocalDate.now();
-        this.author = null;
-        this.votedBy = null;
-        this.favouriteBy = null;
-        this.comments = null;
-        this.category = Category.POTENTIAL;
-        this.tags = null;
-        this.views = 0L;
-        this.likes = 0L;
-    }
 
     public Long getId() {
         return this.id;

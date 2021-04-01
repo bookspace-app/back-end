@@ -5,11 +5,16 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import com.example.bookspace.Inputs.CommentInput;
 import com.example.bookspace.Inputs.PublicationInput;
 import com.example.bookspace.Output.PublicationOutput;
 import com.example.bookspace.Output.UserOutput;
+import com.example.bookspace.enums.Category;
+import com.example.bookspace.Output.CommentOutput;
+import com.example.bookspace.models.Comment;
 import com.example.bookspace.models.Publication;
 import com.example.bookspace.models.User;
+import com.example.bookspace.repositories.CommentRepository;
 import com.example.bookspace.repositories.PublicationRepository;
 import com.example.bookspace.repositories.UserRepository;
 
@@ -21,11 +26,13 @@ public class PublicationService {
 
     private final PublicationRepository publicationRepository;;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
 
     @Autowired
-    public PublicationService(PublicationRepository publicationRepository, UserRepository userRepository) {
+    public PublicationService(PublicationRepository publicationRepository, UserRepository userRepository, CommentRepository commentRepository) {
         this.publicationRepository = publicationRepository;
         this.userRepository = userRepository;
+        this.commentRepository = commentRepository;
     }
 
      
@@ -34,8 +41,7 @@ public class PublicationService {
         List<PublicationOutput> result = new ArrayList<>();
 
         for (Publication p: publicationRepository.findAll()) {
-            User author = userRepository.getOne(p.getAuthor().getId());
-            PublicationOutput po = new PublicationOutput(p, new UserOutput(author));
+            PublicationOutput po = new PublicationOutput(p);
             result.add(po);
         }
 
@@ -46,30 +52,35 @@ public class PublicationService {
         Publication p = publicationRepository.getOne(id);
         p.addView();
         publicationRepository.save(p);
-        User u = userRepository.getOne(p.getAuthor().getId());
-        return new PublicationOutput(p, new UserOutput(u));
+        return new PublicationOutput(p);
     }
 
-    public PublicationOutput addNewPublication(PublicationInput publicationDetails) {
+
+    public PublicationOutput postPublication(PublicationInput publicationDetails) {
         User author = userRepository.findById(publicationDetails.getAuthor()).get();
         Publication publication = new Publication(publicationDetails.getTitle(), publicationDetails.getContent(), author, publicationDetails.getCategory());
+        publication = publicationRepository.save(publication);
         author.addPublication(publication);
-        publicationRepository.save(publication);
         userRepository.save(author);
-        return new PublicationOutput(publication, new UserOutput(author));
+        return new PublicationOutput(publication);
+
+        
     
     }
 
     @Transactional
-	public void updatePublication(Long id, PublicationInput publicationDetails) {
+	public void updatePublication(Long id, PublicationInput publicationDetails) throws Exception {
 		Publication publication = publicationRepository.findById(id)
 					.orElseThrow(() -> new IllegalStateException(
 						"Publication with id " + id + " does not exist"));
-		
-                
-        publication = new Publication(publicationDetails);
-        User author = userRepository.getOne(publicationDetails.getAuthor());
-        publication.setAuthor(author);
+
+
+        if (publication.getAuthor().getId() != publicationDetails.getAuthor()) throw new Exception ("This publication is owned by another author");
+        
+        publication.setTitle(publicationDetails.getTitle());
+        publication.setContent(publicationDetails.getContent());
+        publication.setCategory(Category.ACTION);
+
         publicationRepository.save(publication);
 
 	}
@@ -131,7 +142,7 @@ public class PublicationService {
         p.addLike();
 
         publicationRepository.save(p);
-        return new PublicationOutput(p, new UserOutput(p.getAuthor()));
+        return new PublicationOutput(p);
     }
 
 
@@ -143,7 +154,37 @@ public class PublicationService {
 
         publicationRepository.save(p);
         
-        return new PublicationOutput(p, new UserOutput(p.getAuthor()));
+        return new PublicationOutput(p);
+    }
+
+
+
+    public List<CommentOutput> getComments(Long id) {
+        Publication p = publicationRepository.getOne(id);
+        List<CommentOutput> result = new ArrayList<>();
+        for (Comment c: p.getComments())  {
+            result.add(new CommentOutput(c));
+        }
+
+        return result;
+    }
+
+
+
+    public CommentOutput postComment(Long id, CommentInput commentDetails) {
+        User author = userRepository.getOne(commentDetails.getAuthor());
+        Publication publication = publicationRepository.getOne(id);
+        Comment comment = new Comment(commentDetails.getContent(), author, publication);
+        comment = commentRepository.save(comment);
+
+        //Si no es comentario padre
+        if (commentDetails.getParent() != 0){
+            Comment parent = commentRepository.getOne(commentDetails.getParent()); 
+            comment.setParent(parent);
+            comment = commentRepository.save(comment);
+        }        
+        
+        return new CommentOutput(comment);
     }
 
 
