@@ -11,6 +11,7 @@ public class PublicationOutput extends OutputManager{
     private String content;
     private LocalDate dop;
     private Long views;
+    private Long likes;
     private String category; 
     private UserOutput author;
     private String votedusers;
@@ -33,6 +34,7 @@ public class PublicationOutput extends OutputManager{
         this.comments = self + "/comments";
         this.category = p.getCategory().name();
         this.tags = self + "/tags";
+        this.likes = p.getLikes();
 
     }
 
@@ -139,6 +141,16 @@ public class PublicationOutput extends OutputManager{
     public void setViews(Long views) {
         this.views = views;
     }
+
+
+    public Long getLikes() {
+        return this.likes;
+    }
+
+    public void setLikes(Long likes) {
+        this.likes = likes;
+    }
+
 
     
 }

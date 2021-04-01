@@ -67,6 +67,9 @@ public class Publication {
     @Column
     private Category category;
 
+    @Column
+    private Long likes;
+
 
     @ManyToMany
     @JoinTable (
@@ -94,6 +97,7 @@ public class Publication {
         this.category = Category.POTENTIAL;
         this.tags = null;
         this.views = 0L;
+        this.likes = 0L;
     }
 
 
@@ -108,6 +112,7 @@ public class Publication {
         this.category = Category.POTENTIAL;
         this.tags = null;
         this.views = 0L;
+        this.likes = 0L;
     }
 
     public Long getId() {
@@ -206,6 +211,24 @@ public class Publication {
     public void addView() {
         this.views++;
     }
+
+
+    public Long getLikes() {
+        return this.likes;
+    }
+
+    public void setLikes(Long likes) {
+        this.likes = likes;
+    }
+
+    public void addLike() {
+        this.likes++;
+    }
+
+    public void removeLike() {
+        this.likes--;
+    }
+
 
     
 }

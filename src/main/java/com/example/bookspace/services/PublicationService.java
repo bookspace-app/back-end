@@ -125,6 +125,29 @@ public class PublicationService {
 
 
 
+    public PublicationOutput postLike(Long id) {
+        Publication p = publicationRepository.getOne(id);
+        
+        p.addLike();
+
+        publicationRepository.save(p);
+        return new PublicationOutput(p, new UserOutput(p.getAuthor()));
+    }
+
+
+
+    public PublicationOutput postDislike(Long id) {
+        Publication p = publicationRepository.getOne(id);
+        
+        p.removeLike();
+
+        publicationRepository.save(p);
+        
+        return new PublicationOutput(p, new UserOutput(p.getAuthor()));
+    }
+
+
+
     // public List<CommentOutput> getComments(Long id) {
     //     Publication p = publicationRepository.getOne(id);
     //     List<CommentOutput> result = new ArrayList<>();

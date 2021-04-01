@@ -73,6 +73,17 @@ public class PublicationController {
         
     }
 
+    @PostMapping(path = "{publicationId}/likes")
+    public PublicationOutput postLike(@PathVariable("publicationId") Long id) {
+        return publicationService.postLike(id);
+    }
+
+    @PostMapping(path = "{publicationId}/dislikes")
+    public PublicationOutput postDislike(@PathVariable("publicationId") Long id) {
+        return publicationService.postDislike(id);
+    }
+
+
     // @GetMapping(path="{publicationId}/votedBy")
     // public List<UserOutput> getVotedByUsers (@PathVariable("publicationId") Long id) {
     //     return publicationService.getVotedByUsers(id);
