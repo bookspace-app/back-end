@@ -37,24 +37,13 @@ public class PublicationController {
         return publicationService.getPublications();
     }
 
-    @GetMapping("{publicationId}/favusers")
-    public List<UserOutput> getFavUsers(@PathVariable("publicationId")Long id) {
-        return publicationService.getFavUsers(id);
-        
-    }
-
-    @PostMapping("{publicationId}/favusers/{userId}")
-    public UserOutput postFaUser(@PathVariable("publicationId") Long id, @PathVariable("userId") Long userId) {
-        return publicationService.postFavUser(id, userId);
-        
-    }
 
     @PostMapping
     public void registerNewPublication(@RequestBody PublicationInput publicationDetails) {
         publicationService.addNewPublication(publicationDetails);
     }
 
-    
+
     @GetMapping(path = "{publicationId}")
     public PublicationOutput getUserById(@PathVariable("publicationId") Long id) {
         return publicationService.getPublication(id);
@@ -72,15 +61,24 @@ public class PublicationController {
         publicationService.deletePublication(publicationId);
 	}
 
-    @GetMapping(path="{publicationId}/votedBy")
-    public List<UserOutput> getVotedByUsers (@PathVariable("publicationId") Long id) {
-        return publicationService.getVotedByUsers(id);
+    @GetMapping("{publicationId}/favUsers")
+    public List<UserOutput> getFavUsers(@PathVariable("publicationId") Long id) {
+        return publicationService.getFavUsers(id);
+        
     }
 
-    @GetMapping(path="{publicationId}/favouritesBy")
-    public List<UserOutput> getFavouriteByUsers(@PathVariable("publicationId") Long id) {
-        return publicationService.getVotedByUsers(id);
+    @PostMapping("{publicationId}/favUsers/{userId}")
+    public UserOutput postFaUser(@PathVariable("publicationId") Long id, @PathVariable("userId") Long userId) {
+        return publicationService.postFavUser(id, userId);
+        
     }
+
+    // @GetMapping(path="{publicationId}/votedBy")
+    // public List<UserOutput> getVotedByUsers (@PathVariable("publicationId") Long id) {
+    //     return publicationService.getVotedByUsers(id);
+    // }
+
+   
 
     // @GetMapping(path="{publicationId}/comments")
     // public List<Comment> getPublicationComments(@PathVariable("publicationId") Long id) {
