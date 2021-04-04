@@ -1,7 +1,11 @@
 package com.example.bookspace.Output;
 
 
+import java.time.LocalDate;
+import java.time.Period;
+
 import com.example.bookspace.models.User;
+
 
 public class UserOutput extends OutputManager{
 
@@ -10,9 +14,13 @@ public class UserOutput extends OutputManager{
     private String email;
     private String name;
     private String username;
+    private String password;
     private Integer age;
     private String description;
+    private LocalDate dob;
+    private LocalDate dor;
     private String rank; 
+    private byte[] profile_pic;
     private String publications;
     private String votedPublications;
     private String favouritePublications;
@@ -30,9 +38,12 @@ public class UserOutput extends OutputManager{
         this.email = u.getEmail();
         this.name = u.getName();
         this.username = u.getUsername();
+        this.password = u.getPassword();
         this.age = u.getAge();
         this.description = u.getDescription();
+        this.dor = u.getDor();
         this.rank = u.getRank().name();
+        this.profile_pic = u.getProfile_pic();
         this.self = self + this.id;
         this.publications =  this.self + "/publications";
         this.votedPublications = this.self + "/votedPublications";
@@ -52,6 +63,30 @@ public class UserOutput extends OutputManager{
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public LocalDate getDob() {
+        return this.dob;
+    }
+
+    public void setDob(LocalDate dob) {
+        this.dob = dob;
+    }
+
+    public byte[] getProfile_pic() {
+        return this.profile_pic;
+    }
+
+    public void setProfile_pic(byte[] profile_pic) {
+        this.profile_pic = profile_pic;
     }
 
 
@@ -80,10 +115,11 @@ public class UserOutput extends OutputManager{
     }
 
     public Integer getAge() {
+        System.out.println("Hola out age " + this.age);
         return this.age;
     }
 
-    public void setAge(Integer age) {
+    public void setAge(int age) {
         this.age = age;
     }
 
@@ -93,6 +129,15 @@ public class UserOutput extends OutputManager{
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public LocalDate getDor() {
+        return dor;
+    }
+
+
+    public void setDor(LocalDate dor) {
+        this.dor = dor;
     }
 
     public String getRank() {

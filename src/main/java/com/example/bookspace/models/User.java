@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
 
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
@@ -23,6 +25,7 @@ import com.example.bookspace.Inputs.UserInput;
 import com.example.bookspace.enums.Rank;
 
 import org.hibernate.type.ImageType;
+import java.awt.image.BufferedImage;
 
 
 
@@ -45,6 +48,9 @@ public class User {
         generator = "user_sequence"
     )
     private Long id;
+
+    @Column(name = "password", nullable = false)
+    private String password; 
 
     @Column(name = "email", unique = true, nullable = false)
     private String email; 
@@ -138,8 +144,9 @@ public class User {
     @Transient //This attribute can be calculated from some other attributes
     private int age;
 
+    //@Lob
     @Column(name = "profile_pic")
-    private ImageType profile_pic;
+    private byte[] profile_pic;
 
     @Column(name = "createdTags")
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -160,25 +167,29 @@ public class User {
 
     public User (UserInput userDetails) {
         this.email = userDetails.getEmail();
+        this.password = userDetails.getPassword();
         this.name = userDetails.getName();
         this.username = userDetails.getUsername();
         this.dob = userDetails.getDob();
+        this.age = userDetails.getAge();
+        this.profile_pic = userDetails.getProfile_pic();
         this.description = userDetails.getDescription();
         this.setDor(LocalDate.now());
         this.setRank(Rank.HAREM);
         this.setAge(dob);
     }
-    public User(String email, String name, String username, LocalDate dob, String description) {
+    
+    public User(String email, String name, String username, String password, LocalDate dob, String description) {
         this.email = email;
         this.name = name;
         this.username = username;
+        this.password = password;
         this.dob = dob;
         this.description = description;
+        //this.profile_pic = profilePic;
         this.setDor(LocalDate.now());
         this.setRank(Rank.WORKER);
         this.setAge(dob);
-
-        
 
     }
 
@@ -212,6 +223,14 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public LocalDate getDob() {
@@ -295,19 +314,21 @@ public class User {
     }
 
     public Integer getAge() {
+        System.out.println("Hola age " + this.age);
         return this.age;
-        }
+    }
 
     public void setAge(LocalDate dob) {
         Period period = Period.between(dob, LocalDate.now());
         this.age = period.getYears();
+        System.out.println("Hola period " + this.age);
     }
 
-    public ImageType getProfile_pic() {
+    public byte[] getProfile_pic() {
         return this.profile_pic;
     }
 
-    public void setProfile_pic(ImageType profile_pic) {
+    public void setProfile_pic(byte[] profile_pic) {
         this.profile_pic = profile_pic;
     }
 
