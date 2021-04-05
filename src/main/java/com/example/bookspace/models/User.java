@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
 
-import javax.persistence.Basic;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,7 +14,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
@@ -24,8 +23,6 @@ import javax.persistence.Transient;
 import com.example.bookspace.Inputs.UserInput;
 import com.example.bookspace.enums.Rank;
 
-import org.hibernate.type.ImageType;
-import java.awt.image.BufferedImage;
 
 
 
@@ -62,10 +59,10 @@ public class User {
     private String username;
 
     //date of birth
-    @Column(name = "dob", nullable = false)
+    @Column(name = "dob", nullable = true)
     private LocalDate dob;
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description", nullable = true)
     private String description;
 
     @Column(name = "rank", nullable = false)

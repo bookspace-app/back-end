@@ -18,7 +18,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.example.bookspace.Inputs.CommentInput;
 
 @Entity
 @Table (name = "comments")

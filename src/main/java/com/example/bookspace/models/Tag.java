@@ -13,8 +13,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.example.bookspace.Inputs.TagInput;
-import com.fasterxml.jackson.datatype.jsr310.ser.YearMonthSerializer;
-
 
 @Entity
 @Table(name = "tag")

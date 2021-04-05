@@ -1,13 +1,11 @@
 package com.example.bookspace.Inputs;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.List;
 
 import com.example.bookspace.models.Tag;
 
-import org.hibernate.type.ImageType;
-import java.awt.image.BufferedImage;
+
 
 
 
@@ -23,6 +21,8 @@ public class UserInput {
     private String description; 
     private List<Tag> preferedTags;
 
+    public UserInput(){}
+
     public UserInput(String email, String password, String name, String username, LocalDate dob, int age, byte[] profile_pic, String description, LocalDate dor, List<Tag> preferedTags) {
         this.email = email;
         this.name = name;
@@ -34,6 +34,13 @@ public class UserInput {
         this.description = description;
         this.dor = dor;
         this.preferedTags = preferedTags;
+    }
+
+    public UserInput(String email, String name, String username, String password){
+        this.email = email;
+        this.name = name;
+        this.username = username;
+        this.password = password;
     }
 
 

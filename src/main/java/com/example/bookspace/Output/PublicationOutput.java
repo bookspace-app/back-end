@@ -13,7 +13,7 @@ public class PublicationOutput extends OutputManager{
     private Long views;
     private Long likes;
     private String category; 
-    private UserOutput author;
+    private UserOutput author; 
     private String votedusers;
     private String favusers;
     private String comments;
