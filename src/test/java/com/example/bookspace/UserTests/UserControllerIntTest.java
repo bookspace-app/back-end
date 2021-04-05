@@ -56,7 +56,7 @@ public class UserControllerIntTest
                 "email1",
                 "demo1",
                 "usernam1",
-                LocalDate.now(),
+                null, LocalDate.now(),
                 "description"
         );
 
@@ -64,7 +64,7 @@ public class UserControllerIntTest
                 "email2",
                 "demo2",
                 "username2",
-                LocalDate.now(),
+                null, LocalDate.now(),
                 "description"
         );
 

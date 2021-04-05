@@ -65,7 +65,7 @@ class UserControllerAccTest {
         HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
-		UserInput u1 = new UserInput("email", "demo", "username", LocalDate.now(), "description");
+		UserInput u1 = new UserInput("email", "demo", "username", url, LocalDate.now(), randomServerPort, null, "description", null, null);
         HttpEntity<UserInput> requestEntity = new HttpEntity<>(u1, headers);
 
         ResponseEntity<UserInput> responseEntity = restTemplate.postForEntity(url, requestEntity, UserInput.class);
