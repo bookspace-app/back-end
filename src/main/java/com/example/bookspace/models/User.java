@@ -173,7 +173,7 @@ public class User {
         this.description = userDetails.getDescription();
         this.setDor(LocalDate.now());
         this.setRank(Rank.HAREM);
-        this.setAge(dob);
+        //this.setAge(dob);
     }
     
     public User(String email, String name, String username, String password, LocalDate dob, String description) {
