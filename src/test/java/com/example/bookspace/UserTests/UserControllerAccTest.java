@@ -21,7 +21,9 @@ import com.example.bookspace.Inputs.UserInput;
 import com.example.bookspace.Output.UserOutput;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class UserControllerAccTest {
+class UserControllerAccTest
+//When it fails, it tells you that the application is not doing what the customer expects it to do
+{
 
     @LocalServerPort
     int randomServerPort;
