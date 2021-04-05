@@ -10,8 +10,10 @@ import javax.transaction.Transactional;
 
 import com.example.bookspace.Inputs.UserInput;
 import com.example.bookspace.Output.PublicationOutput;
+import com.example.bookspace.Output.TagOutput;
 import com.example.bookspace.Output.UserOutput;
 import com.example.bookspace.models.Publication;
+import com.example.bookspace.models.Tag;
 import com.example.bookspace.models.User;
 import com.example.bookspace.repositories.UserRepository;
 
@@ -67,7 +69,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public void updateUser(Long id, String name, String description, String email, String username, LocalDate dob) {
+	public void updateUser(Long id, String name, String description, String email, String username, LocalDate dob, byte[] profile_pic) {
 		User user = userRepository.findById(id)
 					.orElseThrow(() -> new IllegalStateException(
 						"User with id " + id + " does not exist"));
@@ -77,7 +79,7 @@ public class UserService {
 				user.setDescription(description);
 			}
 		
-			if (email != null && email.length() > 0 &&
+		if (email != null && email.length() > 0 &&
 			!Objects.equals(user.getEmail(), email)){
 				Optional<User> userOptional = userRepository.findUserByEmail(email);
 				if(userOptional.isPresent()){
@@ -103,6 +105,10 @@ public class UserService {
 		if (dob != null && !Objects.equals(user.getDob(), dob)){
 				user.setDob(dob);
 			}
+
+		if (profile_pic != null && !Objects.equals(user.getProfile_pic(), profile_pic)){
+			user.setProfile_pic(profile_pic);
+		}
 		userRepository.save(user);
 	}
 
@@ -117,6 +123,16 @@ public class UserService {
 		return result;
 		
     }
+
+	public List<TagOutput> getPreferedTagsUser(Long id){
+		User u = userRepository.getOne(id);
+		List<Tag> tags = u.getPreferedTags();
+		List<TagOutput> result = new ArrayList<>();
+		for (Tag t: tags) {
+			result.add(new TagOutput(t));
+		}
+		return result;
+	}
 
     
     

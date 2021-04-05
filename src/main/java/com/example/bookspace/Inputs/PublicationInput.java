@@ -3,7 +3,7 @@ package com.example.bookspace.Inputs;
 public class PublicationInput {
     private String title;
     private String content; 
-    private Long author;
+    private Long author; //front pide User, no Long
     private String category;
 
     public PublicationInput(String title, String content, Long author, String category) {

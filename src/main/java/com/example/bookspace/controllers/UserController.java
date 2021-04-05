@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.example.bookspace.Inputs.UserInput;
 import com.example.bookspace.Output.PublicationOutput;
+import com.example.bookspace.Output.TagOutput;
 import com.example.bookspace.Output.UserOutput;
 import com.example.bookspace.services.UserService;
 
@@ -47,6 +48,11 @@ public class UserController {
         return userService.getPublicationsUser(id);
     }
 
+    @GetMapping(path = "{userId}/preferedTags")   //Implementar
+	public List<TagOutput> getPreferedTagsUser(@PathVariable("userId") Long id) {
+        return userService.getPreferedTagsUser(id);
+    }
+
     @PostMapping
     public void registerNewUser(@RequestBody UserInput userDetails){
         userService.addNewUser(userDetails);
@@ -58,8 +64,9 @@ public class UserController {
                                       @RequestParam(required = false) String description,
                                       @RequestParam(required = false) String email,
                                       @RequestParam(required = false) String username,
-                                      @RequestParam(required = false) LocalDate dob){
-        userService.updateUser(id,name,description,email,username,dob);
+                                      @RequestParam(required = false) LocalDate dob,
+                                      @RequestParam(required = false) byte[] profile_pic){
+        userService.updateUser(id,name,description,email,username,dob,profile_pic);
     }
 
     @DeleteMapping(path = "{userId}")

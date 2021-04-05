@@ -1,21 +1,56 @@
 package com.example.bookspace.Inputs;
 
 import java.time.LocalDate;
+import java.util.List;
+
+import com.example.bookspace.models.Tag;
+
+
+
 
 
 public class UserInput {
     private String email;
     private String name;
     private String username;
+    private String password;
     private LocalDate dob;
+    private int age;
+    private byte[] profile_pic;
+    private LocalDate dor;
     private String description; 
+    private List<Tag> preferedTags;
 
-    public UserInput(String email, String name, String username, LocalDate dob, String description) {
+    public UserInput(){}
+
+    public UserInput(String email, String password, String name, String username, LocalDate dob, int age, byte[] profile_pic, String description, LocalDate dor, List<Tag> preferedTags) {
+        this.email = email;
+        this.name = name;
+        this.password = password;
+        this.username = username;
+        this.dob = dob;
+        this.age = age;
+        this.profile_pic = profile_pic;
+        this.description = description;
+        this.dor = dor;
+        this.preferedTags = preferedTags;
+    }
+
+    public UserInput(String email, String name, String username, String password){
         this.email = email;
         this.name = name;
         this.username = username;
-        this.dob = dob;
-        this.description = description;
+        this.password = password;
+    }
+
+
+    public byte[] getProfile_pic() {
+        return profile_pic;
+    }
+
+
+    public void setProfile_pic(byte[] profile_pic) {
+        this.profile_pic = profile_pic;
     }
 
 
@@ -25,6 +60,14 @@ public class UserInput {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getName() {
@@ -57,6 +100,31 @@ public class UserInput {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public LocalDate getDor() {
+        return this.dor;
+    }
+
+    public void setDor(LocalDate dor) {
+        this.dor = dor;
+    }
+
+    public Integer getAge() {
+        return this.age;
+    }
+
+    public void setAge(int age) {
+        System.out.println("Hola input age " + this.age);
+        this.age = age;
+    }
+
+    public List<Tag> getPreferedTags() {
+        return this.preferedTags;
+    }
+
+    public void setPreferedTags(List<Tag> preferedTags) {
+        this.preferedTags = preferedTags;
     }
 
      
