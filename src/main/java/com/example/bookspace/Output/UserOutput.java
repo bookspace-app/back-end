@@ -23,7 +23,9 @@ public class UserOutput extends OutputManager{
     private String createdTags;
     private String preferedTags; 
     
-
+    public UserOutput() {
+        
+    }
 
     public UserOutput(User u) {
         this.id = u.getId();
