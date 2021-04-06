@@ -167,7 +167,7 @@ public class User {
         this.password = userDetails.getPassword();
         this.name = userDetails.getName();
         this.username = userDetails.getUsername();
-        this.dob = userDetails.getDob();
+        this.dob = LocalDate.now(); //userDetails.getDob();
         this.age = userDetails.getAge();
         this.profile_pic = userDetails.getProfile_pic();
         this.description = userDetails.getDescription();
@@ -181,7 +181,7 @@ public class User {
         this.name = name;
         this.username = username;
         this.password = password;
-        this.dob = dob;
+        this.dob = LocalDate.now();
         this.description = description;
         //this.profile_pic = profilePic;
         this.setDor(LocalDate.now());
