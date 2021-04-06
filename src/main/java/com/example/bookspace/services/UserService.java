@@ -55,7 +55,7 @@ public class UserService {
 			throw new IllegalStateException("email taken");
 		}
 		User user = new User(userDetails);
-		userRepository.save(user);
+		user = userRepository.save(user);
 		return new UserOutput(user);
     }
 

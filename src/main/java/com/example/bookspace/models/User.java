@@ -337,6 +337,14 @@ public class User {
         this.createdTags = createdTags;
     }
 
+    public void addCreatedTag(Tag tag) {
+        this.createdTags.add(tag);
+    }
+
+    public void removeCreatedTag(Tag tag) {
+        this.createdTags.remove(tag);
+    }
+
     public List<Tag> getPreferedTags() {
         return this.preferedTags;
     }

@@ -1,5 +1,6 @@
 package com.example.bookspace.models;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -51,12 +52,18 @@ public class Tag {
         this.tag = tag;
     }
 
-    public Tag (TagInput tagDetails) {
+    public Tag (TagInput tagDetails, User author, Publication publication) {
         this.tag = tagDetails.getTag();
-        this.publications = tagDetails.getTaggedPublications();
-        this.author = tagDetails.getAuthor();
-        // this.preferedBy = tagDetails.getPreferedBy();
+        this.author = author;
+        this.publications = new ArrayList<>();
+        this.publications.add(publication);
 
+    }
+
+    public Tag(TagInput tagDetails, User author) {
+        this.tag = tagDetails.getTag();
+        this.author = author;
+        this.publications = new ArrayList<>();
     }
 
     public String getTag() {
