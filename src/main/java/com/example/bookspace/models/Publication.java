@@ -1,7 +1,6 @@
 package com.example.bookspace.models;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -19,7 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-
+import com.example.bookspace.Inputs.PublicationInput;
 import com.example.bookspace.enums.Category;
 
 
@@ -92,15 +91,29 @@ public class Publication {
         this.content = content;
         this.dop = LocalDate.now();
         this.author = author;
-        this.votedBy = new ArrayList<>();
-        this.favouriteBy = new ArrayList<>();
-        this.comments = new ArrayList<>();
+        this.votedBy = null;
+        this.favouriteBy = null;
+        this.comments = null;
         this.category = Category.POTENTIAL;
-        this.tags = new ArrayList<>();
+        this.tags = null;
         this.views = 0L;
         this.likes = 0L;
     }
 
+
+    public Publication(PublicationInput publicationDetails) {
+        this.title = publicationDetails.getTitle();
+        this.content = publicationDetails.getContent();
+        this.dop = LocalDate.now();
+        this.author = null;
+        this.votedBy = null;
+        this.favouriteBy = null;
+        this.comments = null;
+        this.category = Category.POTENTIAL;
+        this.tags = null;
+        this.views = 0L;
+        this.likes = 0L;
+    }
 
     public Long getId() {
         return this.id;

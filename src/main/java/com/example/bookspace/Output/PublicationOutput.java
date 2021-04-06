@@ -18,26 +18,23 @@ public class PublicationOutput extends OutputManager{
     private String favusers;
     private String comments;
     private String tags;
-    private Integer nComments;
     
 
 
-    public PublicationOutput(Publication p) {
+    public PublicationOutput(Publication p, UserOutput author) {
         this.id = p.getId();
         this.self = self + id;
         this.title = p.getTitle();
         this.content = p.getContent();
         this.dop = p.getDop();
         this.views = p.getViews();
-        this.author = new UserOutput(p.getAuthor());
+        this.author = author;
         this.votedusers = self + "/votedusers";
         this.favusers = self + "/favUsers";
         this.comments = self + "/comments";
         this.category = p.getCategory().name();
         this.tags = self + "/tags";
         this.likes = p.getLikes();
-        this.nComments = p.getComments().size();
-
 
     }
 
@@ -153,15 +150,7 @@ public class PublicationOutput extends OutputManager{
     public void setLikes(Long likes) {
         this.likes = likes;
     }
-    
 
-    public Integer getNComments() {
-        return this.nComments;
-    }
-
-    public void setNComments(Integer nComments) {
-        this.nComments = nComments;
-    }
 
     
 }
