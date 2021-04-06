@@ -61,7 +61,7 @@ public class PublicationService {
     }
 
     @Transactional
-	public void updatePublication(Long id, PublicationInput publicationDetails) {
+	public PublicationOutput updatePublication(Long id, PublicationInput publicationDetails) {
 		Publication publication = publicationRepository.findById(id)
 					.orElseThrow(() -> new IllegalStateException(
 						"Publication with id " + id + " does not exist"));
@@ -71,6 +71,7 @@ public class PublicationService {
         User author = userRepository.getOne(publicationDetails.getAuthor());
         publication.setAuthor(author);
         publicationRepository.save(publication);
+        return new PublicationOutput(publication, new UserOutput(author));
 
 	}
 
