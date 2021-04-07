@@ -12,13 +12,16 @@ import static org.springframework.http.HttpStatus.OK;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.example.bookspace.Inputs.UserInput;
 import com.example.bookspace.Output.UserOutput;
+import com.example.bookspace.models.Publication;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserControllerAccTest
@@ -40,7 +43,7 @@ class UserControllerAccTest
     @Test
     void testgetAllUsers() throws Exception {
 
-        ResponseEntity responseEntity = restTemplate.getForEntity(url, ArrayList.class);
+        ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url, ArrayList.class);
         assertEquals(OK, responseEntity.getStatusCode());
         assertEquals(true, responseEntity.hasBody());
     }
@@ -56,9 +59,11 @@ class UserControllerAccTest
     @Test
     void testgetPublicationsUser() throws Exception {
 
-        ResponseEntity responseEntity = restTemplate.getForEntity(url + "/1/publications", ArrayList.class);
+        ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/publications", ArrayList.class);
         assertEquals(OK, responseEntity.getStatusCode());
         assertEquals(true, responseEntity.hasBody());
+        List<Publication> result = new ArrayList<>();
+        assertEquals(result, responseEntity.getBody());
     }
 
     @Test
@@ -67,10 +72,23 @@ class UserControllerAccTest
         HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
-		UserInput u1 = new UserInput("email", "demo", "username", LocalDate.now(), "description");
+		UserInput u1 = new UserInput("emailNew2", "demoNew2", "usernameNew2", LocalDate.now(), "descriptionNew2");
         HttpEntity<UserInput> requestEntity = new HttpEntity<>(u1, headers);
 
         ResponseEntity<UserInput> responseEntity = restTemplate.postForEntity(url, requestEntity, UserInput.class);
-        System.out.println("Status Code: " + responseEntity.getStatusCode());		
+        assertEquals(OK, responseEntity.getStatusCode());	
+    }
+
+    @Test
+    void testupdateUser() throws Exception {
+
+        HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		String name = "name: NewNameNew";
+        HttpEntity<String> requestEntity = new HttpEntity<>(name, headers);
+
+        ResponseEntity responseEntity = restTemplate.exchange(url + "/2", HttpMethod.PUT, requestEntity, Void.class);
+        assertEquals(OK, responseEntity.getStatusCode());
     }
 }

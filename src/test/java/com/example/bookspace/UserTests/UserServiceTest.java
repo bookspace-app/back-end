@@ -8,7 +8,6 @@ import com.example.bookspace.Inputs.UserInput;
 import com.example.bookspace.Output.PublicationOutput;
 import com.example.bookspace.Output.UserOutput;
 import com.example.bookspace.services.UserService;
-import com.example.bookspace.models.Publication;
 import com.example.bookspace.models.User;
 import com.example.bookspace.repositories.UserRepository;
 
@@ -29,7 +28,7 @@ class UserServiceTest {
         UserRepository userRepository = Mockito.mock(UserRepository.class);
 
         List<User> users = new ArrayList<>();
-        Publication publication = new Publication();
+        //Publication publication = new Publication();
 
         User u1 = new User(
                 "email1",
