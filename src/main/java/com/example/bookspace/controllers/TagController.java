@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.example.bookspace.Inputs.TagInput;
+import com.example.bookspace.Output.TagOutput;
 import com.example.bookspace.models.Publication;
 import com.example.bookspace.models.Tag;
 import com.example.bookspace.models.User;
@@ -43,8 +44,8 @@ public class TagController {
     }
 
     @PostMapping
-    public void createNewTag(@RequestBody TagInput tagDetails){
-        tagService.addNewTag(tagDetails);
+    public TagOutput postTag(@RequestBody TagInput tagDetails) {
+        return tagService.postTag(tagDetails);
     }
 
     @PutMapping(path = "{IdTag}") 

@@ -167,13 +167,13 @@ public class User {
         this.password = userDetails.getPassword();
         this.name = userDetails.getName();
         this.username = userDetails.getUsername();
-        this.dob = userDetails.getDob();
+        this.dob = LocalDate.now(); //userDetails.getDob();
         this.age = userDetails.getAge();
         this.profile_pic = userDetails.getProfile_pic();
         this.description = userDetails.getDescription();
         this.setDor(LocalDate.now());
         this.setRank(Rank.HAREM);
-        this.setAge(dob);
+        //this.setAge(dob);
     }
     
     public User(String email, String name, String username, String password, LocalDate dob, String description) {
@@ -181,7 +181,7 @@ public class User {
         this.name = name;
         this.username = username;
         this.password = password;
-        this.dob = dob;
+        this.dob = LocalDate.now();
         this.description = description;
         //this.profile_pic = profilePic;
         this.setDor(LocalDate.now());
@@ -335,6 +335,14 @@ public class User {
 
     public void setCreatedTags(List<Tag> createdTags) {
         this.createdTags = createdTags;
+    }
+
+    public void addCreatedTag(Tag tag) {
+        this.createdTags.add(tag);
+    }
+
+    public void removeCreatedTag(Tag tag) {
+        this.createdTags.remove(tag);
     }
 
     public List<Tag> getPreferedTags() {

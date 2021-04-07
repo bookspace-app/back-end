@@ -10,7 +10,9 @@ import com.example.bookspace.Output.TagOutput;
 import com.example.bookspace.models.Publication;
 import com.example.bookspace.models.Tag;
 import com.example.bookspace.models.User;
+import com.example.bookspace.repositories.PublicationRepository;
 import com.example.bookspace.repositories.TagRepository;
+import com.example.bookspace.repositories.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,20 +21,26 @@ import org.springframework.stereotype.Service;
 public class TagService {
 
 	private final TagRepository tagRepository;
+	private final UserRepository userRepository;
+	private final PublicationRepository publicationRepository;
 
 	@Autowired
-	public TagService(TagRepository tagRepository) {
+	public TagService(TagRepository tagRepository, UserRepository userRepository, PublicationRepository publicationRepository) {
 		this.tagRepository = tagRepository;
+		this.userRepository = userRepository;
+		this.publicationRepository = publicationRepository;
 	}
 
-	public TagOutput addNewTag(TagInput tagDetails) {
-		// Optional<Tag> tagById = tagRepository
-		// .findById(tagDetails.getTag());
-		// if(tagById.isPresent()){
-		// 	throw new IllegalStateException("tag already exists");
-		// }
-		Tag tag = new Tag(tagDetails);
-		tagRepository.save(tag);
+	public TagOutput postTag(TagInput tagDetails) {
+
+		User author = userRepository.getOne(tagDetails.getAuthor());
+		Publication publication = publicationRepository.getOne(tagDetails.getPublication());
+		Tag tag = new Tag(tagDetails, author, publication);
+		tag = tagRepository.save(tag);
+		author.addCreatedTag(tag);
+		userRepository.save(author);
+		publication.addTag(tag);
+		publicationRepository.save(publication);	
 		return new TagOutput(tag);
     }
 

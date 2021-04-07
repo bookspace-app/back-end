@@ -1,6 +1,5 @@
 package com.example.bookspace.controllers;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import com.example.bookspace.Inputs.UserInput;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -60,13 +58,8 @@ public class UserController {
 
     @PutMapping(path = "{userId}") 
     public void updateUser(@PathVariable("userId") Long id,
-                                      @RequestParam(required = false) String name,
-                                      @RequestParam(required = false) String description,
-                                      @RequestParam(required = false) String email,
-                                      @RequestParam(required = false) String username,
-                                      @RequestParam(required = false) LocalDate dob,
-                                      @RequestParam(required = false) byte[] profile_pic){
-        userService.updateUser(id,name,description,email,username,dob,profile_pic);
+                                       @RequestBody UserInput u){
+        userService.updateUser(id,u.getName(),u.getDescription(),u.getEmail(),u.getUsername(),u.getDob(),u.getProfile_pic());
     }
 
     @DeleteMapping(path = "{userId}")

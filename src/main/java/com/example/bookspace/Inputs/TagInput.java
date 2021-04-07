@@ -1,23 +1,18 @@
 package com.example.bookspace.Inputs;
 
-import java.util.List;
-
-import com.example.bookspace.models.Publication;
-import com.example.bookspace.models.User;
-
 public class TagInput { //preguntar si solo se necesita inputear el nombre 
     
     private String tag;
-    private User author;
-    private List<Publication> taggedPublications;
+    private Long author;
+    private Long publication;
 
+    public TagInput() {}
 
-    public TagInput(String tag, User author, List<Publication> taggedPublications) {
+    public TagInput(String tag, Long author, Long publication) {
         this.tag = tag;
-        // this.author = author;
-        // this.taggedPublications = taggedPublications;
+        this.author = author;
+        this.publication = publication;
     }
-    
 
     public String getTag() {
         return this.tag;
@@ -27,22 +22,21 @@ public class TagInput { //preguntar si solo se necesita inputear el nombre
         this.tag = tag;
     }
 
-
-    public User getAuthor() {
+    public Long getAuthor() {
         return this.author;
     }
 
-    public void setAuthor(User author) {
+    public void setAuthor(Long author) {
         this.author = author;
     }
 
-    public List<Publication> getTaggedPublications() {
-        return this.taggedPublications;
+    public Long getPublication() {
+        return this.publication;
     }
 
-    public void setTaggedPublications(List<Publication> taggedPublications) {
-        this.taggedPublications = taggedPublications;
+    public void setPublication(Long Publication) {
+        this.publication = Publication;
     }
-    
+
 
 }

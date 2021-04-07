@@ -2,25 +2,24 @@ package com.example.bookspace.Output;
 
 
 import com.example.bookspace.models.Tag;
-
 public class TagOutput extends OutputManager{
 
     private String self = getURL() + "/tags/";
     private Long id;
     private String tag;
-    private Long authorId;
+    private UserOutput author;
     private String taggedPublications;
     private String preferedByUsers;
 
-    public TagOutput(Tag t) {
-        this.id = t.getId();
-        this.tag = t.getTag();
-        //this.authorId = t.getAuthor().getId();
-        this.self = self + this.id;
-        this.taggedPublications = this.self + "/publications";
-        this.preferedByUsers = this.self + "/users";
-    }
 
+    public TagOutput(Tag tag) {
+        this.id = tag.getId();
+        this.tag = tag.getTag();
+        this.author = new UserOutput(tag.getAuthor());
+        this.self = self + this.id;
+        this.taggedPublications = this.self + "/taggedPublications";
+        this.preferedByUsers = this.self + "/preferedByUsers";
+    }
 
     public String getSelf() {
         return this.self;
@@ -46,12 +45,12 @@ public class TagOutput extends OutputManager{
         this.tag = tag;
     }
 
-    public Long getAuthorId() {
-        return this.authorId;
+    public UserOutput getAuthor() {
+        return this.author;
     }
 
-    public void setAuthorId(Long authorId) {
-        this.authorId = authorId;
+    public void setAuthor(UserOutput author) {
+        this.author = author;
     }
 
     public String getTaggedPublications() {
@@ -69,7 +68,5 @@ public class TagOutput extends OutputManager{
     public void setPreferedByUsers(String preferedByUsers) {
         this.preferedByUsers = preferedByUsers;
     }
-
-    
 
 }
