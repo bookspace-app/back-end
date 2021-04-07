@@ -35,3 +35,4 @@ build/
 
 ### VS Code ###
 .vscode/
+src/main/java/com/example/bookspace/Output/OutputManager.java
