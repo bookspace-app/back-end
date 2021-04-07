@@ -49,7 +49,7 @@ public class PublicationService {
     }
 
     public PublicationOutput postPublication(PublicationInput publicationDetails) {
-        User author = userRepository.findById(publicationDetails.getAuthor()).get();
+        User author = userRepository.findById(publicationDetails.getAuthorId()).get();
         Publication publication = new Publication(publicationDetails.getTitle(), publicationDetails.getContent(), author, publicationDetails.getCategory());
         author.addPublication(publication);
         publicationRepository.save(publication);
@@ -66,7 +66,7 @@ public class PublicationService {
 		
                 
         publication = new Publication(publicationDetails);
-        User author = userRepository.getOne(publicationDetails.getAuthor());
+        User author = userRepository.getOne(publicationDetails.getAuthorId());
         publication.setAuthor(author);
         publicationRepository.save(publication);
         return new PublicationOutput(publication);

@@ -52,8 +52,8 @@ public class UserController {
     }
 
     @PostMapping
-    public void registerNewUser(@RequestBody UserInput userDetails){
-        userService.addNewUser(userDetails);
+    public UserOutput postUser(@RequestBody UserInput userDetails){
+       return userService.postUser(userDetails);
     }
 
     @PutMapping(path = "{userId}") 
