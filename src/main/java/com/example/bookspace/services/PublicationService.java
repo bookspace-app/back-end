@@ -34,8 +34,7 @@ public class PublicationService {
         List<PublicationOutput> result = new ArrayList<>();
 
         for (Publication p: publicationRepository.findAll()) {
-            User author = userRepository.getOne(p.getAuthor().getId());
-            PublicationOutput po = new PublicationOutput(p, new UserOutput(author));
+            PublicationOutput po = new PublicationOutput(p);
             result.add(po);
         }
 
@@ -46,17 +45,16 @@ public class PublicationService {
         Publication p = publicationRepository.getOne(id);
         p.addView();
         publicationRepository.save(p);
-        User u = userRepository.getOne(p.getAuthor().getId());
-        return new PublicationOutput(p, new UserOutput(u));
+        return new PublicationOutput(p);
     }
 
-    public PublicationOutput addNewPublication(PublicationInput publicationDetails) {
+    public PublicationOutput postPublication(PublicationInput publicationDetails) {
         User author = userRepository.findById(publicationDetails.getAuthor()).get();
         Publication publication = new Publication(publicationDetails.getTitle(), publicationDetails.getContent(), author, publicationDetails.getCategory());
         author.addPublication(publication);
         publicationRepository.save(publication);
         userRepository.save(author);
-        return new PublicationOutput(publication, new UserOutput(author));
+        return new PublicationOutput(publication);
     
     }
 
@@ -71,7 +69,7 @@ public class PublicationService {
         User author = userRepository.getOne(publicationDetails.getAuthor());
         publication.setAuthor(author);
         publicationRepository.save(publication);
-        return new PublicationOutput(publication, new UserOutput(author));
+        return new PublicationOutput(publication);
 
 	}
 
@@ -132,7 +130,7 @@ public class PublicationService {
         p.addLike();
 
         publicationRepository.save(p);
-        return new PublicationOutput(p, new UserOutput(p.getAuthor()));
+        return new PublicationOutput(p);
     }
 
 
@@ -144,7 +142,7 @@ public class PublicationService {
 
         publicationRepository.save(p);
         
-        return new PublicationOutput(p, new UserOutput(p.getAuthor()));
+        return new PublicationOutput(p);
     }
 
 

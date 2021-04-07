@@ -117,7 +117,7 @@ public class UserService {
 		List<Publication> publications = author.getPublications();
 		List<PublicationOutput> result = new ArrayList<>();
 		for (Publication p: publications) {
-			result.add(new PublicationOutput(p, new UserOutput(author)));
+			result.add(new PublicationOutput(p));
 		}
 
 		return result;

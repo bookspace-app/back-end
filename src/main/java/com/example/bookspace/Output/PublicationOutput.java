@@ -14,23 +14,23 @@ public class PublicationOutput extends OutputManager{
     private Long likes;
     private String category; 
     private UserOutput author; 
-    private String votedusers;
-    private String favusers;
+    private String votedUsers;
+    private String favUsers;
     private String comments;
     private String tags;
     
 
 
-    public PublicationOutput(Publication p, UserOutput author) {
+    public PublicationOutput(Publication p) {
         this.id = p.getId();
         this.self = self + id;
         this.title = p.getTitle();
         this.content = p.getContent();
         this.dop = p.getDop();
         this.views = p.getViews();
-        this.author = author;
-        this.votedusers = self + "/votedusers";
-        this.favusers = self + "/favUsers";
+        this.author = new UserOutput(p.getAuthor());
+        this.votedUsers = self + "/votedUsers";
+        this.favUsers = self + "/favUsers";
         this.comments = self + "/comments";
         this.category = p.getCategory().name();
         this.tags = self + "/tags";
@@ -38,7 +38,14 @@ public class PublicationOutput extends OutputManager{
 
     }
 
-    
+
+    public String getSelf() {
+        return this.self;
+    }
+
+    public void setSelf(String self) {
+        this.self = self;
+    }
 
     public Long getId() {
         return this.id;
@@ -64,22 +71,29 @@ public class PublicationOutput extends OutputManager{
         this.content = content;
     }
 
-    public UserOutput getAuthor() {
-        return this.author;
-    }
-
-    public void setAuthor(UserOutput author) {
-        this.author = author;
-    }
-
-
     public LocalDate getDop() {
         return this.dop;
     }
 
     public void setDop(LocalDate dop) {
         this.dop = dop;
-    }      
+    }
+
+    public Long getViews() {
+        return this.views;
+    }
+
+    public void setViews(Long views) {
+        this.views = views;
+    }
+
+    public Long getLikes() {
+        return this.likes;
+    }
+
+    public void setLikes(Long likes) {
+        this.likes = likes;
+    }
 
     public String getCategory() {
         return this.category;
@@ -89,23 +103,28 @@ public class PublicationOutput extends OutputManager{
         this.category = category;
     }
 
-
-
-    public String getSelf() {
-        return this.self;
+    public UserOutput getAuthor() {
+        return this.author;
     }
 
-    public void setSelf(String self) {
-        this.self = self;
-    }
-    
-
-    public String getFavusers() {
-        return this.favusers;
+    public void setAuthor(UserOutput author) {
+        this.author = author;
     }
 
-    public void setFavusers(String favusers) {
-        this.favusers = favusers;
+    public String getVotedUsers() {
+        return this.votedUsers;
+    }
+
+    public void setVotedUsers(String votedUsers) {
+        this.votedUsers = votedUsers;
+    }
+
+    public String getFavUsers() {
+        return this.favUsers;
+    }
+
+    public void setFavUsers(String favUsers) {
+        this.favUsers = favUsers;
     }
 
     public String getComments() {
@@ -123,33 +142,9 @@ public class PublicationOutput extends OutputManager{
     public void setTags(String tags) {
         this.tags = tags;
     }
+
+
     
-
-    public String getVotedusers() {
-        return this.votedusers;
-    }
-
-    public void setVotedusers(String votedusers) {
-        this.votedusers = votedusers;
-    }
-
-
-    public Long getViews() {
-        return this.views;
-    }
-
-    public void setViews(Long views) {
-        this.views = views;
-    }
-
-
-    public Long getLikes() {
-        return this.likes;
-    }
-
-    public void setLikes(Long likes) {
-        this.likes = likes;
-    }
 
 
     

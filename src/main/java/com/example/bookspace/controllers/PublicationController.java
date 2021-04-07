@@ -39,13 +39,13 @@ public class PublicationController {
 
 
     @PostMapping
-    public void registerNewPublication(@RequestBody PublicationInput publicationDetails) {
-        publicationService.addNewPublication(publicationDetails);
+    public PublicationOutput postPublication(@RequestBody PublicationInput publicationDetails) {
+        return publicationService.postPublication(publicationDetails);
     }
 
 
     @GetMapping(path = "{publicationId}")
-    public PublicationOutput getUserById(@PathVariable("publicationId") Long id) {
+    public PublicationOutput getPublicationById(@PathVariable("publicationId") Long id) {
         return publicationService.getPublication(id);
     }    
 
