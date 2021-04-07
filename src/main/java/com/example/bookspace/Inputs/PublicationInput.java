@@ -3,13 +3,13 @@ package com.example.bookspace.Inputs;
 public class PublicationInput {
     private String title;
     private String content; 
-    private Long author;
+    private Long author_id; 
     private String category;
 
-    public PublicationInput(String title, String content, Long author, String category) {
+    public PublicationInput(String title, String content, Long author_id, String category) {
         this.title = title;
         this.content = content;
-        this.author = author;
+        this.author_id = author_id;
         this.category = category;
     }
 
@@ -29,12 +29,12 @@ public class PublicationInput {
         this.content = content;
     }
 
-    public Long getAuthor() {
-        return this.author;
+    public Long getAuthorId() {
+        return this.author_id;
     }
 
-    public void setAuthor(Long author) {
-        this.author = author;
+    public void setAuthorId(Long author_id) {
+        this.author_id = author_id;
     }
 
 

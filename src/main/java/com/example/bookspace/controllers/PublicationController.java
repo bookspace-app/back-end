@@ -2,9 +2,7 @@ package com.example.bookspace.controllers;
 
 import java.util.List;
 
-import com.example.bookspace.Inputs.CommentInput;
 import com.example.bookspace.Inputs.PublicationInput;
-import com.example.bookspace.Output.CommentOutput;
 import com.example.bookspace.Output.PublicationOutput;
 import com.example.bookspace.Output.UserOutput;
 
@@ -47,14 +45,14 @@ public class PublicationController {
 
 
     @GetMapping(path = "{publicationId}")
-    public PublicationOutput getUserById(@PathVariable("publicationId") Long id) {
+    public PublicationOutput getPublicationById(@PathVariable("publicationId") Long id) {
         return publicationService.getPublication(id);
     }    
 
     @PutMapping(path = "{publicationId}") 
     public void updatePublication(@PathVariable("publicationId") Long id,
                                       @RequestParam PublicationInput publicationDetails
-                                      ) throws Exception{
+                                      ){
         publicationService.updatePublication(id, publicationDetails);
     }
 
@@ -84,16 +82,17 @@ public class PublicationController {
     public PublicationOutput postDislike(@PathVariable("publicationId") Long id) {
         return publicationService.postDislike(id);
     }
-  
-    @GetMapping(path="{publicationId}/comments")
-    public List<CommentOutput> getPublicationComments(@PathVariable("publicationId") Long id) {
-        return publicationService.getComments(id);
-    }
 
-    @PostMapping(path="{publicationId}/comments")
-    public CommentOutput postPublicationComment(@PathVariable("publicationId") Long id,
-                                                @RequestBody CommentInput commentDetails) {
-            return publicationService.postComment(id, commentDetails);
 
-    }
+    // @GetMapping(path="{publicationId}/votedBy")
+    // public List<UserOutput> getVotedByUsers (@PathVariable("publicationId") Long id) {
+    //     return publicationService.getVotedByUsers(id);
+    // }
+
+   
+
+    // @GetMapping(path="{publicationId}/comments")
+    // public List<Comment> getPublicationComments(@PathVariable("publicationId") Long id) {
+    //     return publicationService.getComments(id);
+    // }
 }

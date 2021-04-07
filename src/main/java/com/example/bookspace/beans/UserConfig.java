@@ -22,6 +22,7 @@ public class UserConfig {
                 "email",
                 "demo",
                 "username",
+                "passwd",
                 LocalDate.now(),
                 "description"
             );

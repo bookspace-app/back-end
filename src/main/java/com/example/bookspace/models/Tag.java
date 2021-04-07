@@ -1,5 +1,6 @@
 package com.example.bookspace.models;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,10 +13,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.example.bookspace.Inputs.TagInput;
 
 @Entity
 @Table(name = "tag")
 public class Tag {
+
+
+    public Tag() {}
 
     @Id
     @SequenceGenerator(
@@ -45,6 +50,20 @@ public class Tag {
 
     public Tag(String tag) {
         this.tag = tag;
+    }
+
+    public Tag (TagInput tagDetails, User author, Publication publication) {
+        this.tag = tagDetails.getTag();
+        this.author = author;
+        this.publications = new ArrayList<>();
+        this.publications.add(publication);
+
+    }
+
+    public Tag(TagInput tagDetails, User author) {
+        this.tag = tagDetails.getTag();
+        this.author = author;
+        this.publications = new ArrayList<>();
     }
 
     public String getTag() {
@@ -89,14 +108,16 @@ public class Tag {
         this.author = author;
     }
 
+    
+
 
 
     //Test constructor
-    public Tag() {
-        this.tag = "Tag1";
-        this.author = null;
-        this.publications = null;
-        this.preferedBy = null;
-    }
+    //public Tag() {
+    //     this.tag = "Tag1";
+    //     this.author = null;
+    //     this.publications = null;
+    //     this.preferedBy = null;
+    // }
 
 }

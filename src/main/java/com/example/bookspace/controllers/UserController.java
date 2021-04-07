@@ -1,10 +1,10 @@
 package com.example.bookspace.controllers;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import com.example.bookspace.Inputs.UserInput;
 import com.example.bookspace.Output.PublicationOutput;
+import com.example.bookspace.Output.TagOutput;
 import com.example.bookspace.Output.UserOutput;
 import com.example.bookspace.services.UserService;
 
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -47,19 +46,20 @@ public class UserController {
         return userService.getPublicationsUser(id);
     }
 
+    @GetMapping(path = "{userId}/preferedTags")   //Implementar
+	public List<TagOutput> getPreferedTagsUser(@PathVariable("userId") Long id) {
+        return userService.getPreferedTagsUser(id);
+    }
+
     @PostMapping
-    public void registerNewUser(@RequestBody UserInput userDetails){
-        userService.addNewUser(userDetails);
+    public UserOutput postUser(@RequestBody UserInput userDetails){
+       return userService.postUser(userDetails);
     }
 
     @PutMapping(path = "{userId}") 
     public void updateUser(@PathVariable("userId") Long id,
-                                      @RequestParam(required = false) String name,
-                                      @RequestParam(required = false) String description,
-                                      @RequestParam(required = false) String email,
-                                      @RequestParam(required = false) String username,
-                                      @RequestParam(required = false) LocalDate dob){
-        userService.updateUser(id,name,description,email,username,dob);
+                                       @RequestBody UserInput u){
+        userService.updateUser(id,u.getName(),u.getDescription(),u.getEmail(),u.getUsername(),u.getDob(),u.getProfile_pic());
     }
 
     @DeleteMapping(path = "{userId}")
