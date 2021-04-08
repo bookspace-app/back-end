@@ -17,6 +17,7 @@ public class TagConfig {
     CommandLineRunner commandLineRunnerTag(TagRepository repository) {
         return args ->  {
             Tag demo = new Tag(
+                "tag1"
             );
             repository.saveAll(List.of(demo));
         };

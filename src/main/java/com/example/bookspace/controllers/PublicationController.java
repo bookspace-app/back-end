@@ -1,10 +1,13 @@
 package com.example.bookspace.controllers;
 
 import java.util.List;
-import java.util.Optional;
 
-import com.example.bookspace.models.Publication;
+import com.example.bookspace.Inputs.PublicationInput;
+import com.example.bookspace.Output.PublicationOutput;
+import com.example.bookspace.Output.UserOutput;
+
 import com.example.bookspace.services.PublicationService;
+import com.example.bookspace.services.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,43 +17,82 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = "api/v1/publications")
+@RequestMapping(path = "api/publications")
 
 public class PublicationController {
     
     private final PublicationService publicationService;
 
     @Autowired
-    public PublicationController(PublicationService publicationService) {
+    public PublicationController(PublicationService publicationService, UserService userService) {
         this.publicationService = publicationService;
     }
 
-    @GetMapping    
-	public List<Publication> getAllPublications() {
+    @GetMapping
+	public List<PublicationOutput> getAllPublications() {
         return publicationService.getPublications();
     }
-    
-    @GetMapping(path = "{publicationId}")
-    public Optional<Publication> getUserById(@PathVariable("publicationId") Long id) {
-        return publicationService.getPublication(id);
-    }
+
 
     @PostMapping
-    public void registerNewPublication(@RequestBody Publication publication) {
-        publicationService.addNewPublication(publication);
+    public PublicationOutput postPublication(@RequestBody PublicationInput publicationDetails) {
+        return publicationService.postPublication(publicationDetails);
     }
 
-    @PutMapping(path = "{publicationId}")
-    public void putPublication(@PathVariable("publicationId")Long id,
-                                                @RequestBody Publication publicationDetails) {
-        publicationService.updatePublication(publicationDetails);
-	}
+
+    @GetMapping(path = "{publicationId}")
+    public PublicationOutput getPublicationById(@PathVariable("publicationId") Long id) {
+        return publicationService.getPublication(id);
+    }    
+
+    @PutMapping(path = "{publicationId}") 
+    public void updatePublication(@PathVariable("publicationId") Long id,
+                                      @RequestParam PublicationInput publicationDetails
+                                      ){
+        publicationService.updatePublication(id, publicationDetails);
+    }
 
     @DeleteMapping(path = "{publicationId}")
-	public Boolean deletePublication(@PathVariable("publicationId") Long publicationId) {
-        return publicationService.deletePublication(publicationId);
+	public void deletePublication(@PathVariable("publicationId") Long publicationId) {
+        publicationService.deletePublication(publicationId);
 	}
+
+    @GetMapping("{publicationId}/favUsers")
+    public List<UserOutput> getFavUsers(@PathVariable("publicationId") Long id) {
+        return publicationService.getFavUsers(id);
+        
+    }
+
+    @PostMapping("{publicationId}/favUsers/{userId}")
+    public UserOutput postFaUser(@PathVariable("publicationId") Long id, @PathVariable("userId") Long userId) {
+        return publicationService.postFavUser(id, userId);
+        
+    }
+
+    @PostMapping(path = "{publicationId}/likes/{userId}")
+    public PublicationOutput postLike(@PathVariable("publicationId") Long id, @PathVariable("userId") Long userId) throws Exception {
+        return publicationService.postLike(id, userId);
+    }
+
+    @PostMapping(path = "{publicationId}/dislikes/{userId}")
+    public PublicationOutput postDislike(@PathVariable("publicationId") Long id, @PathVariable("userId") Long userId) throws Exception {
+        return publicationService.postDislike(id, userId);
+    }
+
+
+    // @GetMapping(path="{publicationId}/votedBy")
+    // public List<UserOutput> getVotedByUsers (@PathVariable("publicationId") Long id) {
+    //     return publicationService.getVotedByUsers(id);
+    // }
+
+   
+
+    // @GetMapping(path="{publicationId}/comments")
+    // public List<Comment> getPublicationComments(@PathVariable("publicationId") Long id) {
+    //     return publicationService.getComments(id);
+    // }
 }

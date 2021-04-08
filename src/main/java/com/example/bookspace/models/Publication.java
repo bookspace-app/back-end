@@ -1,7 +1,8 @@
 package com.example.bookspace.models;
 
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -17,6 +18,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import com.example.bookspace.Inputs.PublicationInput;
+import com.example.bookspace.enums.Category;
+
 
 @Entity
 @Table(name = "publications")
@@ -44,20 +49,26 @@ public class Publication {
     @Column(name = "dop", nullable = false)
     private LocalDate dop; 
 
-    @ManyToOne
-    @JoinColumn(name = "publication_owner")
-    private User owner;
-
-    @ManyToMany(mappedBy = "voted_publications")
-    private Set<User> votedBy;
-
-    @OneToMany(mappedBy = "parent_publication", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Comment> comments;
+    @Column(name = "views")
+    private Long views;
 
     @ManyToOne
-    @JoinColumn(name = "category_publication")
+    @JoinColumn(name = "author_id")
+    private User author;
+
+    @ManyToMany(mappedBy = "votedPublications")
+    private List<User> votedBy;
+
+    @ManyToMany(mappedBy = "favouritePublications")
+    private List<User> favouriteBy;
+
+    @OneToMany(mappedBy = "publication", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Comment> comments;
+
+    @Column
     private Category category;
 
+ 
 
     @ManyToMany
     @JoinTable (
@@ -66,21 +77,41 @@ public class Publication {
         inverseJoinColumns = @JoinColumn(name = "tag_name")
 
     )
-    private Set<Tag> tags;
+    private List<Tag> tags;
     // private Collection<Chat> chats;
 
 
 
-    public Publication() {
-        
+    public Publication() {     
     }
 
-    public Publication(String title, String content) {
+    public Publication(String title, String content, User author, String category) {
         this.title = title;
         this.content = content;
         this.dop = LocalDate.now();
+        this.author = author;
+        this.category = Category.POTENTIAL;
+        this.tags = new ArrayList<>();
+        this.views = 0L;
+        this.votedBy = new ArrayList<>();
+        this.favouriteBy = new ArrayList<>();
+        this.comments = new ArrayList<>();
+        this.tags = new ArrayList<>();
     }
 
+
+    public Publication(PublicationInput publicationDetails, User author) {
+        this.title = publicationDetails.getTitle();
+        this.content = publicationDetails.getContent();
+        this.dop = LocalDate.now();
+        this.author = author;
+        this.category = Category.POTENTIAL;
+        this.views = 0L;
+        this.votedBy = new ArrayList<>();
+        this.favouriteBy = new ArrayList<>();
+        this.comments = new ArrayList<>();
+        this.tags = new ArrayList<>();
+    }
 
     public Long getId() {
         return this.id;
@@ -114,27 +145,27 @@ public class Publication {
         this.dop = dop;
     }
 
-    public User getOwner() {
-        return this.owner;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
-
-    public Set<User> getVotedBy() {
+    public List<User> getVotedBy() {
         return this.votedBy;
     }
 
-    public void setVotedBy(Set<User> votedBy) {
+    public void setVotedBy(List<User> votedBy) {
         this.votedBy = votedBy;
     }
 
-    public Set<Comment> getComments() {
+    public void addVotedUser(User u) {
+        this.votedBy.add(u);
+    }
+
+    public void removeVotedUser(User u) {
+        this.votedBy.remove(u);
+    }
+
+    public List<Comment> getComments() {
         return this.comments;
     }
 
-    public void setComments(Set<Comment> comments) {
+    public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
 
@@ -146,18 +177,62 @@ public class Publication {
         this.category = category;
     }
 
-    public Set<Tag> getTags() {
+    public List<Tag> getTags() {
         return this.tags;
     }
 
-    public void setTags(Set<Tag> tags) {
+    public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
 
+    public void addTag(Tag tag) {
+        this.tags.add(tag);
+    }
 
- 
+    public void removeTag(Tag tag) {
+        this.tags.remove(tag);
+    }
+   
+
+    public User getAuthor() {
+        return this.author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
+    }
+
+    public List<User> getFavouriteBy() {
+        return this.favouriteBy;
+    }
+
+    public void setFavouriteBy(List<User> favouriteBy) {
+        this.favouriteBy = favouriteBy;
+    }
+
+    public void addFavUser(User favUser) {
+        this.favouriteBy.add(favUser);
+    }
+
+    public Long getViews() {
+        return this.views;
+    }
+
+    public void setViews(Long views) {
+        this.views = views;
+    }
+
+    public void addView() {
+        this.views++;
+    }
 
 
-    
+    public Long getLikes() {
+        return (long) this.votedBy.size();
+    }
+
+   
+
+
     
 }

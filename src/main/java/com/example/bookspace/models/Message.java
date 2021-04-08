@@ -8,16 +8,16 @@ public class Message {
     private LocalDate date; 
 
     private Chat chat;
-    private User owner;
+    private User author;
 
     public Message() {
     }
 
-    public Message(String content, LocalDate date, Chat chat, User owner) {
+    public Message(String content, LocalDate date, Chat chat, User author) {
         this.content = content;
         this.date = date;
         this.chat = chat;
-        this.owner = owner;
+        this.author = author;
     }
 
     public String getContent() {
@@ -41,7 +41,7 @@ public class Message {
     }
 
 
-    public User getOwner() {
-        return this.owner;
+    public User getAuthor() {
+        return this.author;
     }
 }

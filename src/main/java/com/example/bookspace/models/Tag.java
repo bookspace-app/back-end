@@ -1,36 +1,69 @@
 package com.example.bookspace.models;
 
-import java.util.Set;
-
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.example.bookspace.Inputs.TagInput;
 
 @Entity
 @Table(name = "tag")
 public class Tag {
 
+
+    public Tag() {}
+
     @Id
+    @SequenceGenerator(
+        name = "tag_sequence", 
+        sequenceName = "tag_sequence", 
+        allocationSize = 1
+    )
+
+    @GeneratedValue(
+        strategy = GenerationType.SEQUENCE, 
+        generator = "tag_sequence"
+    )
+    private Long id;
+    
     @Column(name = "tag", unique = true)
     private String tag;
 
     @ManyToOne
-    @JoinColumn(name = "tags_created")
-    private User owner;
+    @JoinColumn(name = "author_id")
+    private User author;
 
     @ManyToMany(mappedBy = "tags")
-    private Set<Publication> tagged_publications;
+    private List<Publication> publications;
 
-    @ManyToMany(mappedBy = "prefered_tags")
-    private Set<User> prefered_tags;
+    @ManyToMany(mappedBy = "preferedTags")
+    private List<User> preferedBy;
 
     public Tag(String tag) {
         this.tag = tag;
+    }
+
+    public Tag (TagInput tagDetails, User author, Publication publication) {
+        this.tag = tagDetails.getTag();
+        this.author = author;
+        this.publications = new ArrayList<>();
+        this.publications.add(publication);
+
+    }
+
+    public Tag(TagInput tagDetails, User author) {
+        this.tag = tagDetails.getTag();
+        this.author = author;
+        this.publications = new ArrayList<>();
     }
 
     public String getTag() {
@@ -41,36 +74,50 @@ public class Tag {
         this.tag = tag;
     }
 
-    public User getOwner() {
-        return this.owner;
+    
+
+    public List<Publication> getTagged_publications() {
+        return this.publications;
     }
 
-    public void setOwner(User owner) {
-        this.owner = owner;
+    public void setTagged_publications(List<Publication> tagged_publications) {
+        this.publications = tagged_publications;
     }
 
-    public Set<Publication> getTagged_publications() {
-        return this.tagged_publications;
+    public List<User> getPreferedTags() {
+        return this.preferedBy;
     }
 
-    public void setTagged_publications(Set<Publication> tagged_publications) {
-        this.tagged_publications = tagged_publications;
+    public void setPrefered_tags(List<User> preferedBy) {
+        this.preferedBy = preferedBy;
     }
 
-    public Set<User> getPrefered_tags() {
-        return this.prefered_tags;
+    public Long getId() {
+        return this.id;
     }
 
-    public void setPrefered_tags(Set<User> prefered_tags) {
-        this.prefered_tags = prefered_tags;
+    public void setId(Long id) {
+        this.id = id;
     }
+
+    public User getAuthor() {
+        return this.author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
+    }
+
+    
+
+
 
     //Test constructor
-    public Tag() {
-        this.tag = "Tag1";
-        this.owner = null;
-        this.tagged_publications = null;
-        this.prefered_tags = null;
-    }
+    //public Tag() {
+    //     this.tag = "Tag1";
+    //     this.author = null;
+    //     this.publications = null;
+    //     this.preferedBy = null;
+    // }
 
 }
