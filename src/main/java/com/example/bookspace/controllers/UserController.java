@@ -58,8 +58,9 @@ public class UserController {
 
     @PutMapping(path = "{userId}") 
     public void updateUser(@PathVariable("userId") Long id,
-                                       @RequestBody UserInput u){
-        userService.updateUser(id,u.getName(),u.getDescription(),u.getEmail(),u.getUsername(),u.getDob(),u.getProfile_pic());
+                                       @RequestBody UserInput u) throws Exception{
+                                           throw new Exception("Not implemented yet");
+        // userService.updateUser(id,u.getName(),u.getDescription(),u.getEmail(),u.getUsername(),u.getDob(),u.getProfile_pic());
     }
 
     @DeleteMapping(path = "{userId}")

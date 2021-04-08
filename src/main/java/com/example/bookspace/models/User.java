@@ -167,28 +167,27 @@ public class User {
         this.password = userDetails.getPassword();
         this.name = userDetails.getName();
         this.username = userDetails.getUsername();
-        this.dob = LocalDate.now(); //userDetails.getDob();
-        this.age = userDetails.getAge();
-        this.profile_pic = userDetails.getProfile_pic();
-        this.description = userDetails.getDescription();
-        this.setDor(LocalDate.now());
-        this.setRank(Rank.HAREM);
-        //this.setAge(dob);
+        this.dob = userDetails.getDob(); 
+        this.age = getAge();
+        this.profile_pic = new byte[0];
+        this.description = "";
+        this.dor = LocalDate.now();
+        this.rank = Rank.HAREM;
     }
     
-    public User(String email, String name, String username, String password, LocalDate dob, String description) {
-        this.email = email;
-        this.name = name;
-        this.username = username;
-        this.password = password;
-        this.dob = LocalDate.now();
-        this.description = description;
-        //this.profile_pic = profilePic;
-        this.setDor(LocalDate.now());
-        this.setRank(Rank.WORKER);
-        this.setAge(dob);
+    // public User(String email, String name, String username, String password, LocalDate dob, String description) {
+    //     this.email = email;
+    //     this.name = name;
+    //     this.username = username;
+    //     this.password = password;
+    //     this.dob = LocalDate.now();
+    //     this.description = description;
+    //     //this.profile_pic = profilePic;
+    //     this.setDor(LocalDate.now());
+    //     this.setRank(Rank.WORKER);
+    //     this.setAge(dob);
 
-    }
+    // }
 
     public Long getId() {
         return this.id;
@@ -311,8 +310,7 @@ public class User {
     }
 
     public Integer getAge() {
-        System.out.println("Hola age " + this.age);
-        return this.age;
+        return Period.between(this.dob, LocalDate.now()).getYears();
     }
 
     public void setAge(LocalDate dob) {

@@ -1,8 +1,8 @@
 package com.example.bookspace.beans;
 
-import java.time.LocalDate;
 import java.util.List;
 
+import com.example.bookspace.Inputs.UserInput;
 import com.example.bookspace.models.User;
 import com.example.bookspace.repositories.UserRepository;
 
@@ -18,16 +18,9 @@ public class UserConfig {
     @Bean
     CommandLineRunner commandLineRunner(UserRepository repository) {
         return args ->  {
-            User demo = new User(
-                "email",
-                "demo",
-                "username",
-                "passwd",
-                LocalDate.now(),
-                "description"
-            );
+            UserInput userDetails = new UserInput("demoEmail", "demoName", "demoUsername", "demoPassword");
+            User demo = new User(userDetails);
             repository.saveAll(List.of(demo));
-
         };
 
     }

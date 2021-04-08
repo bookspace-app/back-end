@@ -5,10 +5,8 @@ public enum Category {
     LOVE,
     WAR,
     POTENTIAL;
-
-
-
-
 }
+
+    
 
 

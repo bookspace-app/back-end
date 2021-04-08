@@ -68,7 +68,9 @@ public class PublicationService {
         publication = new Publication(publicationDetails);
         User author = userRepository.getOne(publicationDetails.getAuthorId());
         publication.setAuthor(author);
-        publicationRepository.save(publication);
+        author.addPublication(publication);
+        publication = publicationRepository.save(publication);
+        author = userRepository.save(author);
         return new PublicationOutput(publication);
 
 	}
