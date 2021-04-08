@@ -54,6 +54,7 @@ public class UserService {
 		if(userByEmail.isPresent()){
 			throw new IllegalStateException("email taken");
 		}
+		
 		User user = new User(userDetails);
 		user = userRepository.save(user);
 		return new UserOutput(user);

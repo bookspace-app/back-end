@@ -23,20 +23,20 @@ public class UserInput {
     private String description; 
     private List<Tag> preferedTags;
 
-    public UserInput(){}
+    // public UserInput(){}
 
-    public UserInput(String email, String password, String name, String username, LocalDate dob, int age, byte[] profile_pic, String description, LocalDate dor, List<Tag> preferedTags) {
-        this.email = email;
-        this.name = name;
-        this.password = password;
-        this.username = username;
-        this.dob = dob;
-        this.age = age;
-        this.profile_pic = profile_pic;
-        this.description = description;
-        this.dor = dor;
-        this.preferedTags = preferedTags;
-    }
+    // // public UserInput(String email, String password, String name, String username, LocalDate dob, int age, byte[] profile_pic, String description, LocalDate dor, List<Tag> preferedTags) {
+    // //     this.email = email;
+    // //     this.name = name;
+    // //     this.password = password;
+    // //     this.username = username;
+    // //     this.dob = dob;
+    // //     this.age = age;
+    // //     this.profile_pic = profile_pic;
+    // //     this.description = description;
+    // //     this.dor = dor;
+    // //     this.preferedTags = preferedTags;
+    // // }
 
     public UserInput(String email, String name, String username, String password){
         this.email = email;
@@ -45,7 +45,7 @@ public class UserInput {
         this.password = password;
         this.dob = LocalDate.now();
         this.age = this.getAge();
-        this.profile_pic =  new byte[1];
+        this.profile_pic =  new byte[0];
         this.description = "";
         this.dor = LocalDate.now();
         this.preferedTags = new ArrayList<>();
@@ -120,7 +120,7 @@ public class UserInput {
     }
 
     public Integer getAge() {
-        return 0;//cambiar
+        return Period.between(this.dob, LocalDate.now()).getYears();
     }
 
     public void setAge(int age) {
