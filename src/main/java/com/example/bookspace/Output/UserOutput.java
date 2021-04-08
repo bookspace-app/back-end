@@ -42,6 +42,7 @@ public class UserOutput extends OutputManager{
         this.password = u.getPassword();
         this.age = u.getAge();
         this.description = u.getDescription();
+        this.dob = u.getDob();
         this.dor = u.getDor();
         this.rank = u.getRank().name();
         this.profile_pic = u.getProfile_pic();
@@ -55,6 +56,7 @@ public class UserOutput extends OutputManager{
         this.profilePic = this.self + "/profilePic";
         this.createdTags = this.self + "/tags";
         this.preferedTags = this.self + "/preferedTags";
+        
     }
 
 

@@ -1,6 +1,8 @@
 package com.example.bookspace.Inputs;
 
 import java.time.LocalDate;
+import java.time.Period;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.example.bookspace.models.Tag;
@@ -41,6 +43,13 @@ public class UserInput {
         this.name = name;
         this.username = username;
         this.password = password;
+        this.dob = LocalDate.now();
+        this.age = this.getAge();
+        this.profile_pic =  new byte[1];
+        this.description = "";
+        this.dor = LocalDate.now();
+        this.preferedTags = new ArrayList<>();
+        
     }
 
 
@@ -111,11 +120,10 @@ public class UserInput {
     }
 
     public Integer getAge() {
-        return this.age;
+        return 0;//cambiar
     }
 
     public void setAge(int age) {
-        System.out.println("Hola input age " + this.age);
         this.age = age;
     }
 

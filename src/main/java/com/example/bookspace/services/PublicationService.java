@@ -65,7 +65,7 @@ public class PublicationService {
 						"Publication with id " + id + " does not exist"));
 		
                 
-        publication = new Publication(publicationDetails);
+        publication = new Publication(publicationDetails, userRepository.getOne(publicationDetails.getAuthorId()));
         User author = userRepository.getOne(publicationDetails.getAuthorId());
         publication.setAuthor(author);
         publicationRepository.save(publication);
@@ -124,23 +124,30 @@ public class PublicationService {
 
 
 
-    public PublicationOutput postLike(Long id) {
+    public PublicationOutput postLike(Long id, Long userId) throws Exception {
         Publication p = publicationRepository.getOne(id);
-        
-        p.addLike();
-
+        if (p.getAuthor().getId() == userId) throw new Exception("The author of a publication cannot like it");
+        if (p.getVotedBy().contains(p)) throw new Exception("This user has already liked this publication");
+        User user = userRepository.getOne(userId); 
+        p.addVotedUser(user); 
         publicationRepository.save(p);
+        user.addVotedPublication(p);
+        userRepository.save(user);
         return new PublicationOutput(p);
     }
 
 
 
-    public PublicationOutput postDislike(Long id) {
+    public PublicationOutput postDislike(Long id, Long userId) throws Exception {
         Publication p = publicationRepository.getOne(id);
-        
-        p.removeLike();
+        if (p.getAuthor().getId() == userId) throw new Exception("The author of a publication cannot dislike it");
+        if (!p.getVotedBy().contains(p)) throw new Exception("This user has not liked this publication");
+        User u = userRepository.getOne(userId);
 
+        p.removeVotedUser(u);
+        u.removeVotedPublication(p);
         publicationRepository.save(p);
+        userRepository.save(u);
         
         return new PublicationOutput(p);
     }

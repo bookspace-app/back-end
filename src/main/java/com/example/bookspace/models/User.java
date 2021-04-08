@@ -278,6 +278,14 @@ public class User {
         this.votedPublications = votedPublications;
     }
 
+    public void addVotedPublication(Publication publication) {
+        this.votedPublications.add(publication);
+    }
+
+    public void removeVotedPublication(Publication publication) {
+        this.votedPublications.remove(publication);
+    }
+
     public List<Publication> getFavouritePublications() {
         return this.favouritePublications;
     }
