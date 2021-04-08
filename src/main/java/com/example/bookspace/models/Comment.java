@@ -22,14 +22,14 @@ import javax.persistence.Table;
 public class Comment {
     @Id
     @SequenceGenerator(
-        name = "user_sequence", 
-        sequenceName = "user_sequence", 
+        name = "comment_sequence", 
+        sequenceName = "comment_sequence", 
         allocationSize = 1
     )
 
     @GeneratedValue(
         strategy = GenerationType.SEQUENCE, 
-        generator = "user_sequence"
+        generator = "comment_sequence"
     )
     private Long id;
 
