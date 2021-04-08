@@ -30,9 +30,9 @@ public class UserOutput extends OutputManager{
     private String createdTags;
     private String preferedTags; 
     
-    public UserOutput() {
+    // public UserOutput() {
         
-    }
+    // }
 
     public UserOutput(User u) {
         this.id = u.getId();
@@ -43,6 +43,7 @@ public class UserOutput extends OutputManager{
         this.age = u.getAge();
         this.description = u.getDescription();
         this.dor = u.getDor();
+        this.dob = u.getDob();
         this.rank = u.getRank().name();
         this.profile_pic = u.getProfile_pic();
         this.self = self + this.id;

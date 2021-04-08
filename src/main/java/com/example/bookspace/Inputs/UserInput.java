@@ -1,6 +1,7 @@
 package com.example.bookspace.Inputs;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.example.bookspace.models.Tag;
@@ -15,42 +16,34 @@ public class UserInput {
     private String username;
     private String password;
     private LocalDate dob;
-    private int age;
+    private String description;
     private byte[] profile_pic;
-    private LocalDate dor;
-    private String description; 
-    private List<Tag> preferedTags;
 
-    public UserInput(){}
 
-    public UserInput(String email, String password, String name, String username, LocalDate dob, int age, byte[] profile_pic, String description, LocalDate dor, List<Tag> preferedTags) {
-        this.email = email;
-        this.name = name;
-        this.password = password;
-        this.username = username;
-        this.dob = dob;
-        this.age = age;
-        this.profile_pic = profile_pic;
-        this.description = description;
-        this.dor = dor;
-        this.preferedTags = preferedTags;
-    }
+    // public UserInput(){}
+
+    // public UserInput(String email, String password, String name, String username, LocalDate dob, int age, byte[] profile_pic, String description, LocalDate dor, List<Tag> preferedTags) {
+    //     this.email = email;
+    //     this.name = name;
+    //     this.password = password;
+    //     this.username = username;
+    //     this.dob = dob;
+    //     this.age = age;
+    //     this.profile_pic = profile_pic;
+    //     this.description = description;
+    //     this.dor = dor;
+    //     this.preferedTags = preferedTags;
+    // }
 
     public UserInput(String email, String name, String username, String password){
         this.email = email;
         this.name = name;
         this.username = username;
         this.password = password;
-    }
+        this.dob = LocalDate.of(2000, 12, 2);
 
+ 
 
-    public byte[] getProfile_pic() {
-        return profile_pic;
-    }
-
-
-    public void setProfile_pic(byte[] profile_pic) {
-        this.profile_pic = profile_pic;
     }
 
 
@@ -94,40 +87,9 @@ public class UserInput {
         this.dob = dob;
     }
 
-    public String getDescription() {
-        return this.description;
-    }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
-    public LocalDate getDor() {
-        return this.dor;
-    }
-
-    public void setDor(LocalDate dor) {
-        this.dor = dor;
-    }
-
-    public Integer getAge() {
-        return this.age;
-    }
-
-    public void setAge(int age) {
-        System.out.println("Hola input age " + this.age);
-        this.age = age;
-    }
-
-    public List<Tag> getPreferedTags() {
-        return this.preferedTags;
-    }
-
-    public void setPreferedTags(List<Tag> preferedTags) {
-        this.preferedTags = preferedTags;
-    }
-
-     
+ 
     
 
 
