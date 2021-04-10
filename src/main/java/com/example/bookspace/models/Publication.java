@@ -84,28 +84,29 @@ public class Publication {
 
 
 
-    public Publication() {     
-    }
+    // // public Publication() {     
+    // // }
 
-    public Publication(String title, String content, User author, String category) {
-        this.title = title;
-        this.content = content;
-        this.dop = LocalDate.now();
-        this.author = author;
-        this.votedBy = null;
-        this.favouriteBy = null;
-        this.comments = null;
-        this.category = Category.POTENTIAL;
-        this.tags = null;
-        this.views = 0L;
-        this.likes = 0L;
-    }
+    // public Publication(String title, String content, User author, String category) {
+    //     this.title = title;
+    //     this.content = content;
+    //     this.dop = LocalDate.now();
+    //     this.author = author;
+    //     this.votedBy = null;
+    //     this.favouriteBy = null;
+    //     this.comments = null;
+    //     this.category = Category.POTENTIAL;
+    //     this.tags = null;
+    //     this.views = 0L;
+    //     this.likes = 0L;
+    // }
 
 
-    public Publication(PublicationInput publicationDetails) {
+    public Publication(PublicationInput publicationDetails, User author) {
         this.title = publicationDetails.getTitle();
         this.content = publicationDetails.getContent();
         this.dop = LocalDate.now();
+        this.author = author;
         this.votedBy = new ArrayList<>();
         this.favouriteBy = new ArrayList<>();
         this.comments = new ArrayList<>();
