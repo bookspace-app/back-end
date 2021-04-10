@@ -16,24 +16,25 @@ public class UserInput {
     private String username;
     private String password;
     private LocalDate dob;
+    private Integer age;
     private String description;
     private byte[] profile_pic;
+    private List<Tag> preferedTags;
 
 
     // public UserInput(){}
 
-    // public UserInput(String email, String password, String name, String username, LocalDate dob, int age, byte[] profile_pic, String description, LocalDate dor, List<Tag> preferedTags) {
-    //     this.email = email;
-    //     this.name = name;
-    //     this.password = password;
-    //     this.username = username;
-    //     this.dob = dob;
-    //     this.age = age;
-    //     this.profile_pic = profile_pic;
-    //     this.description = description;
-    //     this.dor = dor;
-    //     this.preferedTags = preferedTags;
-    // }
+    public UserInput(String email, String password, String name, String username, LocalDate dob, int age, byte[] profile_pic, String description, LocalDate dor, List<Tag> preferedTags) {
+        this.email = email;
+        this.name = name;
+        this.password = password;
+        this.username = username;
+        this.dob = dob;
+        this.age = age;
+        this.profile_pic = profile_pic;
+        this.description = description;
+        this.preferedTags = preferedTags;
+    }
 
     public UserInput(String email, String name, String username, String password){
         this.email = email;
@@ -41,9 +42,6 @@ public class UserInput {
         this.username = username;
         this.password = password;
         this.dob = LocalDate.of(2000, 12, 2);
-
- 
-
     }
 
 
