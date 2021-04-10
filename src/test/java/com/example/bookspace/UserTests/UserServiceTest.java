@@ -6,6 +6,7 @@ import org.mockito.Mockito;
 
 import com.example.bookspace.Inputs.UserInput;
 import com.example.bookspace.Output.PublicationOutput;
+import com.example.bookspace.Output.TagOutput;
 import com.example.bookspace.Output.UserOutput;
 import com.example.bookspace.services.UserService;
 import com.example.bookspace.models.User;
@@ -30,23 +31,11 @@ class UserServiceTest {
         List<User> users = new ArrayList<>();
         //Publication publication = new Publication();
 
-        User u1 = new User(
-                "email1",
-                "demo1",
-                "username1",
-                LocalDate.now(),
-                "description"
-        );
+        User u1 = new User(new UserInput("email1", "name1", "username1", "password1"));
 
         //u1.addPublication(publication);
 
-		User u2 = new User(
-                "email2",
-                "demo2",
-                "username2",
-                LocalDate.now(),
-                "description"
-        );
+		User u2 = new User(new UserInput("email2", "name2", "username2", "password2"));
 
 		users.add(u1);
 		users.add(u2);
@@ -73,27 +62,11 @@ class UserServiceTest {
         List<UserOutput> result = new ArrayList<>();
 		result = userService.getUsers();
 
-        User u1 = new User(
-                "email1",
-                "demo1",
-                "username1",
-                LocalDate.now(),
-                "description"
-        );
-
-		User u2 = new User(
-                "email2",
-                "demo2",
-                "username2",
-                LocalDate.now(),
-                "description"
-        );
-
         assertThat(result.size()).isEqualTo(2);
         assertThat(result.get(0).getUsername())
-                        .isEqualTo(u1.getUsername());
+                        .isEqualTo("username1");
 		assertThat(result.get(1).getUsername())
-                        .isEqualTo(u2.getUsername());
+                        .isEqualTo("username2");
     }
 
     @Test
@@ -106,12 +79,12 @@ class UserServiceTest {
     }
 
     @Test
-    void testaddNewUser() {
+    void testpostUser() {
 
-        UserInput ui1 = new UserInput("email3", "name3", "username3", LocalDate.now(), "description3");
+        UserInput ui1 = new UserInput("email3", "name3", "username3", "password3");
 
         UserOutput result;
-		result = userService.addNewUser(ui1);
+		result = userService.postUser(ui1);
         assertThat(result).isNotNull();
         assertThat(result.getUsername()).isEqualTo("username3");
     }
@@ -125,7 +98,8 @@ class UserServiceTest {
     @Test
     void testupdateUser() {
 
-        userService.updateUser(1L, "name1", "descriptionNew", "emailNew", "usernameNew", LocalDate.now());
+        byte[] pic = new byte[0];
+        userService.updateUser(1L, "nameNew", "descriptionNew", "emailNew", "usernameNew", LocalDate.now(), pic);
     }
 
     @Test
@@ -133,6 +107,15 @@ class UserServiceTest {
 
         List<PublicationOutput> result = new ArrayList<>();
 		result = userService.getPublicationsUser(1L);
+
+        assertThat(result.size()).isEqualTo(0);
+    }
+
+    @Test
+    void testgetPreferedTagsUser() {
+
+        List<TagOutput> result = new ArrayList<>();
+		result = userService.getPreferedTagsUser(1L);
 
         assertThat(result.size()).isEqualTo(0);
     }

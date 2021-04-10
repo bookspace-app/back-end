@@ -1,6 +1,7 @@
 package com.example.bookspace.UserTests;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -15,11 +16,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.example.bookspace.Inputs.UserInput;
+import com.example.bookspace.Output.PublicationOutput;
+import com.example.bookspace.Output.TagOutput;
 import com.example.bookspace.Output.UserOutput;
 import com.example.bookspace.models.Publication;
 
@@ -46,6 +48,7 @@ class UserControllerAccTest
         ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url, ArrayList.class);
         assertEquals(OK, responseEntity.getStatusCode());
         assertEquals(true, responseEntity.hasBody());
+        
     }
 
     @Test
@@ -62,20 +65,30 @@ class UserControllerAccTest
         ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/publications", ArrayList.class);
         assertEquals(OK, responseEntity.getStatusCode());
         assertEquals(true, responseEntity.hasBody());
-        List<Publication> result = new ArrayList<>();
+        List<PublicationOutput> result = new ArrayList<>();
         assertEquals(result, responseEntity.getBody());
     }
 
     @Test
-    void testregisterNewUser() throws Exception {
+    void testgetPreferedTagsUser() throws Exception {
+
+        ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/preferedTags", ArrayList.class);
+        assertEquals(OK, responseEntity.getStatusCode());
+        assertEquals(true, responseEntity.hasBody());
+        List<TagOutput> result = new ArrayList<>();
+        assertEquals(result, responseEntity.getBody());
+    }
+
+    @Test
+    void testpostUser() throws Exception {
 
         HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
-		UserInput u1 = new UserInput("emailNew2", "demoNew2", "usernameNew2", LocalDate.now(), "descriptionNew2");
+		UserInput u1 = new UserInput("emailNew2", "nameNew2", "usernameNew2", "passwordNew2");
         HttpEntity<UserInput> requestEntity = new HttpEntity<>(u1, headers);
 
-        ResponseEntity<UserInput> responseEntity = restTemplate.postForEntity(url, requestEntity, UserInput.class);
+        ResponseEntity<UserOutput> responseEntity = restTemplate.postForEntity(url, requestEntity, UserOutput.class);
         assertEquals(OK, responseEntity.getStatusCode());	
     }
 
@@ -85,10 +98,10 @@ class UserControllerAccTest
         HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
-		String name = "name: NewNameNew";
-        HttpEntity<String> requestEntity = new HttpEntity<>(name, headers);
+		UserInput u1 = new UserInput("emailNew2", "nameNew2", "usernameNew2", "passwordNew2");
+        HttpEntity<UserInput> requestEntity = new HttpEntity<>(u1, headers);
 
-        ResponseEntity responseEntity = restTemplate.exchange(url + "/2", HttpMethod.PUT, requestEntity, Void.class);
+        ResponseEntity responseEntity = restTemplate.exchange(url + "/1", HttpMethod.PUT, requestEntity, Void.class);
         assertEquals(OK, responseEntity.getStatusCode());
     }
 }
