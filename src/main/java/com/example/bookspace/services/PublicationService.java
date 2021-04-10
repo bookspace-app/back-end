@@ -50,7 +50,7 @@ public class PublicationService {
 
     public PublicationOutput postPublication(PublicationInput publicationDetails) {
         User author = userRepository.findById(publicationDetails.getAuthorId()).get();
-        Publication publication = new Publication(publicationDetails.getTitle(), publicationDetails.getContent(), author, publicationDetails.getCategory());
+        Publication publication = new Publication(publicationDetails, author);
         author.addPublication(publication);
         publicationRepository.save(publication);
         userRepository.save(author);
@@ -64,13 +64,10 @@ public class PublicationService {
 					.orElseThrow(() -> new IllegalStateException(
 						"Publication with id " + id + " does not exist"));
 		
-                
-        publication = new Publication(publicationDetails);
-        User author = userRepository.getOne(publicationDetails.getAuthorId());
-        publication.setAuthor(author);
-        author.addPublication(publication);
+        
+        if (publicationDetails.getTitle() != null) publication.setTitle(publicationDetails.getTitle());
+        if (publicationDetails.getContent() != null) publication.setContent(publicationDetails.getContent());
         publication = publicationRepository.save(publication);
-        author = userRepository.save(author);
         return new PublicationOutput(publication);
 
 	}

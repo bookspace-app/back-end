@@ -13,11 +13,13 @@ public class PublicationOutput extends OutputManager{
     private Long views;
     private Long likes;
     private String category; 
+    private Integer n_comments;
     private UserOutput author; 
     private String votedUsers;
     private String favUsers;
     private String comments;
     private String tags;
+    
     
 
 
@@ -28,6 +30,7 @@ public class PublicationOutput extends OutputManager{
         this.content = p.getContent();
         this.dop = p.getDop();
         this.views = p.getViews();
+        this.n_comments = p.getComments().size();
         this.author = new UserOutput(p.getAuthor());
         this.votedUsers = self + "/votedUsers";
         this.favUsers = self + "/favUsers";
@@ -142,6 +145,16 @@ public class PublicationOutput extends OutputManager{
     public void setTags(String tags) {
         this.tags = tags;
     }
+
+
+    public Integer getN_comments() {
+        return this.n_comments;
+    }
+
+    public void setN_comments(Integer n_comments) {
+        this.n_comments = n_comments;
+    }
+
 
 
     
