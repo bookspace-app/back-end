@@ -84,8 +84,8 @@ public class Publication {
 
 
 
-    // // public Publication() {     
-    // // }
+    public Publication() {     
+    }
 
     // public Publication(String title, String content, User author, String category) {
     //     this.title = title;
