@@ -1,6 +1,7 @@
 package com.example.bookspace.models;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +48,7 @@ public class Publication {
     private String content;
 
     @Column(name = "dop", nullable = false)
-    private LocalDate dop; 
+    private LocalDateTime dop; 
 
     @Column(name = "views")
     private Long views;
@@ -87,25 +88,10 @@ public class Publication {
     public Publication() {     
     }
 
-    // public Publication(String title, String content, User author, String category) {
-    //     this.title = title;
-    //     this.content = content;
-    //     this.dop = LocalDate.now();
-    //     this.author = author;
-    //     this.votedBy = null;
-    //     this.favouriteBy = null;
-    //     this.comments = null;
-    //     this.category = Category.POTENTIAL;
-    //     this.tags = null;
-    //     this.views = 0L;
-    //     this.likes = 0L;
-    // }
-
-
     public Publication(PublicationInput publicationDetails, User author) {
         this.title = publicationDetails.getTitle();
         this.content = publicationDetails.getContent();
-        this.dop = LocalDate.now();
+        this.dop = LocalDateTime.now();
         this.author = author;
         this.votedBy = new ArrayList<>();
         this.favouriteBy = new ArrayList<>();
@@ -140,13 +126,15 @@ public class Publication {
         this.content = content;
     }
 
-    public LocalDate getDop() {
+
+    public LocalDateTime getDop() {
         return this.dop;
     }
 
-    public void setDop(LocalDate dop) {
+    public void setDop(LocalDateTime dop) {
         this.dop = dop;
     }
+    
 
     public List<User> getVotedBy() {
         return this.votedBy;

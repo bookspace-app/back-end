@@ -1,15 +1,18 @@
 package com.example.bookspace.Output;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.example.bookspace.models.Publication;
+
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters.LocalDateTimeConverter;
 
 public class PublicationOutput extends OutputManager{ 
     private String self = getURL() + "/publications/";
     private Long id;
     private String title;
     private String content;
-    private LocalDate dop;
+    private LocalDateTime dop;
     private Long views;
     private Long likes;
     private String category; 
@@ -74,13 +77,15 @@ public class PublicationOutput extends OutputManager{
         this.content = content;
     }
 
-    public LocalDate getDop() {
+
+    public LocalDateTime getDop() {
         return this.dop;
     }
 
-    public void setDop(LocalDate dop) {
+    public void setDop(LocalDateTime dop) {
         this.dop = dop;
     }
+    
 
     public Long getViews() {
         return this.views;
