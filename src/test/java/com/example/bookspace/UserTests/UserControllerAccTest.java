@@ -1,7 +1,6 @@
 package com.example.bookspace.UserTests;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -23,7 +22,6 @@ import com.example.bookspace.Inputs.UserInput;
 import com.example.bookspace.Output.PublicationOutput;
 import com.example.bookspace.Output.TagOutput;
 import com.example.bookspace.Output.UserOutput;
-import com.example.bookspace.models.Publication;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserControllerAccTest

@@ -29,12 +29,8 @@ class UserServiceTest {
         UserRepository userRepository = Mockito.mock(UserRepository.class);
 
         List<User> users = new ArrayList<>();
-        //Publication publication = new Publication();
 
         User u1 = new User(new UserInput("email1", "name1", "username1", "password1"));
-
-        //u1.addPublication(publication);
-
 		User u2 = new User(new UserInput("email2", "name2", "username2", "password2"));
 
 		users.add(u1);
