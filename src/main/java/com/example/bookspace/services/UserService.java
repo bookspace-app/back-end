@@ -69,7 +69,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public void updateUser(Long id, String name, String description, String email, String username, LocalDate dob, byte[] profile_pic) {
+	public UserOutput updateUser(Long id, String name, String description, String email, String username, LocalDate dob, byte[] profile_pic) {
 		User user = userRepository.findById(id)
 					.orElseThrow(() -> new IllegalStateException(
 						"User with id " + id + " does not exist"));
@@ -110,6 +110,7 @@ public class UserService {
 			user.setProfile_pic(profile_pic);
 		}
 		userRepository.save(user);
+		return new UserOutput(user);
 	}
 
     public List<PublicationOutput> getPublicationsUser(Long id) {

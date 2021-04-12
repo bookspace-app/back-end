@@ -52,14 +52,14 @@ public class UserController {
     }
 
     @PostMapping
-    public void registerNewUser(@RequestBody UserInput userDetails){
-        userService.addNewUser(userDetails);
+    public UserOutput registerNewUser(@RequestBody UserInput userDetails){
+        return userService.addNewUser(userDetails);
     }
 
     @PutMapping(path = "{userId}") 
-    public void updateUser(@PathVariable("userId") Long id,
+    public UserOutput updateUser(@PathVariable("userId") Long id,
                                        @RequestBody UserInput u){
-        userService.updateUser(id,u.getName(),u.getDescription(),u.getEmail(),u.getUsername(),u.getDob(),u.getProfile_pic());
+        return userService.updateUser(id,u.getName(),u.getDescription(),u.getEmail(),u.getUsername(),u.getDob(),u.getProfile_pic());
     }
 
     @DeleteMapping(path = "{userId}")
