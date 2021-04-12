@@ -79,8 +79,7 @@ class UserServiceTest {
 
         UserInput ui1 = new UserInput("email3", "name3", "username3", "password3");
 
-        UserOutput result;
-		result = userService.postUser(ui1);
+        UserOutput result = userService.postUser(ui1);
         assertThat(result).isNotNull();
         assertThat(result.getUsername()).isEqualTo("username3");
     }
@@ -101,8 +100,7 @@ class UserServiceTest {
     @Test
     void testgetPublicationsUser() {
 
-        List<PublicationOutput> result = new ArrayList<>();
-		result = userService.getPublicationsUser(1L);
+        List<PublicationOutput> result = userService.getPublicationsUser(1L);
 
         assertThat(result.size()).isEqualTo(0);
     }

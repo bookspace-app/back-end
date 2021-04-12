@@ -16,11 +16,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import com.example.bookspace.Inputs.UserInput;
-import com.example.bookspace.Output.PublicationOutput;
-import com.example.bookspace.Output.TagOutput;
 import com.example.bookspace.Output.UserOutput;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -44,9 +40,9 @@ class UserControllerAccTest
     void testgetAllUsers() throws Exception {
 
         ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url, ArrayList.class);
+        
         assertEquals(OK, responseEntity.getStatusCode());
         assertEquals(true, responseEntity.hasBody());
-        
     }
 
     @Test
@@ -63,8 +59,6 @@ class UserControllerAccTest
         ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/publications", ArrayList.class);
         assertEquals(OK, responseEntity.getStatusCode());
         assertEquals(true, responseEntity.hasBody());
-        List<PublicationOutput> result = new ArrayList<>();
-        assertEquals(result, responseEntity.getBody());
     }
 
     @Test
@@ -73,8 +67,6 @@ class UserControllerAccTest
         ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/preferedTags", ArrayList.class);
         assertEquals(OK, responseEntity.getStatusCode());
         assertEquals(true, responseEntity.hasBody());
-        List<TagOutput> result = new ArrayList<>();
-        assertEquals(result, responseEntity.getBody());
     }
 
     @Test
@@ -83,10 +75,11 @@ class UserControllerAccTest
         HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
+        HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
 		UserInput u1 = new UserInput("emailNew2", "nameNew2", "usernameNew2", "passwordNew2");
-        HttpEntity<UserInput> requestEntity = new HttpEntity<>(u1, headers);
+        requestEntity = new HttpEntity<>(u1, headers);
 
-        ResponseEntity<UserOutput> responseEntity = restTemplate.postForEntity(url, requestEntity, UserOutput.class);
+        ResponseEntity<UserOutput> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, UserOutput.class);
         assertEquals(OK, responseEntity.getStatusCode());	
     }
 
