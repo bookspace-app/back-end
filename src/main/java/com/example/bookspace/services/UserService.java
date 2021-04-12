@@ -48,12 +48,13 @@ public class UserService {
 		return new UserOutput(u);
     }
 
-    public UserOutput addNewUser(UserInput userDetails) {
+    public UserOutput postUser(UserInput userDetails) {
 		Optional<User> userByEmail = userRepository
 		.findUserByEmail(userDetails.getEmail());
 		if(userByEmail.isPresent()){
 			throw new IllegalStateException("email taken");
 		}
+		
 		User user = new User(userDetails);
 		user = userRepository.save(user);
 		return new UserOutput(user);
