@@ -8,7 +8,7 @@ import com.example.bookspace.models.User;
 
 public class UserOutput extends OutputManager{
 
-    private String self = getURL() + "/users/";
+    private String self ;
     private Long id;
     private String email;
     private String name;
@@ -16,10 +16,8 @@ public class UserOutput extends OutputManager{
     private String password;
     private Integer age;
     private String description;
-    private LocalDate dob;
     private LocalDate dor;
     private String rank; 
-    private byte[] profile_pic;
     private String publications;
     private String votedPublications;
     private String favouritePublications;
@@ -28,12 +26,9 @@ public class UserOutput extends OutputManager{
     private String blockedUsers; 
     private String profilePic;
     private String createdTags;
-    private String preferedTags; 
+    private String favTags; 
+    private String favCategories;
     
-    // public UserOutput() {
-        
-    // }
-
     public UserOutput(User u) {
         this.id = u.getId();
         this.email = u.getEmail();
@@ -43,10 +38,8 @@ public class UserOutput extends OutputManager{
         this.age = u.getAge();
         this.description = u.getDescription();
         this.dor = u.getDor();
-        this.dob = u.getDob();
         this.rank = u.getRank().name();
-        this.profile_pic = u.getProfile_pic();
-        this.self = self + this.id;
+        this.self = getURL() + "/users/" + this.id;
         this.publications =  this.self + "/publications";
         this.votedPublications = this.self + "/votedPublications";
         this.favouritePublications = this.self + "/favouritePublications";
@@ -55,9 +48,19 @@ public class UserOutput extends OutputManager{
         this.blockedUsers = this.self + "/blockedUsers";
         this.profilePic = this.self + "/profilePic";
         this.createdTags = this.self + "/tags";
-        this.preferedTags = this.self + "/preferedTags";
+        this.favTags = this.self + "/favTags";
+        this.favCategories = this.self + "/favCategories";
     }
 
+
+
+    public String getSelf() {
+        return this.self;
+    }
+
+    public void setSelf(String self) {
+        this.self = self;
+    }
 
     public Long getId() {
         return this.id;
@@ -66,31 +69,6 @@ public class UserOutput extends OutputManager{
     public void setId(Long id) {
         this.id = id;
     }
-
-    public String getPassword() {
-        return this.password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public LocalDate getDob() {
-        return this.dob;
-    }
-
-    public void setDob(LocalDate dob) {
-        this.dob = dob;
-    }
-
-    public byte[] getProfile_pic() {
-        return this.profile_pic;
-    }
-
-    public void setProfile_pic(byte[] profile_pic) {
-        this.profile_pic = profile_pic;
-    }
-
 
     public String getEmail() {
         return this.email;
@@ -116,12 +94,19 @@ public class UserOutput extends OutputManager{
         this.username = username;
     }
 
+    public String getPassword() {
+        return this.password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public Integer getAge() {
-        System.out.println("Hola out age " + this.age);
         return this.age;
     }
 
-    public void setAge(int age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 
@@ -134,9 +119,8 @@ public class UserOutput extends OutputManager{
     }
 
     public LocalDate getDor() {
-        return dor;
+        return this.dor;
     }
-
 
     public void setDor(LocalDate dor) {
         this.dor = dor;
@@ -198,15 +182,6 @@ public class UserOutput extends OutputManager{
         this.blockedUsers = blockedUsers;
     }
 
-
-    public String getSelf() {
-        return this.self;
-    }
-
-    public void setSelf(String self) {
-        this.self = self;
-    }
-
     public String getProfilePic() {
         return this.profilePic;
     }
@@ -223,13 +198,24 @@ public class UserOutput extends OutputManager{
         this.createdTags = createdTags;
     }
 
-    public String getPreferedTags() {
-        return this.preferedTags;
+    public String getfavTags() {
+        return this.favTags;
     }
 
-    public void setPreferedTags(String preferedTags) {
-        this.preferedTags = preferedTags;
+    public void setfavTags(String favTags) {
+        this.favTags = favTags;
     }
+
+
+    public String getFavCategories() {
+        return this.favCategories;
+    }
+
+    public void setFavCategories(String favCategories) {
+        this.favCategories = favCategories;
+    }
+
+
     
 
 

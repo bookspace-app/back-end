@@ -45,7 +45,7 @@ public class Tag {
     @ManyToMany(mappedBy = "tags")
     private List<Publication> publications;
 
-    @ManyToMany(mappedBy = "preferedTags")
+    @ManyToMany(mappedBy = "favTags")
     private List<User> preferedBy;
 
     public Tag(String tag) {
@@ -84,7 +84,7 @@ public class Tag {
         this.publications = tagged_publications;
     }
 
-    public List<User> getPreferedTags() {
+    public List<User> getfavTags() {
         return this.preferedBy;
     }
 

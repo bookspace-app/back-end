@@ -1,13 +1,7 @@
 package com.example.bookspace.Inputs;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-
-import com.example.bookspace.models.Tag;
-
-
-
 
 
 public class UserInput {
@@ -16,35 +10,22 @@ public class UserInput {
     private String username;
     private String password;
     private LocalDate dob;
-    private Integer age;
     private String description;
-    private byte[] profile_pic;
-    private List<Tag> preferedTags;
+    private List<String> favCategories;
 
 
-    // public UserInput(){}
-
-    public UserInput(String email, String password, String name, String username, LocalDate dob, int age, byte[] profile_pic, String description, LocalDate dor, List<Tag> preferedTags) {
+    public UserInput(String email, String name, String username, String password, LocalDate dob, String description, List<String> favCategories) {
         this.email = email;
         this.name = name;
-        this.password = password;
         this.username = username;
+        this.password = password;
         this.dob = dob;
-        this.age = age;
-        this.profile_pic = profile_pic;
         this.description = description;
-        this.preferedTags = preferedTags;
+        this.favCategories = favCategories;
     }
 
-    public UserInput(String email, String name, String username, String password){
-        this.email = email;
-        this.name = name;
-        this.username = username;
-        this.password = password;
-        this.dob = LocalDate.of(2000, 12, 2);
-    }
-
-
+    
+  
     public String getEmail() {
         return this.email;
     }
@@ -86,9 +67,26 @@ public class UserInput {
     }
 
 
+    public String getDescription() {
+        return this.description;
+    }
 
- 
-    
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+
+    public List<String> getFavCategories() {
+        return this.favCategories;
+    }
+
+    public void setFavCategories(List<String> favCategories) {
+        this.favCategories = favCategories;
+    }
+   
+
+
+
 
 
 

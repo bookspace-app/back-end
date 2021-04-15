@@ -39,7 +39,7 @@ public class PublicationController {
 
 
     @PostMapping
-    public PublicationOutput postPublication(@RequestBody PublicationInput publicationDetails) {
+    public PublicationOutput postPublication(@RequestBody PublicationInput publicationDetails) throws Exception {
         return publicationService.postPublication(publicationDetails);
     }
 
@@ -73,14 +73,14 @@ public class PublicationController {
         
     }
 
-    @PostMapping(path = "{publicationId}/likes")
-    public PublicationOutput postLike(@PathVariable("publicationId") Long id) {
-        return publicationService.postLike(id);
+    @PostMapping(path = "{publicationId}/likes/{userId}")
+    public PublicationOutput postLike(@PathVariable("publicationId") Long id, @PathVariable("userId") Long userId) throws Exception {
+        return publicationService.postLike(id, userId);
     }
 
-    @PostMapping(path = "{publicationId}/dislikes")
-    public PublicationOutput postDislike(@PathVariable("publicationId") Long id) {
-        return publicationService.postDislike(id);
+    @PostMapping(path = "{publicationId}/dislikes/{userId}")
+    public PublicationOutput postDislike(@PathVariable("publicationId") Long id, @PathVariable("userId") Long userId) throws Exception {
+        return publicationService.postDislike(id, userId);
     }
 
 

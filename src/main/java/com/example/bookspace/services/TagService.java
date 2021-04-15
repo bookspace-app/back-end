@@ -63,7 +63,7 @@ public class TagService {
 	}
 
 	@Transactional
-	public void updateTag(Long IdTag, User author, List<Publication> tagged_publications, List<User> preferedTags) {
+	public void updateTag(Long IdTag, User author, List<Publication> tagged_publications, List<User> favTags) {
 		Tag tag = tagRepository.findById(IdTag)
 					.orElseThrow(() -> new IllegalStateException(
 						"Tag with IdTag " + IdTag + " does not exist"));
@@ -78,9 +78,9 @@ public class TagService {
 				tag.setTagged_publications(tagged_publications);
 			}
 
-		if (preferedTags != null &&
-			!Objects.equals(tag.getPreferedTags(), preferedTags)){
-				tag.setPrefered_tags(preferedTags);
+		if (favTags != null &&
+			!Objects.equals(tag.getfavTags(), favTags)){
+				tag.setPrefered_tags(favTags);
 			}
 
 		tagRepository.save(tag);

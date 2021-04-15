@@ -1,6 +1,5 @@
 package com.example.bookspace.services;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -12,6 +11,7 @@ import com.example.bookspace.Inputs.UserInput;
 import com.example.bookspace.Output.PublicationOutput;
 import com.example.bookspace.Output.TagOutput;
 import com.example.bookspace.Output.UserOutput;
+import com.example.bookspace.enums.Category;
 import com.example.bookspace.models.Publication;
 import com.example.bookspace.models.Tag;
 import com.example.bookspace.models.User;
@@ -48,13 +48,17 @@ public class UserService {
 		return new UserOutput(u);
     }
 
-    public UserOutput postUser(UserInput userDetails) {
-		Optional<User> userByEmail = userRepository
-		.findUserByEmail(userDetails.getEmail());
-		if(userByEmail.isPresent()){
-			throw new IllegalStateException("email taken");
-		}
-		User user = new User(userDetails);
+    public UserOutput postUser(UserInput userDetails) throws Exception {
+		
+		if (userDetails.getEmail() == null) throw new Exception("The email can¡' be empty");
+		if (userRepository.findUserByEmail(userDetails.getEmail()).isPresent()) throw new Exception("This email is already used");
+		if (userDetails.getName() == null) throw new Exception("The name can't be empty");
+		if (userDetails.getUsername() == null) throw new Exception("The username can't be empty");
+		if (userRepository.findUserByUsername(userDetails.getUsername()).isPresent()) throw new Exception("This username is already used");
+		if (userDetails.getPassword() == null) throw new Exception("The password can't be empty");
+		if (userDetails.getDob() == null) throw new Exception("The date of birth can't be empty");
+		
+		User user = new User(userDetails.getEmail(), userDetails.getName(), userDetails.getUsername(), userDetails.getPassword(), userDetails.getDob());
 		user = userRepository.save(user);
 		return new UserOutput(user);
     }
@@ -69,47 +73,49 @@ public class UserService {
 	}
 
 	@Transactional
-	public void updateUser(Long id, String name, String description, String email, String username, LocalDate dob, byte[] profile_pic) {
+	public UserOutput updateUser(Long id, UserInput userDetails) {
 		User user = userRepository.findById(id)
 					.orElseThrow(() -> new IllegalStateException(
 						"User with id " + id + " does not exist"));
 		
-		if (description != null && description.length() > 0 &&
-			!Objects.equals(user.getDescription(), description)){
-				user.setDescription(description);
+		if (userDetails.getDescription() != null && userDetails.getDescription().length() > 0 &&
+			!Objects.equals(user.getDescription(), userDetails.getDescription())){
+				user.setDescription(userDetails.getDescription());
 			}
 		
-		if (email != null && email.length() > 0 &&
-			!Objects.equals(user.getEmail(), email)){
-				Optional<User> userOptional = userRepository.findUserByEmail(email);
+		if (userDetails.getEmail() != null && userDetails.getEmail().length() > 0 &&
+			!Objects.equals(user.getEmail(), userDetails.getEmail())){
+				Optional<User> userOptional = userRepository.findUserByEmail(userDetails.getEmail());
 				if(userOptional.isPresent()){
 					throw new IllegalStateException("email already taken");
 				}
-				user.setEmail(email);
+				user.setEmail(userDetails.getEmail());
 			}
 
-		if (name != null && name.length() > 0 &&
-			!Objects.equals(user.getName(), name)){
-				user.setName(name);
+		if (userDetails.getName() != null && userDetails.getName().length() > 0 &&
+			!Objects.equals(user.getName(), userDetails.getName())){
+				user.setName(userDetails.getName());
 			}
 
-		if (username != null && username.length() > 0 &&
-			!Objects.equals(user.getUsername(), username)){
-				Optional<User> userOptional = userRepository.findUserByUsername(username);
+		if (userDetails.getUsername() != null && userDetails.getUsername() .length() > 0 &&
+			!Objects.equals(user.getUsername(), userDetails.getUsername() )){
+				Optional<User> userOptional = userRepository.findUserByUsername(userDetails.getUsername() );
 				if(userOptional.isPresent()){
 					throw new IllegalStateException("username already taken");
 				}
-				user.setUsername(username);
+				user.setUsername(userDetails.getUsername() );
 			}
 		
-		if (dob != null && !Objects.equals(user.getDob(), dob)){
-				user.setDob(dob);
+		if (userDetails.getDob()  != null && !Objects.equals(user.getDob(), userDetails.getDob() )){
+				user.setDob(userDetails.getDob() );
 			}
-
-		if (profile_pic != null && !Objects.equals(user.getProfile_pic(), profile_pic)){
-			user.setProfile_pic(profile_pic);
+		
+		if (userDetails.getFavCategories() != null){
+			List<Category> cateogories = Category.getCategories(userDetails.getFavCategories());
+			user.setFavCategories(cateogories);
 		}
-		userRepository.save(user);
+		user = userRepository.save(user);
+		return new UserOutput(user);
 	}
 
     public List<PublicationOutput> getPublicationsUser(Long id) {
@@ -124,14 +130,19 @@ public class UserService {
 		
     }
 
-	public List<TagOutput> getPreferedTagsUser(Long id){
+	public List<TagOutput> getFavTagsUser(Long id){
 		User u = userRepository.getOne(id);
-		List<Tag> tags = u.getPreferedTags();
+		List<Tag> tags = u.getfavTags();
 		List<TagOutput> result = new ArrayList<>();
 		for (Tag t: tags) {
 			result.add(new TagOutput(t));
 		}
 		return result;
+	}
+
+	public List<String> getFavCategoriesUser(Long id) {
+		User user = userRepository.getOne(id);
+		return Category.parseToString(user.getFavCategories());
 	}
 
     

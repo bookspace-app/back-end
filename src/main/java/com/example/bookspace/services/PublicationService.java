@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 import com.example.bookspace.Inputs.PublicationInput;
 import com.example.bookspace.Output.PublicationOutput;
 import com.example.bookspace.Output.UserOutput;
+import com.example.bookspace.enums.Category;
 import com.example.bookspace.models.Publication;
 import com.example.bookspace.models.User;
 import com.example.bookspace.repositories.PublicationRepository;
@@ -48,9 +49,16 @@ public class PublicationService {
         return new PublicationOutput(p);
     }
 
-    public PublicationOutput postPublication(PublicationInput publicationDetails) {
+    public PublicationOutput postPublication(PublicationInput publicationDetails) throws Exception {
+        if (publicationDetails.getTitle() == null) throw new Exception("The title can't be empty");
+        if (publicationDetails.getContent() == null) throw new Exception("The content can't be empty");
+        if (publicationDetails.getAuthorId() == null) throw new Exception("The author_id can't be empty");
+        if (!userRepository.existsById(publicationDetails.getAuthorId())) throw new Exception("There are no users with this id");
+        if (publicationDetails.getCategory() == null) throw new Exception("The category can't be empty");
+        if (!Category.existsCategory(publicationDetails.getCategory())) throw new Exception ("There are not categories with that name");
         User author = userRepository.findById(publicationDetails.getAuthorId()).get();
-        Publication publication = new Publication(publicationDetails, author);
+        Category category = Category.getCategory(publicationDetails.getCategory());
+        Publication publication = new Publication(publicationDetails.getTitle(), publicationDetails.getContent(), author, category);
         author.addPublication(publication);
         publicationRepository.save(publication);
         userRepository.save(author);
@@ -83,15 +91,15 @@ public class PublicationService {
 
 
 
-    public List<UserOutput> getVotedByUsers(Long id) {
-        Publication p = publicationRepository.getOne(id);
-        List<UserOutput> result = new ArrayList<>();
+    // public List<UserOutput> getVotedByUsers(Long id) {
+    //     Publication p = publicationRepository.getOne(id);
+    //     List<UserOutput> result = new ArrayList<>();
 
-        for (User u: p.getVotedBy()) {
-            result.add(new UserOutput(u));
-        }
-        return result;
-    }
+    //     for (User u: p.getVotedBy()) {
+    //         result.add(new UserOutput(u));
+    //     }
+    //     return result;
+    // }
 
 
 
@@ -112,10 +120,10 @@ public class PublicationService {
         User favUser = userRepository.getOne(userId);
 
         p.addFavUser(favUser);
-        favUser.addFavPublication(p);
+        favUser.addLikedPublication(p);
 
-        publicationRepository.save(p);
-        userRepository.save(favUser);
+        p = publicationRepository.save(p);
+        favUser = userRepository.save(favUser);
 
         return new UserOutput(favUser);
 
@@ -123,24 +131,32 @@ public class PublicationService {
 
 
 
-    public PublicationOutput postLike(Long id) {
+    public PublicationOutput postLike(Long id, Long userId) throws Exception {
         Publication p = publicationRepository.getOne(id);
+        User user = userRepository.getOne(userId);
+        if (p.getAuthor().getId() == userId) throw new Exception("The author of a publication can't like it's own publication"); 
+        if (p.getLikedBy().contains(user)) throw new Exception("This user has already liked this publication");
         
-        p.addLike();
-
-        publicationRepository.save(p);
+        p.addLikedUser(user);
+        user.addLikedPublication(p);
+        p = publicationRepository.save(p);
+        user = userRepository.save(user);
         return new PublicationOutput(p);
     }
 
 
 
-    public PublicationOutput postDislike(Long id) {
+    public PublicationOutput postDislike(Long id, Long userId) throws Exception {
         Publication p = publicationRepository.getOne(id);
+        User user = userRepository.getOne(userId);
+        if (p.getAuthor().getId() == userId) throw new Exception("The author of a publication can't dislike it's own publication"); 
+        if (p.getDislikedBy().contains(user)) throw new Exception("This user has already disliked this publication before");
         
-        p.removeLike();
+        p.addDislikedUser(user);
+        user.addDislikedPublication(p);
 
-        publicationRepository.save(p);
-        
+        p = publicationRepository.save(p);
+        user = userRepository.save(user);
         return new PublicationOutput(p);
     }
 

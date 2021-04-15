@@ -46,10 +46,11 @@ public class UserController {
         return userService.getPublicationsUser(id);
     }
 
-    @GetMapping(path = "{userId}/preferedTags")   //Implementar
-	public List<TagOutput> getPreferedTagsUser(@PathVariable("userId") Long id) {
-        return userService.getPreferedTagsUser(id);
+    @GetMapping(path = "{userId}/favTags")   //Implementar
+	public List<TagOutput> getFavTagsUser(@PathVariable("userId") Long id) {
+        return userService.getFavTagsUser(id);
     }
+
 
     @PostMapping
     public UserOutput postUser(@RequestBody UserInput userDetails) throws Exception{
@@ -65,6 +66,13 @@ public class UserController {
     public void deleteUser(@PathVariable("userId") Long userId){
         userService.deleteUser(userId);
     }
+
+    @GetMapping(path = "{userId}/favCategories")   
+	public List<String> getFavCategoriesUser(@PathVariable("userId") Long id) {
+        return userService.getFavCategoriesUser(id);
+    }
+
+
 
 
 

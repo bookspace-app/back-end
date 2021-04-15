@@ -1,22 +1,20 @@
 package com.example.bookspace.Output;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.example.bookspace.models.Publication;
 
-import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters.LocalDateTimeConverter;
 
 public class PublicationOutput extends OutputManager{ 
-    private String self = getURL() + "/publications/";
+    private String self;
     private Long id;
     private String title;
     private String content;
     private LocalDateTime dop;
-    private Long views;
-    private Long likes;
-    private String category; 
+    private Integer n_views;
+    private Integer n_likes;
     private Integer n_comments;
+    private String category; 
     private UserOutput author; 
     private String votedUsers;
     private String favUsers;
@@ -28,22 +26,24 @@ public class PublicationOutput extends OutputManager{
 
     public PublicationOutput(Publication p) {
         this.id = p.getId();
-        this.self = self + id;
+        this.self = getURL() + "/publications/" + id;
         this.title = p.getTitle();
         this.content = p.getContent();
         this.dop = p.getDop();
-        this.views = p.getViews();
+        this.n_views = p.getViews();
+        this.n_likes = p.getLikes();
+        this.category = p.getCategory().name();
         this.n_comments = p.getComments().size();
         this.author = new UserOutput(p.getAuthor());
+        this.category = p.getCategory().name();
         this.votedUsers = self + "/votedUsers";
         this.favUsers = self + "/favUsers";
         this.comments = self + "/comments";
-        this.category = p.getCategory().name();
         this.tags = self + "/tags";
-        this.likes = p.getLikes();
 
     }
 
+    
 
     public String getSelf() {
         return this.self;
@@ -77,7 +77,6 @@ public class PublicationOutput extends OutputManager{
         this.content = content;
     }
 
-
     public LocalDateTime getDop() {
         return this.dop;
     }
@@ -85,22 +84,29 @@ public class PublicationOutput extends OutputManager{
     public void setDop(LocalDateTime dop) {
         this.dop = dop;
     }
-    
 
-    public Long getViews() {
-        return this.views;
+    public Integer getN_views() {
+        return this.n_views;
     }
 
-    public void setViews(Long views) {
-        this.views = views;
+    public void setN_views(Integer n_views) {
+        this.n_views = n_views;
     }
 
-    public Long getLikes() {
-        return this.likes;
+    public Integer getN_likes() {
+        return this.n_likes;
     }
 
-    public void setLikes(Long likes) {
-        this.likes = likes;
+    public void setN_likes(Integer n_likes) {
+        this.n_likes = n_likes;
+    }
+
+    public Integer getN_comments() {
+        return this.n_comments;
+    }
+
+    public void setN_comments(Integer n_comments) {
+        this.n_comments = n_comments;
     }
 
     public String getCategory() {
@@ -151,14 +157,12 @@ public class PublicationOutput extends OutputManager{
         this.tags = tags;
     }
 
+    
 
-    public Integer getN_comments() {
-        return this.n_comments;
-    }
+    
 
-    public void setN_comments(Integer n_comments) {
-        this.n_comments = n_comments;
-    }
+
+    
 
 
 
