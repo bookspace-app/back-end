@@ -52,15 +52,13 @@ public class UserController {
     }
 
     @PostMapping
-    public UserOutput postUser(@RequestBody UserInput userDetails){
+    public UserOutput postUser(@RequestBody UserInput userDetails) throws Exception{
        return userService.postUser(userDetails);
     }
 
     @PutMapping(path = "{userId}") 
-    public void updateUser(@PathVariable("userId") Long id,
-                                       @RequestBody UserInput u) throws Exception{
-                                           throw new Exception("Not implemented yet");
-        // userService.updateUser(id,u.getName(),u.getDescription(),u.getEmail(),u.getUsername(),u.getDob(),u.getProfile_pic());
+    public UserOutput updateUser(@PathVariable("userId") Long id, @RequestBody UserInput userDetails) throws Exception{
+        return userService.updateUser(id, userDetails);
     }
 
     @DeleteMapping(path = "{userId}")
