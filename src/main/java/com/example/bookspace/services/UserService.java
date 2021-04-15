@@ -70,16 +70,17 @@ public class UserService {
 	}
 
 	@Transactional
-	public UserOutput updateUser(Long id, String name, String description, String email, String username, LocalDate dob, byte[] profile_pic) {
+	public UserOutput updateUser(Long id, UserInput userDetails) {
 		User user = userRepository.findById(id)
 					.orElseThrow(() -> new IllegalStateException(
 						"User with id " + id + " does not exist"));
-		
-		if (description != null && description.length() > 0 &&
-			!Objects.equals(user.getDescription(), description)){
-				user.setDescription(description);
+		String desc = userDetails.getDescription();
+		if (desc != null && desc.length() > 0 &&
+			!Objects.equals(user.getDescription(), desc)){
+				user.setDescription(desc);
 			}
 		
+		String email = userDetails.getEmail();	
 		if (email != null && email.length() > 0 &&
 			!Objects.equals(user.getEmail(), email)){
 				Optional<User> userOptional = userRepository.findUserByEmail(email);
@@ -89,11 +90,13 @@ public class UserService {
 				user.setEmail(email);
 			}
 
+		String name = userDetails.getName();
 		if (name != null && name.length() > 0 &&
 			!Objects.equals(user.getName(), name)){
 				user.setName(name);
 			}
 
+		String username = userDetails.getUsername();
 		if (username != null && username.length() > 0 &&
 			!Objects.equals(user.getUsername(), username)){
 				Optional<User> userOptional = userRepository.findUserByUsername(username);
@@ -103,12 +106,19 @@ public class UserService {
 				user.setUsername(username);
 			}
 		
+		LocalDate dob = userDetails.getDob();
 		if (dob != null && !Objects.equals(user.getDob(), dob)){
 				user.setDob(dob);
 			}
 
+		byte[] profile_pic = userDetails.getProfile_pic();
 		if (profile_pic != null && !Objects.equals(user.getProfile_pic(), profile_pic)){
 			user.setProfile_pic(profile_pic);
+		}
+
+		List<Tag> prefTags = userDetails.getPreferedTags();
+		if (prefTags != null && !Objects.equals(user.getPreferedTags(), prefTags)){
+			user.setPreferedTags(prefTags);
 		}
 		userRepository.save(user);
 		return new UserOutput(user);

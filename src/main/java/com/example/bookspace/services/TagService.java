@@ -38,6 +38,7 @@ public class TagService {
 		Tag tag = new Tag(tagDetails, author, publication);
 		tag = tagRepository.save(tag);
 		author.addCreatedTag(tag);
+		author.addPreferedTag(tag);
 		userRepository.save(author);
 		publication.addTag(tag);
 		publicationRepository.save(publication);	

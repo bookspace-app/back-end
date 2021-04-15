@@ -360,6 +360,10 @@ public class User {
     public void setPreferedTags(List<Tag> preferedTags) {
         this.preferedTags = preferedTags;
     }
+
+    public void addPreferedTag(Tag tag) {
+        this.preferedTags.add(tag);
+    }
    
 
     public void votePublication(Publication p) throws Exception {

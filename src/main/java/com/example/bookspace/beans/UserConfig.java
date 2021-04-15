@@ -22,7 +22,7 @@ public class UserConfig {
             UserInput userDetails = new UserInput("demo@email", "demoName", "demoUsername", "demoPassword");
             User demo = new User(userDetails);
             repository.saveAll(List.of(demo));
-
+            
         };
 
     }

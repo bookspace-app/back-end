@@ -59,8 +59,14 @@ public class UserController {
     @PutMapping(path = "{userId}") 
     public UserOutput updateUser(@PathVariable("userId") Long id,
                                        @RequestBody UserInput u){
-        return userService.updateUser(id,u.getName(),u.getDescription(),u.getEmail(),u.getUsername(),u.getDob(),u.getProfile_pic());
+        return userService.updateUser(id,u);
     }
+
+    // @PutMapping(path = "{userId}/preferedTags") 
+    // public UserOutput addPreferedTags(@PathVariable("userId") Long id,
+    //                                    @RequestBody UserInput u){
+    //     return userService.updateUser(id,u);
+    // }
 
     @DeleteMapping(path = "{userId}")
     public void deleteUser(@PathVariable("userId") Long userId){
