@@ -43,9 +43,7 @@ public class User {
         strategy = GenerationType.SEQUENCE, 
         generator = "user_sequence"
     )
-    private Long id;
-
-    
+    private Long id;    
 
     @Column(name = "email", unique = true, nullable = false)
     private String email ; 
@@ -122,6 +120,9 @@ public class User {
     )
     private List<Publication> favouritePublications = new ArrayList<>();
 
+    @ManyToMany(mappedBy = "mentions")
+    private List<Publication> mentions = new ArrayList<>();
+
     /*
     User comments
     Cascade deletion
@@ -151,18 +152,6 @@ public class User {
     )
     private List<Comment> dislikedComments = new ArrayList<>();
 
-    /*
-    Blocked users
-    */
-    @ManyToMany
-    @JoinTable (
-        name = "blockedUsers",
-        joinColumns = @JoinColumn(name="blocker", referencedColumnName = "id"), 
-        inverseJoinColumns = @JoinColumn(name = "blocked")
-    )
-    private List<User> blockedUsers = new ArrayList<>();
-
-
     @Column(name = "createdTags")
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Tag> createdTags = new ArrayList<>();
@@ -175,6 +164,20 @@ public class User {
         inverseJoinColumns = @JoinColumn(name = "name_tag")
     )
     private List<Tag> favTags = new ArrayList<>();
+
+    /*
+    Blocked users
+    */
+    @ManyToMany
+    @JoinTable (
+        name = "blockedUsers",
+        joinColumns = @JoinColumn(name="blocker", referencedColumnName = "id"), 
+        inverseJoinColumns = @JoinColumn(name = "blocked")
+    )
+    private List<User> blockedUsers = new ArrayList<>();
+
+
+  
 
     
     // private Collection<Message> messages;
@@ -394,7 +397,7 @@ public class User {
         this.createdTags.add(tag);
     }
 
-    public List<Tag> getfavTags() {
+    public List<Tag> getFavTags() {
         return this.favTags;
     }
 
@@ -402,13 +405,21 @@ public class User {
         this.favTags = favTags;
     }
 
-    public void addPreferedTag(Tag tag) {
+    public void addFavTag(Tag tag) {
         this.favTags.add(tag);
     }
 
-    public void removePrefereTag(Tag tag) {
+    public void removeFavTag(Tag tag) {
         this.favTags.remove(tag);
     }
+    public List<Publication> getMentions() {
+        return this.mentions;
+    }
+
+    public void setMentions(List<Publication> mentions) {
+        this.mentions = mentions;
+    }
+
     
 
     

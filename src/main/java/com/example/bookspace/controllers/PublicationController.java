@@ -3,7 +3,9 @@ package com.example.bookspace.controllers;
 import java.util.List;
 
 import com.example.bookspace.Inputs.PublicationInput;
+import com.example.bookspace.Output.CommentOutput;
 import com.example.bookspace.Output.PublicationOutput;
+import com.example.bookspace.Output.TagOutput;
 import com.example.bookspace.Output.UserOutput;
 
 import com.example.bookspace.services.PublicationService;
@@ -33,7 +35,7 @@ public class PublicationController {
     }
 
     @GetMapping
-	public List<PublicationOutput> getAllPublications() {
+	public List<PublicationOutput> getPublications() {
         return publicationService.getPublications();
     }
 
@@ -50,10 +52,8 @@ public class PublicationController {
     }    
 
     @PutMapping(path = "{publicationId}") 
-    public void updatePublication(@PathVariable("publicationId") Long id,
-                                      @RequestParam PublicationInput publicationDetails
-                                      ){
-        publicationService.updatePublication(id, publicationDetails);
+    public PublicationOutput updatePublication(@PathVariable("publicationId") Long id, @RequestParam PublicationInput publicationDetails){
+        return publicationService.putPublication(id, publicationDetails);
     }
 
     @DeleteMapping(path = "{publicationId}")
@@ -61,38 +61,74 @@ public class PublicationController {
         publicationService.deletePublication(publicationId);
 	}
 
-    @GetMapping("{publicationId}/favUsers")
+    @GetMapping("{publicationId}/like")
+    public List<UserOutput> getLikedUsers(@PathVariable("publicationId") Long publicationId) throws Exception {
+        return publicationService.getLikedUsers(publicationId);
+    }
+
+    @PostMapping("{publicationId}/like/{userId}")
+    public PublicationOutput postLikedUsers(@PathVariable("publicationId") Long publicationId) throws Exception {
+        return publicationService.postLike(publicationId);
+    }
+
+    @DeleteMapping("{publicationId}/like/{userId}")
+    public PublicationOutput deleteLikedUsers(@PathVariable("publicationId") Long publicationId) throws Exception {
+        return publicationService.deleteLike(publicationId);
+    }
+
+    @GetMapping("{publicationId}/dislike")
+    public List<UserOutput> getDislikedUsers(@PathVariable("publicationId") Long publicationId) throws Exception {
+        return publicationService.getDislikedUsers(publicationId);
+    }
+
+    @PostMapping("{publicationId}/dislike/{userId}")
+    public PublicationOutput postDislikedUsers(@PathVariable("publicationId") Long publicationId) throws Exception {
+        return publicationService.postDislike(publicationId);
+    }
+
+    @DeleteMapping("{publicationId}/dislike/{userId}")
+    public void deleteDislikedUsers(@PathVariable("publicationId") Long publicationId) throws Exception {
+        publicationService.deleteDislike(publicationId);
+    }
+
+    @GetMapping("{publicationId}/fav")
     public List<UserOutput> getFavUsers(@PathVariable("publicationId") Long id) {
         return publicationService.getFavUsers(id);
         
     }
 
-    @PostMapping("{publicationId}/favUsers/{userId}")
+    @PostMapping("{publicationId}/fav/{userId}")
     public UserOutput postFaUser(@PathVariable("publicationId") Long id, @PathVariable("userId") Long userId) {
         return publicationService.postFavUser(id, userId);
         
     }
 
-    @PostMapping(path = "{publicationId}/likes/{userId}")
-    public PublicationOutput postLike(@PathVariable("publicationId") Long id, @PathVariable("userId") Long userId) throws Exception {
-        return publicationService.postLike(id, userId);
+    @DeleteMapping("{publicationId}/fav/{userId}")
+    public UserOutput deleteFavUser(@PathVariable("publicationId") Long id, @PathVariable("userId") Long userId) throws Exception {
+        return publicationService.deleteFavUser(id, userId);
+        
     }
 
-    @PostMapping(path = "{publicationId}/dislikes/{userId}")
-    public PublicationOutput postDislike(@PathVariable("publicationId") Long id, @PathVariable("userId") Long userId) throws Exception {
-        return publicationService.postDislike(id, userId);
+    @GetMapping("{publicationId}/comments")
+    public List<CommentOutput> getComments(@PathVariable("publicationId") Long id) throws Exception {
+        return publicationService.getComments(id);
+        
+    }
+
+    @GetMapping("{publicationId}/mentions")
+    public List<UserOutput> getMentions(@PathVariable("publicationId") Long id) throws Exception {
+        return publicationService.getMentions(id);
+    }
+
+    @GetMapping("{publicationId}/tags")
+    public List<TagOutput> getTags(@PathVariable("publicationId") Long id) throws Exception {
+        return publicationService.getTags(id);
     }
 
 
-    // @GetMapping(path="{publicationId}/votedBy")
-    // public List<UserOutput> getVotedByUsers (@PathVariable("publicationId") Long id) {
-    //     return publicationService.getVotedByUsers(id);
-    // }
+
+    
+
 
    
-
-    // @GetMapping(path="{publicationId}/comments")
-    // public List<Comment> getPublicationComments(@PathVariable("publicationId") Long id) {
-    //     return publicationService.getComments(id);
-    // }
 }

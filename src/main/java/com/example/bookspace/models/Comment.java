@@ -61,9 +61,9 @@ public class Comment {
     private List<Comment> answers;
 
 
-    public Comment() {
-        this.id = 2L;
-    }
+    // public Comment() {
+    //     this.id = 2L;
+    // }
 
     // public Comment(String content, LocalDate date) {
     //     this.content = content;

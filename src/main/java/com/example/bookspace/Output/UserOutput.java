@@ -19,15 +19,18 @@ public class UserOutput extends OutputManager{
     private LocalDate dor;
     private String rank; 
     private String publications;
-    private String votedPublications;
+    private String likedPublications;
+    private String dislikedPublications;
     private String favouritePublications;
-    private String comments; 
-    private String votedComments; 
+    private String comments;     
+    private String likedComments;
+    private String dislikedComments; 
     private String blockedUsers; 
     private String profilePic;
     private String createdTags;
     private String favTags; 
     private String favCategories;
+    private String mentions;
     
     public UserOutput(User u) {
         this.id = u.getId();
@@ -41,15 +44,18 @@ public class UserOutput extends OutputManager{
         this.rank = u.getRank().name();
         this.self = getURL() + "/users/" + this.id;
         this.publications =  this.self + "/publications";
-        this.votedPublications = this.self + "/votedPublications";
-        this.favouritePublications = this.self + "/favouritePublications";
+        this.likedPublications= this.self + "/likedPublications";
+        this.dislikedPublications = this.self + "/dislikedPublications";
+        this.favouritePublications = this.self + "/favPublications";
         this.comments = this.self + "/comments";
-        this.votedComments = this.self + "/votedComments";
+        this.likedComments = this.self + "/likedComments";
+        this.dislikedComments = this.self + "/dislikedComments";
         this.blockedUsers = this.self + "/blockedUsers";
         this.profilePic = this.self + "/profilePic";
         this.createdTags = this.self + "/tags";
         this.favTags = this.self + "/favTags";
-        this.favCategories = this.self + "/favCategories";
+        this.favCategories = this.self + "/categories";
+        this.mentions = this.self + "/mentions";
     }
 
 
@@ -142,13 +148,47 @@ public class UserOutput extends OutputManager{
         this.publications = publications;
     }
 
-    public String getVotedPublications() {
-        return this.votedPublications;
+
+    public String getLikedPublications() {
+        return this.likedPublications;
     }
 
-    public void setVotedPublications(String votedPublications) {
-        this.votedPublications = votedPublications;
+    public void setLikedPublications(String likedPublications) {
+        this.likedPublications = likedPublications;
     }
+
+    public String getDislikedPublications() {
+        return this.dislikedPublications;
+    }
+
+    public void setDislikedPublications(String dislikedPublications) {
+        this.dislikedPublications = dislikedPublications;
+    }
+
+    public String getLikedComments() {
+        return this.likedComments;
+    }
+
+    public void setLikedComments(String likedComments) {
+        this.likedComments = likedComments;
+    }
+
+    public String getDislikedComments() {
+        return this.dislikedComments;
+    }
+
+    public void setDislikedComments(String dislikedComments) {
+        this.dislikedComments = dislikedComments;
+    }
+
+    public String getFavTags() {
+        return this.favTags;
+    }
+
+    public void setFavTags(String favTags) {
+        this.favTags = favTags;
+    }
+    
 
     public String getFavouritePublications() {
         return this.favouritePublications;
@@ -164,14 +204,6 @@ public class UserOutput extends OutputManager{
 
     public void setComments(String comments) {
         this.comments = comments;
-    }
-
-    public String getVotedComments() {
-        return this.votedComments;
-    }
-
-    public void setVotedComments(String votedComments) {
-        this.votedComments = votedComments;
     }
 
     public String getBlockedUsers() {
@@ -198,15 +230,6 @@ public class UserOutput extends OutputManager{
         this.createdTags = createdTags;
     }
 
-    public String getfavTags() {
-        return this.favTags;
-    }
-
-    public void setfavTags(String favTags) {
-        this.favTags = favTags;
-    }
-
-
     public String getFavCategories() {
         return this.favCategories;
     }
@@ -214,6 +237,16 @@ public class UserOutput extends OutputManager{
     public void setFavCategories(String favCategories) {
         this.favCategories = favCategories;
     }
+
+
+    public String getMentions() {
+        return this.mentions;
+    }
+
+    public void setMentions(String mentions) {
+        this.mentions = mentions;
+    }
+
 
 
     
