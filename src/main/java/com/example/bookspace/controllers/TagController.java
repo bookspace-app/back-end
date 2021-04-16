@@ -52,8 +52,8 @@ public class TagController {
     public void updateTag(@PathVariable("IdTag") Long IdTag,
                                       @RequestParam(required = false) User author,
                                       @RequestParam(required = false) List<Publication> tagged_publications,
-                                      @RequestParam(required = false) List<User> preferedTags){
-        tagService.updateTag(IdTag,author,tagged_publications,preferedTags);
+                                      @RequestParam(required = false) List<User> favTags){
+        tagService.updateTag(IdTag,author,tagged_publications,favTags);
     }
 
     @DeleteMapping(path = "{IdTag}")

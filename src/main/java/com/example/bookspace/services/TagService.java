@@ -35,7 +35,8 @@ public class TagService {
 
 		User author = userRepository.getOne(tagDetails.getAuthor());
 		Publication publication = publicationRepository.getOne(tagDetails.getPublication());
-		Tag tag = new Tag(tagDetails, author, publication);
+
+		Tag tag = new Tag(tagDetails.getName(), author, publication);
 		tag = tagRepository.save(tag);
 		author.addCreatedTag(tag);
 		userRepository.save(author);
@@ -45,6 +46,7 @@ public class TagService {
     }
 
 	public List<Tag> getTags(){
+		
 		return tagRepository.findAll();
 	}
 
@@ -63,7 +65,7 @@ public class TagService {
 	}
 
 	@Transactional
-	public void updateTag(Long IdTag, User author, List<Publication> tagged_publications, List<User> preferedTags) {
+	public void updateTag(Long IdTag, User author, List<Publication> publications, List<User> users) {
 		Tag tag = tagRepository.findById(IdTag)
 					.orElseThrow(() -> new IllegalStateException(
 						"Tag with IdTag " + IdTag + " does not exist"));
@@ -73,14 +75,14 @@ public class TagService {
 				tag.setAuthor(author);
 			}
 
-		if (tagged_publications != null &&
-			!Objects.equals(tag.getTagged_publications(), tagged_publications)){
-				tag.setTagged_publications(tagged_publications);
+		if (publications != null &&
+			!Objects.equals(tag.getPublications(), publications)){
+				tag.setPublications(publications);
 			}
 
-		if (preferedTags != null &&
-			!Objects.equals(tag.getPreferedTags(), preferedTags)){
-				tag.setPrefered_tags(preferedTags);
+		if (users != null &&
+			!Objects.equals(tag.getUsers(), users)){
+				tag.setUsers(users);
 			}
 
 		tagRepository.save(tag);

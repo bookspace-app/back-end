@@ -6,19 +6,19 @@ public class TagOutput extends OutputManager{
 
     private String self = getURL() + "/tags/";
     private Long id;
-    private String tag;
+    private String name;
     private UserOutput author;
-    private String taggedPublications;
-    private String preferedByUsers;
+    private String publications;
+    private String users;
 
 
     public TagOutput(Tag tag) {
         this.id = tag.getId();
-        this.tag = tag.getTag();
+        this.name = tag.getName();
         this.author = new UserOutput(tag.getAuthor());
         this.self = self + this.id;
-        this.taggedPublications = this.self + "/taggedPublications";
-        this.preferedByUsers = this.self + "/preferedByUsers";
+        this.publications = this.self + "/publications";
+        this.users = this.self + "/users";
     }
 
     public String getSelf() {
@@ -37,12 +37,12 @@ public class TagOutput extends OutputManager{
         this.id = id;
     }
 
-    public String getTag() {
-        return this.tag;
+    public String getName() {
+        return this.name;
     }
 
-    public void setTag(String tag) {
-        this.tag = tag;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public UserOutput getAuthor() {
@@ -53,20 +53,24 @@ public class TagOutput extends OutputManager{
         this.author = author;
     }
 
-    public String getTaggedPublications() {
-        return this.taggedPublications;
+    public String getPublications() {
+        return this.publications;
     }
 
-    public void setTaggedPublications(String taggedPublications) {
-        this.taggedPublications = taggedPublications;
+    public void setPublications(String publications) {
+        this.publications = publications;
     }
 
-    public String getPreferedByUsers() {
-        return this.preferedByUsers;
+    public String getUsers() {
+        return this.users;
     }
 
-    public void setPreferedByUsers(String preferedByUsers) {
-        this.preferedByUsers = preferedByUsers;
+    public void setUsers(String users) {
+        this.users = users;
     }
+    
+    
+
+    
 
 }

@@ -1,6 +1,6 @@
 package com.example.bookspace.models;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -38,14 +38,17 @@ public class Comment {
     private String content;
 
     @Column(name = "dop")
-    private LocalDate dop;
+    private LocalDateTime dop;
 
     @ManyToOne
     @JoinColumn(name = "author_id")
     private User author;
 
-    @ManyToMany(mappedBy = "votedComments")
-    private List<User> votedBy;
+    @ManyToMany(mappedBy = "likedComments")
+    private List<User> likedBy;
+
+    @ManyToMany(mappedBy = "dislikedComments")
+    private List<User> dislikedBy;
 
     @ManyToOne
     @JoinColumn(name = "publication_id")
@@ -59,9 +62,9 @@ public class Comment {
     private List<Comment> answers;
 
 
-    public Comment() {
-        this.id = 2L;
-    }
+    // public Comment() {
+    //     this.id = 2L;
+    // }
 
   
 }

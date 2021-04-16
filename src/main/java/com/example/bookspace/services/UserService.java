@@ -1,6 +1,5 @@
 package com.example.bookspace.services;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -9,9 +8,11 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import com.example.bookspace.Inputs.UserInput;
+import com.example.bookspace.Output.CommentOutput;
 import com.example.bookspace.Output.PublicationOutput;
 import com.example.bookspace.Output.TagOutput;
 import com.example.bookspace.Output.UserOutput;
+import com.example.bookspace.enums.Category;
 import com.example.bookspace.models.Publication;
 import com.example.bookspace.models.Tag;
 import com.example.bookspace.models.User;
@@ -41,6 +42,22 @@ public class UserService {
 		return result;
 	}
 
+	public UserOutput postUser(UserInput userDetails) throws Exception {
+		
+		if (userDetails.getEmail() == null) throw new Exception("The email can¡' be empty");
+		else if (userRepository.findUserByEmail(userDetails.getEmail()).isPresent()) throw new Exception("This email is already used");
+		else if (userDetails.getName() == null) throw new Exception("The name can't be empty");
+		else if (userDetails.getUsername() == null) throw new Exception("The username can't be empty");
+		else if (userRepository.findUserByUsername(userDetails.getUsername()).isPresent()) throw new Exception("This username is already used");
+		else if (userDetails.getPassword() == null) throw new Exception("The password can't be empty");
+		else if (userDetails.getDob() == null) throw new Exception("The date of birth can't be empty");
+		else {
+			User user = new User(userDetails.getEmail(), userDetails.getName(), userDetails.getUsername(), userDetails.getPassword(), userDetails.getDob());
+			user = userRepository.save(user);
+			return new UserOutput(user);
+		}
+    }
+
     public UserOutput getUser(Long id) {
 		boolean exists = userRepository.existsById(id);
 		if(!exists) throw new IllegalStateException("The user with id " + id + " does not exist");
@@ -48,16 +65,51 @@ public class UserService {
 		return new UserOutput(u);
     }
 
-    public UserOutput postUser(UserInput userDetails) {
-		Optional<User> userByEmail = userRepository
-		.findUserByEmail(userDetails.getEmail());
-		if(userByEmail.isPresent()){
-			throw new IllegalStateException("email taken");
+	@Transactional
+	public UserOutput putUser(Long id, UserInput userDetails) {
+		User user = userRepository.findById(id)
+					.orElseThrow(() -> new IllegalStateException(
+						"User with id " + id + " does not exist"));
+		
+		if (userDetails.getDescription() != null && userDetails.getDescription().length() > 0 &&
+			!Objects.equals(user.getDescription(), userDetails.getDescription())){
+				user.setDescription(userDetails.getDescription());
+			}
+		
+		if (userDetails.getEmail() != null && userDetails.getEmail().length() > 0 &&
+			!Objects.equals(user.getEmail(), userDetails.getEmail())){
+				Optional<User> userOptional = userRepository.findUserByEmail(userDetails.getEmail());
+				if(userOptional.isPresent()){
+					throw new IllegalStateException("email already taken");
+				}
+				user.setEmail(userDetails.getEmail());
+			}
+
+		if (userDetails.getName() != null && userDetails.getName().length() > 0 &&
+			!Objects.equals(user.getName(), userDetails.getName())){
+				user.setName(userDetails.getName());
+			}
+
+		if (userDetails.getUsername() != null && userDetails.getUsername() .length() > 0 &&
+			!Objects.equals(user.getUsername(), userDetails.getUsername() )){
+				Optional<User> userOptional = userRepository.findUserByUsername(userDetails.getUsername() );
+				if(userOptional.isPresent()){
+					throw new IllegalStateException("username already taken");
+				}
+				user.setUsername(userDetails.getUsername() );
+			}
+		
+		if (userDetails.getDob()  != null && !Objects.equals(user.getDob(), userDetails.getDob() )){
+				user.setDob(userDetails.getDob() );
+			}
+		
+		if (userDetails.getFavCategories() != null){
+			List<Category> cateogories = Category.getCategories(userDetails.getFavCategories());
+			user.setFavCategories(cateogories);
 		}
-		User user = new User(userDetails);
 		user = userRepository.save(user);
 		return new UserOutput(user);
-    }
+	}
 
 	public void deleteUser(Long userId){
 		boolean b = userRepository.existsById(userId);
@@ -68,51 +120,25 @@ public class UserService {
 
 	}
 
-	@Transactional
-	public void updateUser(Long id, String name, String description, String email, String username, LocalDate dob, byte[] profile_pic) {
-		User user = userRepository.findById(id)
-					.orElseThrow(() -> new IllegalStateException(
-						"User with id " + id + " does not exist"));
-		
-		if (description != null && description.length() > 0 &&
-			!Objects.equals(user.getDescription(), description)){
-				user.setDescription(description);
-			}
-		
-		if (email != null && email.length() > 0 &&
-			!Objects.equals(user.getEmail(), email)){
-				Optional<User> userOptional = userRepository.findUserByEmail(email);
-				if(userOptional.isPresent()){
-					throw new IllegalStateException("email already taken");
-				}
-				user.setEmail(email);
-			}
+	public void getProfilePic(Long userId) throws Exception {
+		throw new Exception("This endpoint is not implemented yet");
+    }
 
-		if (name != null && name.length() > 0 &&
-			!Objects.equals(user.getName(), name)){
-				user.setName(name);
-			}
-
-		if (username != null && username.length() > 0 &&
-			!Objects.equals(user.getUsername(), username)){
-				Optional<User> userOptional = userRepository.findUserByUsername(username);
-				if(userOptional.isPresent()){
-					throw new IllegalStateException("username already taken");
-				}
-				user.setUsername(username);
-			}
-		
-		if (dob != null && !Objects.equals(user.getDob(), dob)){
-				user.setDob(dob);
-			}
-
-		if (profile_pic != null && !Objects.equals(user.getProfile_pic(), profile_pic)){
-			user.setProfile_pic(profile_pic);
-		}
-		userRepository.save(user);
+	public void postProfilePic(Long userId) throws Exception {
+		throw new Exception("This endpoint is not implemented yet");
 	}
 
-    public List<PublicationOutput> getPublicationsUser(Long id) {
+    public void deleteProfilePic(Long userId) throws Exception {
+		throw new Exception("This endpoint is not implemented yet");
+
+    }    
+	
+    public List<String> getFavCategoriesUser(Long id) {
+		User user = userRepository.getOne(id);
+		return Category.parseToString(user.getFavCategories());
+	}
+	
+	public List<PublicationOutput> getPublicationsUser(Long id) {
 		User author = userRepository.getOne(id);
 		List<Publication> publications = author.getPublications();
 		List<PublicationOutput> result = new ArrayList<>();
@@ -124,15 +150,69 @@ public class UserService {
 		
     }
 
-	public List<TagOutput> getPreferedTagsUser(Long id){
+	public List<PublicationOutput> getLikedPublications(Long id) throws Exception {
+		throw new Exception("This endpoint is not implemented yet");
+    }
+
+    public List<PublicationOutput> getDislikedPublications(Long id) throws Exception {
+		throw new Exception("This endpoint is not implemented yet");
+    }
+	
+	public List<PublicationOutput> getFavPublications(Long id) throws Exception {
+		throw new Exception("This endpoint is not implemented yet");
+    }
+	
+	public List<PublicationOutput> getMentionedPublications(Long id) throws Exception {
+		throw new Exception("This endpoint is not implemented yet");
+	}
+
+	public List<CommentOutput> getComments(Long id) throws Exception {
+		throw new Exception("This endpoint is not implemented yet");
+	}
+
+    public List<CommentOutput> getLikedComments(Long id) throws Exception {
+		throw new Exception("This endpoint is not implemented yet");
+    }
+
+	public List<CommentOutput> getDislikedComments(Long id) throws Exception {
+		throw new Exception("This endpoint is not implemented yet");
+    }
+
+	public List<TagOutput> getCreatedTags(Long id) throws Exception {
+		throw new Exception("This endpoint is not implemented yet");
+    }
+
+	public List<TagOutput> getFavTagsUser(Long id){
 		User u = userRepository.getOne(id);
-		List<Tag> tags = u.getPreferedTags();
+		List<Tag> tags = u.getFavTags();
 		List<TagOutput> result = new ArrayList<>();
 		for (Tag t: tags) {
 			result.add(new TagOutput(t));
 		}
 		return result;
 	}
+
+    public List<UserOutput> getBlockedUsers(Long id) throws Exception {
+		throw new Exception("This endpoint is not implemented yet");
+    }
+
+   	public UserOutput postBlockedUsers(Long id, Long blockedUserid) throws Exception {
+		throw new Exception("This endpoint is not implemented yet");
+	}
+
+    public void deleteBlockedUsers(Long id, Long blockedUserid) throws Exception {
+		throw new Exception("This endpoint is not implemented yet");
+    }
+
+	
+
+    
+
+	
+
+	
+
+    
 
     
     
