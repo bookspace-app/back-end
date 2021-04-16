@@ -13,7 +13,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.example.bookspace.Inputs.TagInput;
 
 @Entity
 @Table(name = "tag")

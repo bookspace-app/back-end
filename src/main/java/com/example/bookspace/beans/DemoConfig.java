@@ -38,8 +38,7 @@ public class DemoConfig {
             publication = publicationRepository.save(publication);
             TagInput tagDetails = new TagInput("demoTag", user.getId(), publication.getId());
             tag = new Tag(tagDetails.getName(), user, publication);
-            tagRepository.save(tag);
-            
+            tagRepository.save(tag);            
         };
 
     }
