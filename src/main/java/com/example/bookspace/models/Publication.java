@@ -71,6 +71,14 @@ public class Publication {
 
     @ManyToMany
     @JoinTable (
+        name = "mentioned_users", 
+        joinColumns = @JoinColumn(name = "publication_id"),
+        inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<User> mentions = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable (
         name = "tagged_publications", 
         joinColumns = @JoinColumn(name = "publication_id"), 
         inverseJoinColumns = @JoinColumn(name = "tag_name")
@@ -145,7 +153,7 @@ public class Publication {
         this.category = category;
     }
 
-    public Integer getLikes() {
+    public Integer getTotalLikes() {
         return this.likedBy.size()-this.dislikedBy.size();
     }
 
@@ -224,6 +232,18 @@ public class Publication {
 
     public void addView() {
         this.views++;
+    }
+
+
+
+    public Integer getLikes() {
+        return likedBy.size();
+    }
+
+
+
+    public Integer getDislikes() {
+        return dislikedBy.size();
     }
 
 

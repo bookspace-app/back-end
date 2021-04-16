@@ -6,7 +6,9 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import com.example.bookspace.Inputs.PublicationInput;
+import com.example.bookspace.Output.CommentOutput;
 import com.example.bookspace.Output.PublicationOutput;
+import com.example.bookspace.Output.TagOutput;
 import com.example.bookspace.Output.UserOutput;
 import com.example.bookspace.enums.Category;
 import com.example.bookspace.models.Publication;
@@ -42,6 +44,25 @@ public class PublicationService {
         return result;
     }
 
+    public PublicationOutput postPublication(PublicationInput publicationDetails) throws Exception {
+        if (publicationDetails.getTitle() == null) throw new Exception("The title can't be empty");
+        else if (publicationDetails.getContent() == null) throw new Exception("The content can't be empty");
+        else if (publicationDetails.getAuthorId() == null) throw new Exception("The author_id can't be empty");
+        else if (!userRepository.existsById(publicationDetails.getAuthorId())) throw new Exception("There are no users with this id");
+        else if (publicationDetails.getCategory() == null) throw new Exception("The category can't be empty");
+        else if (!Category.existsCategory(publicationDetails.getCategory())) throw new Exception ("There are not categories with that name");
+        else {
+            User author = userRepository.findById(publicationDetails.getAuthorId()).get();
+            Category category = Category.getCategory(publicationDetails.getCategory());
+            Publication publication = new Publication(publicationDetails.getTitle(), publicationDetails.getContent(), author, category);
+            author.addPublication(publication);
+            publicationRepository.save(publication);
+            userRepository.save(author);
+            return new PublicationOutput(publication);
+        }
+            
+    }
+    
     public PublicationOutput getPublication(Long id) {
         Publication p = publicationRepository.getOne(id);
         p.addView();
@@ -49,25 +70,8 @@ public class PublicationService {
         return new PublicationOutput(p);
     }
 
-    public PublicationOutput postPublication(PublicationInput publicationDetails) throws Exception {
-        if (publicationDetails.getTitle() == null) throw new Exception("The title can't be empty");
-        if (publicationDetails.getContent() == null) throw new Exception("The content can't be empty");
-        if (publicationDetails.getAuthorId() == null) throw new Exception("The author_id can't be empty");
-        if (!userRepository.existsById(publicationDetails.getAuthorId())) throw new Exception("There are no users with this id");
-        if (publicationDetails.getCategory() == null) throw new Exception("The category can't be empty");
-        if (!Category.existsCategory(publicationDetails.getCategory())) throw new Exception ("There are not categories with that name");
-        User author = userRepository.findById(publicationDetails.getAuthorId()).get();
-        Category category = Category.getCategory(publicationDetails.getCategory());
-        Publication publication = new Publication(publicationDetails.getTitle(), publicationDetails.getContent(), author, category);
-        author.addPublication(publication);
-        publicationRepository.save(publication);
-        userRepository.save(author);
-        return new PublicationOutput(publication);
-    
-    }
-
     @Transactional
-	public PublicationOutput updatePublication(Long id, PublicationInput publicationDetails) {
+	public PublicationOutput putPublication(Long id, PublicationInput publicationDetails) {
 		Publication publication = publicationRepository.findById(id)
 					.orElseThrow(() -> new IllegalStateException(
 						"Publication with id " + id + " does not exist"));
@@ -90,19 +94,37 @@ public class PublicationService {
 	}
 
 
+    public List<UserOutput> getLikedUsers(Long publicationId) throws Exception {
+		throw new Exception("This endpoint is not implemented yet");
+    }
 
-    // public List<UserOutput> getVotedByUsers(Long id) {
-    //     Publication p = publicationRepository.getOne(id);
-    //     List<UserOutput> result = new ArrayList<>();
+    public PublicationOutput postLike(Long publicationId) throws Exception {
+		throw new Exception("This endpoint is not implemented yet");
+    }
+    
+    public PublicationOutput deleteLike(Long publicationId) throws Exception {
+        throw new Exception("This endpoint is not implemented yet");
 
-    //     for (User u: p.getVotedBy()) {
-    //         result.add(new UserOutput(u));
-    //     }
-    //     return result;
-    // }
+    }    
+    
+    public List<UserOutput> getDislikedUsers(Long publicationId) throws Exception {
+		throw new Exception("This endpoint is not implemented yet");
+    }
 
 
 
+	public PublicationOutput postDislike(Long publicationId) throws Exception {
+		throw new Exception("This endpoint is not implemented yet");
+	}
+
+
+
+	public void deleteDislike(Long publicationId) throws Exception {
+        throw new Exception("This endpoint is not implemented yet");
+
+	}
+    
+    
     public List<UserOutput> getFavUsers(Long id) {
         Publication p = publicationRepository.getOne(id);
         List<UserOutput> result = new ArrayList<>();
@@ -129,52 +151,54 @@ public class PublicationService {
 
     }
 
+    public UserOutput deleteFavUser(Long id, Long userId) throws Exception {
+        throw new Exception("This endpoint is not implemented yet");
+    }
 
-
-    public PublicationOutput postLike(Long id, Long userId) throws Exception {
-        Publication p = publicationRepository.getOne(id);
-        User user = userRepository.getOne(userId);
-        if (p.getAuthor().getId() == userId) throw new Exception("The author of a publication can't like it's own publication"); 
-        if (p.getLikedBy().contains(user)) throw new Exception("This user has already liked this publication");
-        
-        p.addLikedUser(user);
-        user.addLikedPublication(p);
-        p = publicationRepository.save(p);
-        user = userRepository.save(user);
-        return new PublicationOutput(p);
+    public List<CommentOutput> getComments(Long id) throws Exception {
+        throw new Exception("This endpoint is not implemented yet");
     }
 
 
 
-    public PublicationOutput postDislike(Long id, Long userId) throws Exception {
-        Publication p = publicationRepository.getOne(id);
-        User user = userRepository.getOne(userId);
-        if (p.getAuthor().getId() == userId) throw new Exception("The author of a publication can't dislike it's own publication"); 
-        if (p.getDislikedBy().contains(user)) throw new Exception("This user has already disliked this publication before");
-        
-        p.addDislikedUser(user);
-        user.addDislikedPublication(p);
-
-        p = publicationRepository.save(p);
-        user = userRepository.save(user);
-        return new PublicationOutput(p);
+    public List<UserOutput> getMentions(Long id) throws Exception {
+        throw new Exception("This endpoint is not implemented yet");
     }
 
 
 
-    // public List<CommentOutput> getComments(Long id) {
-    //     Publication p = publicationRepository.getOne(id);
-    //     List<CommentOutput> result = new ArrayList<>();
+    public List<TagOutput> getTags(Long id) throws Exception {
+        throw new Exception("This endpoint is not implemented yet");
+    }
 
-    //     for (User u: p.getComments()) {
-    //         result.add(new CommentOutput(u));
-    //     }
-    //     return result;
-    // }
+
+
 
     
 
 
+
+
+   
+
+
+
+    
+
+
+
+   
+
+
+
+
+
+
+
+
+
+
+    
 
     
 

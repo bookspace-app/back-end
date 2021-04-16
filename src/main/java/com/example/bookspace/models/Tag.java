@@ -13,14 +13,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.example.bookspace.Inputs.TagInput;
 
 @Entity
 @Table(name = "tag")
 public class Tag {
-
-
-    public Tag() {}
 
     @Id
     @SequenceGenerator(
@@ -36,61 +32,33 @@ public class Tag {
     private Long id;
     
     @Column(name = "tag", unique = true)
-    private String tag;
+    private String name;
 
     @ManyToOne
     @JoinColumn(name = "author_id")
     private User author;
 
     @ManyToMany(mappedBy = "tags")
-    private List<Publication> publications;
+    private List<Publication> publications = new ArrayList<>();
 
     @ManyToMany(mappedBy = "favTags")
-    private List<User> preferedBy;
-
-    public Tag(String tag) {
-        this.tag = tag;
-    }
-
-    public Tag (TagInput tagDetails, User author, Publication publication) {
-        this.tag = tagDetails.getTag();
-        this.author = author;
-        this.publications = new ArrayList<>();
-        this.publications.add(publication);
-
-    }
-
-    public Tag(TagInput tagDetails, User author) {
-        this.tag = tagDetails.getTag();
-        this.author = author;
-        this.publications = new ArrayList<>();
-    }
-
-    public String getTag() {
-        return this.tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
+    private List<User> users = new ArrayList<>();
 
     
+    public Tag() {}
 
-    public List<Publication> getTagged_publications() {
-        return this.publications;
+    public Tag (String name, User author, Publication publication) {
+        this.name = name;
+        this.author = author;
+        this.publications.add(publication);
     }
 
-    public void setTagged_publications(List<Publication> tagged_publications) {
-        this.publications = tagged_publications;
+    public Tag (String name, User author, List<Publication> publications) {
+        this.name = name;
+        this.author = author;
+        this.publications = publications;
     }
 
-    public List<User> getfavTags() {
-        return this.preferedBy;
-    }
-
-    public void setPrefered_tags(List<User> preferedBy) {
-        this.preferedBy = preferedBy;
-    }
 
     public Long getId() {
         return this.id;
@@ -98,6 +66,14 @@ public class Tag {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public User getAuthor() {
@@ -108,16 +84,21 @@ public class Tag {
         this.author = author;
     }
 
-    
+    public List<Publication> getPublications() {
+        return this.publications;
+    }
 
+    public void setPublications(List<Publication> publications) {
+        this.publications = publications;
+    }
 
+    public List<User> getUsers() {
+        return this.users;
+    }
 
-    //Test constructor
-    //public Tag() {
-    //     this.tag = "Tag1";
-    //     this.author = null;
-    //     this.publications = null;
-    //     this.preferedBy = null;
-    // }
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
 
+   
 }

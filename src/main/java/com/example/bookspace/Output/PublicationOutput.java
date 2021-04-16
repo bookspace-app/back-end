@@ -11,16 +11,19 @@ public class PublicationOutput extends OutputManager{
     private String title;
     private String content;
     private LocalDateTime dop;
+    private Integer likes;
+    private Integer dislikes;
     private Integer n_views;
     private Integer n_likes;
     private Integer n_comments;
     private String category; 
     private UserOutput author; 
-    private String votedUsers;
-    private String favUsers;
+    private String likedBy;
+    private String dislikedBy;
+    private String favBy;
     private String comments;
-    private String tags;
-    
+    private String tags;   
+    private String mentions;
     
 
 
@@ -30,20 +33,25 @@ public class PublicationOutput extends OutputManager{
         this.title = p.getTitle();
         this.content = p.getContent();
         this.dop = p.getDop();
+        this.likes = p.getLikes();
+        this.dislikes = p.getDislikes();
         this.n_views = p.getViews();
-        this.n_likes = p.getLikes();
+        this.n_likes = p.getTotalLikes();
         this.category = p.getCategory().name();
         this.n_comments = p.getComments().size();
         this.author = new UserOutput(p.getAuthor());
         this.category = p.getCategory().name();
-        this.votedUsers = self + "/votedUsers";
-        this.favUsers = self + "/favUsers";
+        this.likedBy = self + "/likedBy";
+        this.dislikedBy = self + "/dislikedBy";
+        this.favBy = self + "/favBy";
         this.comments = self + "/comments";
         this.tags = self + "/tags";
+        this.mentions = self + "/mentions";
 
     }
 
     
+
 
     public String getSelf() {
         return this.self;
@@ -83,6 +91,22 @@ public class PublicationOutput extends OutputManager{
 
     public void setDop(LocalDateTime dop) {
         this.dop = dop;
+    }
+
+    public Integer getLikes() {
+        return this.likes;
+    }
+
+    public void setLikes(Integer likes) {
+        this.likes = likes;
+    }
+
+    public Integer getDislikes() {
+        return this.dislikes;
+    }
+
+    public void setDislikes(Integer dislikes) {
+        this.dislikes = dislikes;
     }
 
     public Integer getN_views() {
@@ -125,20 +149,28 @@ public class PublicationOutput extends OutputManager{
         this.author = author;
     }
 
-    public String getVotedUsers() {
-        return this.votedUsers;
+    public String getLikedBy() {
+        return this.likedBy;
     }
 
-    public void setVotedUsers(String votedUsers) {
-        this.votedUsers = votedUsers;
+    public void setLikedBy(String likedBy) {
+        this.likedBy = likedBy;
     }
 
-    public String getFavUsers() {
-        return this.favUsers;
+    public String getDislikedBy() {
+        return this.dislikedBy;
     }
 
-    public void setFavUsers(String favUsers) {
-        this.favUsers = favUsers;
+    public void setDislikedBy(String dislikedBy) {
+        this.dislikedBy = dislikedBy;
+    }
+
+    public String getFavBy() {
+        return this.favBy;
+    }
+
+    public void setFavBy(String favBy) {
+        this.favBy = favBy;
     }
 
     public String getComments() {
@@ -157,8 +189,16 @@ public class PublicationOutput extends OutputManager{
         this.tags = tags;
     }
 
-    
 
+    public String getMentions() {
+        return this.mentions;
+    }
+
+    public void setMentions(String mentions) {
+        this.mentions = mentions;
+    }
+
+    
     
 
 
