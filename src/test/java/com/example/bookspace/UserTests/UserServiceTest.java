@@ -8,8 +8,11 @@ import com.example.bookspace.Inputs.UserInput;
 import com.example.bookspace.Output.PublicationOutput;
 import com.example.bookspace.Output.TagOutput;
 import com.example.bookspace.Output.UserOutput;
+import com.example.bookspace.enums.Category;
 import com.example.bookspace.services.UserService;
 import com.example.bookspace.models.User;
+import com.example.bookspace.models.Tag;
+import com.example.bookspace.models.Publication;
 import com.example.bookspace.repositories.UserRepository;
 
 import java.util.ArrayList;
@@ -30,8 +33,23 @@ class UserServiceTest {
 
         List<User> users = new ArrayList<>();
 
-        User u1 = new User(new UserInput("email1", "name1", "username1", "password1"));
-		User u2 = new User(new UserInput("email2", "name2", "username2", "password2"));
+        User u1 = new User("email1", "name1", "username1", "password1", LocalDate.now());
+        List<String> fav_cat = new ArrayList<>();
+        fav_cat.add("ACTION");
+        List<Category> cateogories = Category.getCategories(fav_cat);
+		u1.setFavCategories(cateogories);
+
+        List<Publication> pub = new ArrayList<>();
+        Publication p = new Publication("title", "content", u1, Category.ACTION);
+        pub.add(p);
+        u1.setPublications(pub);
+
+        List<Tag> tgs = new ArrayList<>();
+        Tag t = new Tag("name1", u1, pub);
+        tgs.add(t);
+        u1.setfavTags(tgs);
+
+		User u2 = new User("email2", "name2", "username2", "password2", LocalDate.now());
 
 		users.add(u1);
 		users.add(u2);
@@ -40,13 +58,10 @@ class UserServiceTest {
         Optional<User> ou3 = Optional.empty();
 
         when(userRepository.findAll()).thenReturn(users);
-        when(userRepository.existsById(1L)).thenReturn(true);
-        when(userRepository.existsById(2L)).thenReturn(false);
-        when(userRepository.getOne(1L)).thenReturn(u1);
-        when(userRepository.findUserByEmail("email1")).thenReturn(ou1);
         when(userRepository.findUserByEmail("email3")).thenReturn(ou3);
-        when(userRepository.findUserByEmail("emailNew")).thenReturn(ou3);
-        when(userRepository.findUserByUsername("usernameNew")).thenReturn(ou3);
+        when(userRepository.findUserByUsername("username3")).thenReturn(ou3);
+        when(userRepository.existsById(1L)).thenReturn(true);
+        when(userRepository.getOne(1L)).thenReturn(u1);
         when(userRepository.findById(1L)).thenReturn(ou1);
 
         this.userService = new UserService(userRepository);
@@ -66,6 +81,17 @@ class UserServiceTest {
     }
 
     @Test
+    void testpostUser() throws Exception {
+
+        List<String> fav_cat = new ArrayList<>();
+        UserInput ui1 = new UserInput("email3", "name3", "username3", "password3", LocalDate.now(), "description3", fav_cat);
+
+        UserOutput result = userService.postUser(ui1);
+        assertThat(result).isNotNull();
+        assertThat(result.getUsername()).isEqualTo("username3");
+    }
+
+    @Test
     void testgetUser() {
 
         UserOutput result;
@@ -75,11 +101,14 @@ class UserServiceTest {
     }
 
     @Test
-    void testpostUser() {
+    void testputUser() {
 
-        UserInput ui1 = new UserInput("email3", "name3", "username3", "password3");
+        List<String> fav_cat = new ArrayList<>();
+        UserInput ui1 = new UserInput("email3", "name3", "username3", "password3", LocalDate.now(), "description3", fav_cat);
 
-        UserOutput result = userService.postUser(ui1);
+        UserOutput result;
+		result = userService.putUser(1L, ui1);
+
         assertThat(result).isNotNull();
         assertThat(result.getUsername()).isEqualTo("username3");
     }
@@ -91,10 +120,27 @@ class UserServiceTest {
     }
 
     @Test
-    void testupdateUser() {
+    void testgetProfilePic() {
+        //Not implemented yet
+    }
 
-        byte[] pic = new byte[0];
-        userService.updateUser(1L, "nameNew", "descriptionNew", "emailNew", "usernameNew", LocalDate.now(), pic);
+    @Test
+    void testpostProfilePic() {
+        //Not implemented yet
+    }
+
+    @Test
+    void testdeleteProfilePic() {
+        //Not implemented yet
+    }
+
+    @Test
+    void testgetFavCategoriesUser() {
+
+        List<String> result = userService.getFavCategoriesUser(1L);
+
+        assertThat(result.size()).isEqualTo(1);
+        assertThat(result.get(0)).isEqualTo("ACTION");
     }
 
     @Test
@@ -102,15 +148,72 @@ class UserServiceTest {
 
         List<PublicationOutput> result = userService.getPublicationsUser(1L);
 
-        assertThat(result.size()).isEqualTo(0);
+        assertThat(result.size()).isEqualTo(1);
+        assertThat(result.get(0).getContent()).isEqualTo("content");
     }
 
     @Test
-    void testgetPreferedTagsUser() {
+    void testgetLikedPublications() {
+        //Not implemented yet
+    }
+
+    @Test
+    void testgetDislikedPublications() {
+        //Not implemented yet
+    }
+
+    @Test
+    void testgetFavPublications() {
+        //Not implemented yet
+    }
+
+    @Test
+    void testgetMentionedPublications() {
+        //Not implemented yet
+    }
+
+    @Test
+    void testgetComments() {
+        //Not implemented yet
+    }
+
+    @Test
+    void testgetLikedComments() {
+        //Not implemented yet
+    }
+
+    @Test
+    void testgetDislikedComments() {
+        //Not implemented yet
+    }
+
+    @Test
+    void testgetCreatedTags() {
+        //Not implemented yet
+    }
+
+    @Test
+    void testgetFavTagsUser() {
 
         List<TagOutput> result = new ArrayList<>();
-		result = userService.getPreferedTagsUser(1L);
+		result = userService.getFavTagsUser(1L);
 
-        assertThat(result.size()).isEqualTo(0);
+        assertThat(result.size()).isEqualTo(1);
+        assertThat(result.get(0).getName()).isEqualTo("name1");
+    }
+
+    @Test
+    void testgetBlockedUsers() {
+        //Not implemented yet
+    }
+
+    @Test
+    void testpostBlockedUsers() {
+        //Not implemented yet
+    }
+
+    @Test
+    void testdeleteBlockedUsers() {
+        //Not implemented yet
     }
 }

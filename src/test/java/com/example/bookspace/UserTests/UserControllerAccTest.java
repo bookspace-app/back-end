@@ -15,13 +15,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
+
 import com.example.bookspace.Inputs.UserInput;
 import com.example.bookspace.Output.UserOutput;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserControllerAccTest
-//When it fails, it tells you that the application is not doing what the customer expects it to do
 {
 
     @LocalServerPort
@@ -46,41 +48,33 @@ class UserControllerAccTest
     }
 
     @Test
-    void testgetUserById() throws Exception {
-
-        ResponseEntity responseEntity = restTemplate.getForEntity(url + "/1", UserOutput.class);
-        assertEquals(OK, responseEntity.getStatusCode());
-        assertEquals(true, responseEntity.hasBody());
-    }
-
-    @Test
-    void testgetPublicationsUser() throws Exception {
-
-        ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/publications", ArrayList.class);
-        assertEquals(OK, responseEntity.getStatusCode());
-        assertEquals(true, responseEntity.hasBody());
-    }
-
-    @Test
-    void testgetPreferedTagsUser() throws Exception {
-
-        ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/preferedTags", ArrayList.class);
-        assertEquals(OK, responseEntity.getStatusCode());
-        assertEquals(true, responseEntity.hasBody());
-    }
-
-    @Test
     void testpostUser() throws Exception {
 
         HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
-		UserInput u1 = new UserInput("emailNew2", "nameNew2", "usernameNew2", "passwordNew2");
+        List<String> fav_cat = new ArrayList<>();
+        fav_cat.add("ACTION");
+		UserInput u1 = new UserInput("email1", "name1", "username1", "password1", LocalDate.now(), "description1", fav_cat);
         requestEntity = new HttpEntity<>(u1, headers);
 
         ResponseEntity<UserOutput> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, UserOutput.class);
         assertEquals(OK, responseEntity.getStatusCode());	
+
+        ResponseEntity<UserOutput> responseEntity2 = restTemplate.getForEntity(url + "/2", UserOutput.class);
+        assertEquals(OK, responseEntity2.getStatusCode());
+        assertEquals(true, responseEntity2.hasBody());
+        assertEquals("email1", responseEntity2.getBody().getEmail());
+    }
+
+    @Test
+    void testgetUserById() throws Exception {
+
+        ResponseEntity<UserOutput> responseEntity = restTemplate.getForEntity(url + "/1", UserOutput.class);
+        assertEquals(OK, responseEntity.getStatusCode());
+        assertEquals(true, responseEntity.hasBody());
+        assertEquals("demoEmail", responseEntity.getBody().getEmail());
     }
 
     @Test
@@ -89,10 +83,128 @@ class UserControllerAccTest
         HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
-		UserInput u1 = new UserInput("emailNew2", "nameNew2", "usernameNew2", "passwordNew2");
-        HttpEntity<UserInput> requestEntity = new HttpEntity<>(u1, headers);
+        HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
+        List<String> fav_cat = new ArrayList<>();
+        fav_cat.add("ACTION");
+		UserInput u1 = new UserInput("emailUpd", "nameUpd", "usernameUpd", "passwordUpd", LocalDate.now(), "descriptionUpd", fav_cat);
+        requestEntity = new HttpEntity<>(u1, headers);
 
-        ResponseEntity responseEntity = restTemplate.exchange(url + "/1", HttpMethod.PUT, requestEntity, Void.class);
-        assertEquals(OK, responseEntity.getStatusCode());
+        ResponseEntity<UserOutput> responseEntity = restTemplate.exchange(url + "/1", HttpMethod.PUT, requestEntity, UserOutput.class);
+        assertEquals(OK, responseEntity.getStatusCode());	
+
+        ResponseEntity<UserOutput> responseEntity2 = restTemplate.getForEntity(url + "/1", UserOutput.class);
+        assertEquals(OK, responseEntity2.getStatusCode());
+        assertEquals(true, responseEntity2.hasBody());
+        assertEquals("emailUpd", responseEntity2.getBody().getEmail());
     }
+
+    /*@Test
+    void testgetProfilePic() throws Exception {
+
+        ResponseEntity responseEntity = restTemplate.getForEntity(url + "/1/profilePic", Void.class);
+        assertEquals(OK, responseEntity.getStatusCode());
+    }*/
+
+    /*@Test
+    void testpostProfilePic() throws Exception {
+
+        ResponseEntity responseEntity = restTemplate.postForEntity(url + "/1/profilePic", Void.class);
+        assertEquals(OK, responseEntity.getStatusCode());
+    }*/
+
+    @Test
+    void testgetFavCategoriesUser() throws Exception {
+
+        ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/categories", ArrayList.class);
+        assertEquals(OK, responseEntity.getStatusCode());
+        assertEquals(true, responseEntity.hasBody());
+        assertEquals("ACTION", responseEntity.getBody().get(0));
+    }
+
+    @Test
+    void testgetPublicationsUser() throws Exception {
+
+        ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/publications", ArrayList.class);
+        assertEquals(OK, responseEntity.getStatusCode());
+        assertEquals(true, responseEntity.hasBody());
+        assertEquals(1, responseEntity.getBody().size());
+    }
+
+    /*@Test
+    void testgetLikedPublications() throws Exception {
+
+        ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/likedPublications", ArrayList.class);
+        assertEquals(OK, responseEntity.getStatusCode());
+    }*/
+
+    /*@Test
+    void testgetDislikedPublications() throws Exception {
+
+        ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/dislikedPublications", ArrayList.class);
+        assertEquals(OK, responseEntity.getStatusCode());
+    }*/
+
+    /*@Test
+    void testgetFavPublications() throws Exception {
+
+        ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/favPublications", ArrayList.class);
+        assertEquals(OK, responseEntity.getStatusCode());
+    }*/
+
+    /*@Test
+    void testgetMentionedPublications() throws Exception {
+
+        ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/mentions", ArrayList.class);
+        assertEquals(OK, responseEntity.getStatusCode());
+    }*/
+
+    /*@Test
+    void testgetComments() throws Exception {
+
+        ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/comments", ArrayList.class);
+        assertEquals(OK, responseEntity.getStatusCode());
+    }*/
+
+    /*@Test
+    void testgetLikedComments() throws Exception {
+
+        ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/likedComments", ArrayList.class);
+        assertEquals(OK, responseEntity.getStatusCode());
+    }*/
+
+    /*@Test
+    void testgetDislikedComments() throws Exception {
+
+        ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/dislikedComments", ArrayList.class);
+        assertEquals(OK, responseEntity.getStatusCode());
+    }*/
+
+    /*@Test
+    void testgetCreatedTags() throws Exception {
+
+        ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/tags", ArrayList.class);
+        assertEquals(OK, responseEntity.getStatusCode());
+    }*/
+
+    @Test
+    void getFavTagsUser() throws Exception {
+
+        ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/favTags", ArrayList.class);
+        assertEquals(OK, responseEntity.getStatusCode());
+        assertEquals(true, responseEntity.hasBody());
+    }
+
+    /*@Test
+    void testgetBlockedUsers() throws Exception {
+
+        ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/blockedUsers", ArrayList.class);
+        assertEquals(OK, responseEntity.getStatusCode());
+    }*/
+
+    /*@Test
+    void testpostBlockedUsers() throws Exception {
+
+        ResponseEntity<UserOutput> responseEntity = restTemplate.postForEntity(url + "/1/blockedUsers", UserOutput.class);
+        assertEquals(OK, responseEntity.getStatusCode());
+    }*/
 }

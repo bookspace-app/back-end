@@ -5,15 +5,16 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import com.example.bookspace.Inputs.PublicationInput;
-import com.example.bookspace.Inputs.UserInput;
 import com.example.bookspace.Output.PublicationOutput;
 import com.example.bookspace.Output.UserOutput;
+import com.example.bookspace.enums.Category;
 import com.example.bookspace.services.PublicationService;
 import com.example.bookspace.models.User;
 import com.example.bookspace.models.Publication;
 import com.example.bookspace.repositories.UserRepository;
 import com.example.bookspace.repositories.PublicationRepository;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,24 +32,52 @@ class PublicationServiceTest {
 
         List<Publication> publications = new ArrayList<>();
 
-        User u1 = new User(new UserInput("email1", "name1", "username1", "password1"));
-        Publication p1 = new Publication(new PublicationInput("title1", "content1", 1L, "category1"), u1);
+        User u1 = new User("email1", "name1", "username1", "password1", LocalDate.now());
+        List<String> fav_cat = new ArrayList<>();
+        fav_cat.add("ACTION");
+        List<Category> cateogories = Category.getCategories(fav_cat);
+		u1.setFavCategories(cateogories);
 
-		User u2 = new User(new UserInput("email2", "name2", "username2", "password2"));
-        Publication p2 = new Publication(new PublicationInput("title2", "content2", 2L, "category2"), u2);
+        List<Publication> pub = new ArrayList<>();
+        Publication p1 = new Publication("title1", "content1", u1, Category.ACTION);
+        pub.add(p1);
+        u1.setPublications(pub);
+
+        List<User> fav_by = new ArrayList<>();
+
+		User u2 = new User("email2", "name2", "username2", "password2", LocalDate.now());
+        List<String> fav_cat2 = new ArrayList<>();
+        fav_cat2.add("LOVE");
+        List<Category> cateogories2 = Category.getCategories(fav_cat2);
+		u2.setFavCategories(cateogories2);
+
+        List<Publication> pub2 = new ArrayList<>();
+        Publication p2 = new Publication("title2", "content2", u2, Category.LOVE);
+        pub2.add(p2);
+        u2.setPublications(pub2);
+
+        fav_by.add(u2);
+        p1.setFavouriteBy(fav_by);
+
+        User u3 = new User("email3", "name3", "username3", "password3", LocalDate.now());
 
         publications.add(p1);
         publications.add(p2);
 
         Optional<User> ou1 = Optional.of(u1);
+        Optional<User> ou3 = Optional.of(u3);
         Optional<Publication> op1 = Optional.of(p1);
 
         when(publicationRepository.findAll()).thenReturn(publications);
+        when(userRepository.existsById(3L)).thenReturn(true);
+        when(userRepository.findById(3L)).thenReturn(ou3);
         when(publicationRepository.getOne(1L)).thenReturn(p1);
-        when(userRepository.getOne(1L)).thenReturn(u1);
-        when(userRepository.findById(1L)).thenReturn(ou1);
         when(publicationRepository.findById(1L)).thenReturn(op1);
         when(publicationRepository.existsById(1L)).thenReturn(true);
+        when(userRepository.getOne(3L)).thenReturn(u3);
+
+
+        when(userRepository.findById(1L)).thenReturn(ou1);
 
         this.publicationService = new PublicationService(publicationRepository, userRepository);
     }
@@ -67,6 +96,18 @@ class PublicationServiceTest {
     }
 
     @Test
+    void testpostPublication() throws Exception {
+
+        List<Long> nl = new ArrayList<>();
+        PublicationInput pi1 = new PublicationInput("title3", "content3", 3L, "POTENTIAL", nl, nl);
+
+        PublicationOutput result;
+		result = publicationService.postPublication(pi1);
+        assertThat(result).isNotNull();
+        assertThat(result.getTitle()).isEqualTo("title3");
+    }
+
+    @Test
     void testgetPublication() {
 
         PublicationOutput result;
@@ -76,25 +117,15 @@ class PublicationServiceTest {
     }
 
     @Test
-    void testpostPublication() {
+    void testputPublication() {
 
-        PublicationInput pi1 = new PublicationInput("titleNew", "contentNew", 1L, "categoryNew");
-
-        PublicationOutput result;
-		result = publicationService.postPublication(pi1);
-        assertThat(result).isNotNull();
-        assertThat(result.getTitle()).isEqualTo("titleNew");
-    }
-
-    @Test
-    void testupdatePublication() {
-
-        PublicationInput pi1 = new PublicationInput("titleNew", "contentNew", 1L, "categoryNew");
+        List<Long> nl = new ArrayList<>();
+        PublicationInput pi1 = new PublicationInput("titleNEW", "content3", 3L, "POTENTIAL", nl, nl);
 
         PublicationOutput result;
-		result = publicationService.updatePublication(1L, pi1);
+		result = publicationService.putPublication(1L, pi1);
         assertThat(result).isNotNull();
-        assertThat(result.getTitle()).isEqualTo("titleNew");
+        assertThat(result.getTitle()).isEqualTo("titleNEW");
     }
 
     @Test
@@ -104,12 +135,33 @@ class PublicationServiceTest {
     }
 
     @Test
-    void testgetVotedByUsers() {
+    void testgetLikedUsers() {
+        //Not implemented yet
+    }
 
-        List<UserOutput> result = new ArrayList<>();
-		result = publicationService.getVotedByUsers(1L);
+    @Test
+    void testpostLike() {
+        //Not implemented yet
+    }
 
-        assertThat(result.size()).isEqualTo(0);
+    @Test
+    void testdeleteLike() {
+        //Not implemented yet
+    }
+
+    @Test
+    void testgetDislikedUsers() {
+        //Not implemented yet
+    }
+
+    @Test
+    void testpostDislike() {
+        //Not implemented yet
+    }
+
+    @Test
+    void testdeleteDislike() {
+        //Not implemented yet
     }
 
     @Test
@@ -118,33 +170,35 @@ class PublicationServiceTest {
         List<UserOutput> result = new ArrayList<>();
 		result = publicationService.getFavUsers(1L);
 
-        assertThat(result.size()).isEqualTo(0);
+        assertThat(result.size()).isEqualTo(1);
+        assertThat(result.get(0).getUsername()).isEqualTo("username2");
     }
 
     @Test
-    void testpostFavUser() {
+    void testpostFavUsers() {
 
-        UserOutput result = new UserOutput();
-		result = publicationService.postFavUser(1L, 1L);
+        UserOutput result = publicationService.postFavUser(1L, 3L);
 
-        assertThat(result.getId()).isEqualTo(1L);
+        assertThat(result.getUsername()).isEqualTo("username3");
     }
 
     @Test
-    void testpostLike() {
-
-        PublicationOutput result;
-		result = publicationService.postLike(1L);
-
-        assertThat(result.getTitle()).isEqualTo("title1");
+    void testdeleteFavUser() {
+        //Not implemented yet
     }
 
     @Test
-    void testpostDislike() {
+    void testgetComments() {
+        //Not implemented yet
+    }
 
-        PublicationOutput result;
-		result = publicationService.postLike(1L);
+    @Test
+    void testgetMentions() {
+        //Not implemented yet
+    }
 
-        assertThat(result.getTitle()).isEqualTo("title1");
+    @Test
+    void testgetTags() {
+        //Not implemented yet
     }
 }

@@ -16,13 +16,14 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import com.example.bookspace.Inputs.PublicationInput;
 import com.example.bookspace.Output.PublicationOutput;
 import com.example.bookspace.Output.UserOutput;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class PublicationControllerAccTest
-//When it fails, it tells you that the application is not doing what the customer expects it to do
 {
 
     @LocalServerPort
@@ -38,10 +39,11 @@ class PublicationControllerAccTest
     }
 
     @Test
-    void testgetAllPublications() throws Exception {
+    void testgetPublications() throws Exception {
 
         ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url, ArrayList.class);
         assertEquals(OK, responseEntity.getStatusCode());
+        assertEquals(true, responseEntity.hasBody());
     }
 
     @Test
@@ -50,18 +52,28 @@ class PublicationControllerAccTest
         HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
-		PublicationInput p1 = new PublicationInput("title1", "content1", 1L, "category1");
-        HttpEntity<PublicationInput> requestEntity = new HttpEntity<>(p1, headers);
+        HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
+        List<Long> nl = new ArrayList<>();
+        PublicationInput p1 = new PublicationInput("titleNew", "contentNew", 1L, "LOVE", nl, nl);
 
-        ResponseEntity<PublicationOutput> responseEntity = restTemplate.postForEntity(url, requestEntity, PublicationOutput.class);
-        assertEquals(OK, responseEntity.getStatusCode());
+        requestEntity = new HttpEntity<>(p1, headers);
+
+        ResponseEntity<PublicationOutput> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, PublicationOutput.class);
+        assertEquals(OK, responseEntity.getStatusCode());	
+
+        ResponseEntity<PublicationOutput> responseEntity2 = restTemplate.getForEntity(url + "/2", PublicationOutput.class);
+        assertEquals(OK, responseEntity2.getStatusCode());
+        assertEquals(true, responseEntity2.hasBody());
+        assertEquals("titleNew", responseEntity2.getBody().getTitle());
     }
 
     @Test
     void testgetPublicationById() throws Exception {
 
-        ResponseEntity responseEntity = restTemplate.getForEntity(url + "/1", UserOutput.class);
-        assertEquals(OK, responseEntity.getStatusCode());
+        ResponseEntity<PublicationOutput> responseEntity2 = restTemplate.getForEntity(url + "/1", PublicationOutput.class);
+        assertEquals(OK, responseEntity2.getStatusCode());
+        assertEquals(true, responseEntity2.hasBody());
+        assertEquals("demoTitle", responseEntity2.getBody().getTitle());
     }
 
     @Test
@@ -70,17 +82,59 @@ class PublicationControllerAccTest
         HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
-		PublicationInput p1 = new PublicationInput("title1", "content1", 1L, "category1");
-        HttpEntity<PublicationInput> requestEntity = new HttpEntity<>(p1, headers);
+        HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
+        List<Long> nl = new ArrayList<>();
+        PublicationInput p1 = new PublicationInput("titleNew", "contentNew", 1L, "LOVE", nl, nl);
+        requestEntity = new HttpEntity<>(p1, headers);
 
-        ResponseEntity responseEntity = restTemplate.exchange(url + "/1", HttpMethod.PUT, requestEntity, Void.class);
-        assertEquals(400, responseEntity.getBody());
+        ResponseEntity<PublicationOutput> responseEntity = restTemplate.exchange(url + "/1", HttpMethod.PUT, requestEntity, PublicationOutput.class);
+        assertEquals(OK, responseEntity.getStatusCode());
+
+        ResponseEntity<PublicationOutput> responseEntity2 = restTemplate.getForEntity(url + "/1", PublicationOutput.class);
+        assertEquals(OK, responseEntity2.getStatusCode());
+        assertEquals(true, responseEntity2.hasBody());
+        assertEquals("titleUpd", responseEntity2.getBody().getTitle());
     }
+
+    /*@Test
+    void testgetLikedUsers() throws Exception {
+
+        ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/like", ArrayList.class);
+        assertEquals(OK, responseEntity.getStatusCode());
+    }*/
+
+    /*@Test
+    void testpostLikedUsers() throws Exception {
+
+        ResponseEntity<PublicationOutput> responseEntity = restTemplate.postForEntity(url + "/1/like/1", PublicationOutput.class);
+        assertEquals(OK, responseEntity.getStatusCode());
+    }*/
+
+    /*@Test
+    void testgetDislikedUsers() throws Exception {
+
+        ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/dislike", ArrayList.class);
+        assertEquals(OK, responseEntity.getStatusCode());
+    }*/
+
+    /*@Test
+    void testpostDislikedUsers() throws Exception {
+
+        ResponseEntity<PublicationOutput> responseEntity = restTemplate.postForEntity(url + "/1/dislike/1", PublicationOutput.class);
+        assertEquals(OK, responseEntity.getStatusCode());
+    }*/
+
+    /*@Test
+    void testpostDislikedUsers() throws Exception {
+
+        ResponseEntity<PublicationOutput> responseEntity = restTemplate.postForEntity(url + "/1/dislike/1", PublicationOutput.class);
+        assertEquals(OK, responseEntity.getStatusCode());
+    }*/
 
     @Test
     void testgetFavUsers() throws Exception {
 
-        ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/favUsers", ArrayList.class);
+        ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/fav", ArrayList.class);
         assertEquals(OK, responseEntity.getStatusCode());
     }
 
@@ -92,8 +146,9 @@ class PublicationControllerAccTest
 
         HttpEntity requestEntity = new HttpEntity<>(headers);
 
-        ResponseEntity<UserOutput> responseEntity = restTemplate.postForEntity(url + "1/favUsers/1", requestEntity, UserOutput.class);
+        ResponseEntity<UserOutput> responseEntity = restTemplate.postForEntity(url + "/1/fav/1", requestEntity, UserOutput.class);
         assertEquals(OK, responseEntity.getStatusCode());
+        assertEquals("demoName", responseEntity.getBody().getName());
     }
 
     @Test
@@ -108,15 +163,24 @@ class PublicationControllerAccTest
         assertEquals(OK, responseEntity.getStatusCode());
     }
 
-    @Test
-    void testpostDislike() throws Exception {
+    /*@Test
+    void testgetComments() throws Exception {
 
-        HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-
-        HttpEntity requestEntity = new HttpEntity<>(headers);
-
-        ResponseEntity<PublicationOutput> responseEntity = restTemplate.postForEntity(url + "1/dislikes", requestEntity, PublicationOutput.class);
+        ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/comments", ArrayList.class);
         assertEquals(OK, responseEntity.getStatusCode());
-    }
+    }*/
+
+    /*@Test
+    void testgetMentions() throws Exception {
+
+        ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/mentions", ArrayList.class);
+        assertEquals(OK, responseEntity.getStatusCode());
+    }*/
+
+    /*@Test
+    void testgetTags() throws Exception {
+
+        ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/tags", ArrayList.class);
+        assertEquals(OK, responseEntity.getStatusCode());
+    }*/
 }
