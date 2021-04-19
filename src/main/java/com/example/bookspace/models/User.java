@@ -353,6 +353,14 @@ public class User {
         this.favouritePublications = favouritePublications;
     }
 
+    public void addFavPublication(Publication p) {
+        this.favouritePublications.add(p);
+    }
+
+    public void removeFavPublication(Publication p) {
+        this.favouritePublications.remove(p);
+    }
+
     public List<Comment> getComments() {
         return this.comments;
     }

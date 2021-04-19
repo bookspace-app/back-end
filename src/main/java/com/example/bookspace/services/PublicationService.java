@@ -12,6 +12,7 @@ import com.example.bookspace.Output.TagOutput;
 import com.example.bookspace.Output.UserOutput;
 import com.example.bookspace.enums.Category;
 import com.example.bookspace.models.Publication;
+import com.example.bookspace.models.Tag;
 import com.example.bookspace.models.User;
 import com.example.bookspace.repositories.PublicationRepository;
 import com.example.bookspace.repositories.UserRepository;
@@ -79,6 +80,10 @@ public class PublicationService {
         
         if (publicationDetails.getTitle() != null) publication.setTitle(publicationDetails.getTitle());
         if (publicationDetails.getContent() != null) publication.setContent(publicationDetails.getContent());
+        if (publicationDetails.getCategory() != null) {
+            Category c = Category.getCategory(publicationDetails.getCategory());
+            publication.setCategory(c);
+        } 
         publication = publicationRepository.save(publication);
         return new PublicationOutput(publication);
 
@@ -95,33 +100,87 @@ public class PublicationService {
 
 
     public List<UserOutput> getLikedUsers(Long publicationId) throws Exception {
-		throw new Exception("This endpoint is not implemented yet");
+        List<UserOutput> result = new ArrayList<>();
+        Publication p = publicationRepository.getOne(publicationId);
+        for (User u: p.getLikedBy()) {
+            result.add(new UserOutput(u));
+        }   
+        return result;
     }
 
-    public PublicationOutput postLike(Long publicationId) throws Exception {
-		throw new Exception("This endpoint is not implemented yet");
+    public PublicationOutput postLike(Long publicationId, Long userId) throws Exception {
+        Publication p = publicationRepository.getOne(publicationId);
+        User u = userRepository.getOne(userId);
+        if (p.getLikedBy().contains(u)) throw new Exception("This user has already liked this publication");
+
+        if (p.getDislikedBy().contains(u))  {
+            p.getDislikedBy().remove(u);
+            u.getLikedPublications().remove(p); 
+        }
+
+        p.addLikedUser(u);
+        p = publicationRepository.save(p);
+        u.addLikedPublication(p);
+        u =userRepository.save(u);
+
+        return new PublicationOutput(p);
+
+
     }
     
-    public PublicationOutput deleteLike(Long publicationId) throws Exception {
-        throw new Exception("This endpoint is not implemented yet");
+    public PublicationOutput deleteLike(Long publicationId, Long userId) throws Exception {
+        Publication p = publicationRepository.getOne(publicationId);
+        User u = userRepository.getOne(userId);
+        if (!p.getLikedBy().contains(u)) throw new Exception ("This user has not liked this publication");
 
+        p.getLikedBy().remove(u);
+        u.getLikedPublications().remove(p);
+        u = userRepository.save(u);
+        p = publicationRepository.save(p);
+        return new PublicationOutput(p);
+        
     }    
     
     public List<UserOutput> getDislikedUsers(Long publicationId) throws Exception {
-		throw new Exception("This endpoint is not implemented yet");
+       Publication p = publicationRepository.getOne(publicationId);
+       List<UserOutput> result = new ArrayList<>();
+       for (User u: p.getDislikedBy()) {
+           result.add(new UserOutput(u));
+       }
+       return result;
     }
 
 
 
-	public PublicationOutput postDislike(Long publicationId) throws Exception {
-		throw new Exception("This endpoint is not implemented yet");
-	}
+	public PublicationOutput postDislike(Long publicationId, Long userId) throws Exception {
+        Publication p = publicationRepository.getOne(publicationId);
+        User u = userRepository.getOne(userId);
+        if (p.getDislikedBy().contains(u)) throw new Exception("This user has already disliked this publication");
+
+        if (p.getLikedBy().contains(u))  {
+            p.getLikedBy().remove(u);
+            u.getLikedPublications().remove(p); 
+        }
+
+        p.addDislikedUser(u);
+        p = publicationRepository.save(p);
+        u.addDislikedPublication(p);
+        userRepository.save(u);
+
+        return new PublicationOutput(p);	}
 
 
 
-	public void deleteDislike(Long publicationId) throws Exception {
-        throw new Exception("This endpoint is not implemented yet");
+	public PublicationOutput deleteDislike(Long publicationId, Long userId) throws Exception {
+        Publication p = publicationRepository.getOne(publicationId);
+        User u = userRepository.getOne(userId);
+        if (!p.getDislikedBy().contains(u)) throw new Exception ("This user has not disliked this publication");
 
+        p.getDislikedBy().remove(u);
+        u.getDislikedPublications().remove(p);
+        u = userRepository.save(u);
+        p = publicationRepository.save(p);
+        return new PublicationOutput(p);
 	}
     
     
@@ -137,12 +196,13 @@ public class PublicationService {
 
 
 
-    public UserOutput postFavUser(Long id, Long userId) {
+    public UserOutput postFavUser(Long id, Long userId) throws Exception {
         Publication p = publicationRepository.getOne(id);
         User favUser = userRepository.getOne(userId);
-
+        if (p.getFavouriteBy().contains(favUser)) throw new Exception("This user has already faved this publication");
+        
         p.addFavUser(favUser);
-        favUser.addLikedPublication(p);
+        favUser.addFavPublication(p);
 
         p = publicationRepository.save(p);
         favUser = userRepository.save(favUser);
@@ -152,8 +212,17 @@ public class PublicationService {
     }
 
     public UserOutput deleteFavUser(Long id, Long userId) throws Exception {
-        throw new Exception("This endpoint is not implemented yet");
-    }
+        Publication p = publicationRepository.getOne(id);
+        User favUser = userRepository.getOne(userId);
+        if (!p.getFavouriteBy().contains(favUser)) throw new Exception("This user has not faved this publication");
+        
+        p.removeFavUser(favUser);
+        favUser.removeFavPublication(p);
+
+        p = publicationRepository.save(p);
+        favUser = userRepository.save(favUser);
+
+        return new UserOutput(favUser);    }
 
     public List<CommentOutput> getComments(Long id) throws Exception {
         throw new Exception("This endpoint is not implemented yet");
@@ -167,8 +236,15 @@ public class PublicationService {
 
 
 
-    public List<TagOutput> getTags(Long id) throws Exception {
-        throw new Exception("This endpoint is not implemented yet");
+    public List<TagOutput> getTags(Long publicationId) throws Exception {
+        Publication p = publicationRepository.getOne(publicationId);
+        List<TagOutput> result = new ArrayList<>();
+        for (Tag t: p.getTags()) {
+            result.add(new TagOutput(t));
+        }
+
+        return result;       
+
     }
 
 

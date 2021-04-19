@@ -4,10 +4,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum Category {
-    ACTION,
-    LOVE,
-    WAR,
-    POTENTIAL;
+    Accion, 
+    Aventura,
+    Literaria, 
+    Contemporanea, 
+    Negra, 
+    Historica, 
+    Romantica,
+    Erotica, 
+    Poesia, 
+    Teatro,
+    Terror,
+    Comic,
+    Manga, 
+    SciFi,
+    Fantasia,
+    Infantil,
+    Economia,
+    Cocina,
+    Comedia,
+    Documental,
+    Drama,
+    Suspense,
+    Juvenil,
+    Adulto,
+    Belico,
+    Crimen,
+    Deporte,
+    Historia,
+    Biografia,
+    Policiaco,
+    Familiar,
+    Western,
+    Religion,
+    Futurismo;
     
 
     public static boolean existsCategory(String category) {
