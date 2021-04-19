@@ -248,10 +248,12 @@ public class UserService {
 		for (User u: users) {
 			result.add(new UserOutput(u));
 		}
+		userRepository.save(user);
 		return result;
     }
 
    	public UserOutput postBlockedUsers(Long id, Long blockedUserid) throws Exception {
+		if (id == blockedUserid) throw new Exception ("You cannot block yourself!");
 		User user = userRepository.getOne(id);
 		User userToBlock = userRepository.getOne(blockedUserid);
 		boolean b = userRepository.existsById(blockedUserid);
@@ -261,6 +263,9 @@ public class UserService {
 		List<User> blockedUsers = user.getBlockedUsers();
 		if (!blockedUsers.contains(userToBlock)){
 			blockedUsers.add(userToBlock);
+			user.setBlockedUsers(blockedUsers);
+			userRepository.save(user);
+			System.out.println("User " + id + " has blocked user " + blockedUserid);
 		}
 		else throw new Exception("This user is already blocked");
 		return new UserOutput(userToBlock);
@@ -272,6 +277,8 @@ public class UserService {
 		List<User> blockedUsers = user.getBlockedUsers();
 		if (blockedUsers.contains(userToUnblock)){
 			blockedUsers.remove(userToUnblock);
+			user.setBlockedUsers(blockedUsers);
+			userRepository.save(user);
 		}
 		else throw new Exception("This user is not blocked yet");
     }
