@@ -52,7 +52,7 @@ public class PublicationController {
     }    
 
     @PutMapping(path = "{publicationId}") 
-    public PublicationOutput updatePublication(@PathVariable("publicationId") Long id, @RequestParam PublicationInput publicationDetails){
+    public PublicationOutput updatePublication(@PathVariable("publicationId") Long id, @RequestBody PublicationInput publicationDetails){
         return publicationService.putPublication(id, publicationDetails);
     }
 
@@ -67,13 +67,13 @@ public class PublicationController {
     }
 
     @PostMapping("{publicationId}/like/{userId}")
-    public PublicationOutput postLikedUsers(@PathVariable("publicationId") Long publicationId) throws Exception {
-        return publicationService.postLike(publicationId);
+    public PublicationOutput postLikedUsers(@PathVariable("publicationId") Long publicationId, @PathVariable("userId") Long userId) throws Exception {
+        return publicationService.postLike(publicationId, userId);
     }
 
     @DeleteMapping("{publicationId}/like/{userId}")
-    public PublicationOutput deleteLikedUsers(@PathVariable("publicationId") Long publicationId) throws Exception {
-        return publicationService.deleteLike(publicationId);
+    public PublicationOutput deleteLikedUsers(@PathVariable("publicationId") Long publicationId, @PathVariable("userId") Long userId) throws Exception {
+        return publicationService.deleteLike(publicationId, userId);
     }
 
     @GetMapping("{publicationId}/dislike")
@@ -82,13 +82,13 @@ public class PublicationController {
     }
 
     @PostMapping("{publicationId}/dislike/{userId}")
-    public PublicationOutput postDislikedUsers(@PathVariable("publicationId") Long publicationId) throws Exception {
-        return publicationService.postDislike(publicationId);
+    public PublicationOutput postDislikedUsers(@PathVariable("publicationId") Long publicationId, @PathVariable("userId") Long userId) throws Exception {
+        return publicationService.postDislike(publicationId, userId);
     }
 
     @DeleteMapping("{publicationId}/dislike/{userId}")
-    public void deleteDislikedUsers(@PathVariable("publicationId") Long publicationId) throws Exception {
-        publicationService.deleteDislike(publicationId);
+    public PublicationOutput deleteDislikedUsers(@PathVariable("publicationId") Long publicationId, @PathVariable("userId") Long userId)  throws Exception {
+        return publicationService.deleteDislike(publicationId, userId);
     }
 
     @GetMapping("{publicationId}/fav")
@@ -98,7 +98,7 @@ public class PublicationController {
     }
 
     @PostMapping("{publicationId}/fav/{userId}")
-    public UserOutput postFaUser(@PathVariable("publicationId") Long id, @PathVariable("userId") Long userId) {
+    public UserOutput postFaUser(@PathVariable("publicationId") Long id, @PathVariable("userId") Long userId) throws Exception {
         return publicationService.postFavUser(id, userId);
         
     }
