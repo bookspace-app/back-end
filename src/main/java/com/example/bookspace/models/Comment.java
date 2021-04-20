@@ -42,7 +42,7 @@ public class Comment {
     private LocalDateTime dop = LocalDateTime.now();
 
     @ManyToOne
-    @JoinColumn(name = "author_id", nullable =  false)
+    @JoinColumn(name = "authorId", nullable =  false)
     private User author;
 
     @ManyToMany(mappedBy = "likedComments")
@@ -52,11 +52,11 @@ public class Comment {
     private List<User> dislikedBy = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "publication_id", nullable = false)
+    @JoinColumn(name = "publicationId", nullable = false)
     private Publication publication;
 
     @ManyToOne
-    @JoinColumn(name = "parent_id")
+    @JoinColumn(name = "parentId")
     private Comment parent;
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
