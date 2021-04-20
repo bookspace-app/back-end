@@ -18,19 +18,19 @@ public class UserOutput extends OutputManager{
     private String description;
     private LocalDate dor;
     private String rank; 
-    private String publications;
-    private String likedPublications;
-    private String dislikedPublications;
-    private String favouritePublications;
-    private String comments;     
-    private String likedComments;
-    private String dislikedComments; 
-    private String blockedUsers; 
-    private String profilePic;
-    private String createdTags;
-    private String favTags; 
-    private String favCategories;
-    private String mentions;
+    private String publicationsUri;
+    private String likedPublicationsUri;
+    private String dislikedPublicationsUri;
+    private String favouritePublicationsUri;
+    private String commentsUri;     
+    private String likedCommentsUri;
+    private String dislikedCommentsUri; 
+    private String blockedUsersUri; 
+    private String profilePicUri;
+    private String createdTagsUri;
+    private String favTagsUri; 
+    private String favCategoriesUri;
+    private String mentionsUri;
     
     public UserOutput(User u) {
         this.id = u.getId();
@@ -43,19 +43,19 @@ public class UserOutput extends OutputManager{
         this.dor = u.getDor();
         this.rank = u.getRank().name();
         this.self = getURL() + "/users/" + this.id;
-        this.publications =  this.self + "/publications";
-        this.likedPublications= this.self + "/likedPublications";
-        this.dislikedPublications = this.self + "/dislikedPublications";
-        this.favouritePublications = this.self + "/favPublications";
-        this.comments = this.self + "/comments";
-        this.likedComments = this.self + "/likedComments";
-        this.dislikedComments = this.self + "/dislikedComments";
-        this.blockedUsers = this.self + "/blockedUsers";
-        this.profilePic = this.self + "/profilePic";
-        this.createdTags = this.self + "/tags";
-        this.favTags = this.self + "/favTags";
-        this.favCategories = this.self + "/categories";
-        this.mentions = this.self + "/mentions";
+        this.publicationsUri =  this.self + "/publications";
+        this.likedPublicationsUri = this.self + "/likedPublications";
+        this.dislikedPublicationsUri = this.self + "/dislikedPublications";
+        this.favouritePublicationsUri = this.self + "/favPublications";
+        this.commentsUri = this.self + "/comments";
+        this.likedCommentsUri = this.self + "/likedComments";
+        this.dislikedCommentsUri = this.self + "/dislikedComments";
+        this.blockedUsersUri = this.self + "/blockedUsers";
+        this.profilePicUri = this.self + "/profilePic";
+        this.createdTagsUri = this.self + "/tags";
+        this.favTagsUri = this.self + "/favTags";
+        this.favCategoriesUri = this.self + "/categories";
+        this.mentionsUri = this.self + "/mentions";
     }
 
 
@@ -140,112 +140,111 @@ public class UserOutput extends OutputManager{
         this.rank = rank;
     }
 
-    public String getPublications() {
-        return this.publications;
+
+    public String getPublicationsUri() {
+        return this.publicationsUri;
     }
 
-    public void setPublications(String publications) {
-        this.publications = publications;
+    public void setPublicationsUri(String publicationsUri) {
+        this.publicationsUri = publicationsUri;
     }
 
-
-    public String getLikedPublications() {
-        return this.likedPublications;
+    public String getLikedPublicationsUri() {
+        return this.likedPublicationsUri;
     }
 
-    public void setLikedPublications(String likedPublications) {
-        this.likedPublications = likedPublications;
+    public void setLikedPublicationsUri(String likedPublicationsUri) {
+        this.likedPublicationsUri = likedPublicationsUri;
     }
 
-    public String getDislikedPublications() {
-        return this.dislikedPublications;
+    public String getDislikedPublicationsUri() {
+        return this.dislikedPublicationsUri;
     }
 
-    public void setDislikedPublications(String dislikedPublications) {
-        this.dislikedPublications = dislikedPublications;
+    public void setDislikedPublicationsUri(String dislikedPublicationsUri) {
+        this.dislikedPublicationsUri = dislikedPublicationsUri;
     }
 
-    public String getLikedComments() {
-        return this.likedComments;
+    public String getFavouritePublicationsUri() {
+        return this.favouritePublicationsUri;
     }
 
-    public void setLikedComments(String likedComments) {
-        this.likedComments = likedComments;
+    public void setFavouritePublicationsUri(String favouritePublicationsUri) {
+        this.favouritePublicationsUri = favouritePublicationsUri;
     }
 
-    public String getDislikedComments() {
-        return this.dislikedComments;
+    public String getCommentsUri() {
+        return this.commentsUri;
     }
 
-    public void setDislikedComments(String dislikedComments) {
-        this.dislikedComments = dislikedComments;
+    public void setCommentsUri(String commentsUri) {
+        this.commentsUri = commentsUri;
     }
 
-    public String getFavTags() {
-        return this.favTags;
+    public String getLikedCommentsUri() {
+        return this.likedCommentsUri;
     }
 
-    public void setFavTags(String favTags) {
-        this.favTags = favTags;
+    public void setLikedCommentsUri(String likedCommentsUri) {
+        this.likedCommentsUri = likedCommentsUri;
+    }
+
+    public String getDislikedCommentsUri() {
+        return this.dislikedCommentsUri;
+    }
+
+    public void setDislikedCommentsUri(String dislikedCommentsUri) {
+        this.dislikedCommentsUri = dislikedCommentsUri;
+    }
+
+    public String getBlockedUsersUri() {
+        return this.blockedUsersUri;
+    }
+
+    public void setBlockedUsersUri(String blockedUsersUri) {
+        this.blockedUsersUri = blockedUsersUri;
+    }
+
+    public String getProfilePicUri() {
+        return this.profilePicUri;
+    }
+
+    public void setProfilePicUri(String profilePicUri) {
+        this.profilePicUri = profilePicUri;
+    }
+
+    public String getCreatedTagsUri() {
+        return this.createdTagsUri;
+    }
+
+    public void setCreatedTagsUri(String createdTagsUri) {
+        this.createdTagsUri = createdTagsUri;
+    }
+
+    public String getFavTagsUri() {
+        return this.favTagsUri;
+    }
+
+    public void setFavTagsUri(String favTagsUri) {
+        this.favTagsUri = favTagsUri;
+    }
+
+    public String getFavCategoriesUri() {
+        return this.favCategoriesUri;
+    }
+
+    public void setFavCategoriesUri(String favCategoriesUri) {
+        this.favCategoriesUri = favCategoriesUri;
+    }
+
+    public String getMentionsUri() {
+        return this.mentionsUri;
+    }
+
+    public void setMentionsUri(String mentionsUri) {
+        this.mentionsUri = mentionsUri;
     }
     
-
-    public String getFavouritePublications() {
-        return this.favouritePublications;
-    }
-
-    public void setFavouritePublications(String favouritePublications) {
-        this.favouritePublications = favouritePublications;
-    }
-
-    public String getComments() {
-        return this.comments;
-    }
-
-    public void setComments(String comments) {
-        this.comments = comments;
-    }
-
-    public String getBlockedUsers() {
-        return this.blockedUsers;
-    }
-
-    public void setBlockedUsers(String blockedUsers) {
-        this.blockedUsers = blockedUsers;
-    }
-
-    public String getProfilePic() {
-        return this.profilePic;
-    }
-
-    public void setProfilePic(String profilePic) {
-        this.profilePic = profilePic;
-    }
-
-    public String getCreatedTags() {
-        return this.createdTags;
-    }
-
-    public void setCreatedTags(String createdTags) {
-        this.createdTags = createdTags;
-    }
-
-    public String getFavCategories() {
-        return this.favCategories;
-    }
-
-    public void setFavCategories(String favCategories) {
-        this.favCategories = favCategories;
-    }
-
-
-    public String getMentions() {
-        return this.mentions;
-    }
-
-    public void setMentions(String mentions) {
-        this.mentions = mentions;
-    }
 
 
 

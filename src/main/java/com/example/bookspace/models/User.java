@@ -65,8 +65,8 @@ public class User {
     private String description = "";
 
     //@Lob
-    @Column(name = "profile_pic")
-    private byte[] profile_pic;
+    @Column(name = "profilePic")
+    private byte[] profilePic;
 
     @Column(name = "rank", nullable = false)
     private Rank rank = Rank.WORKER; 
@@ -92,8 +92,8 @@ public class User {
     @ManyToMany
     @JoinTable (
         name = "likedPublications", 
-        joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), 
-        inverseJoinColumns = @JoinColumn(name = "publication_id")
+        joinColumns = @JoinColumn(name = "userId", referencedColumnName = "id"), 
+        inverseJoinColumns = @JoinColumn(name = "publicationId")
 
     )
     private List<Publication> likedPublications = new ArrayList<>();
@@ -101,8 +101,8 @@ public class User {
     @ManyToMany
     @JoinTable (
         name = "dislikedPublications", 
-        joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), 
-        inverseJoinColumns = @JoinColumn(name = "publication_id")
+        joinColumns = @JoinColumn(name = "userId", referencedColumnName = "id"), 
+        inverseJoinColumns = @JoinColumn(name = "publicationId")
 
     )
     private List<Publication> dislikedPublications = new ArrayList<>();
@@ -114,8 +114,8 @@ public class User {
     @ManyToMany
     @JoinTable (
         name = "favouritePublications", 
-        joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), 
-        inverseJoinColumns = @JoinColumn(name = "publication_id")
+        joinColumns = @JoinColumn(name = "userId", referencedColumnName = "id"), 
+        inverseJoinColumns = @JoinColumn(name = "publicationId")
 
     )
     private List<Publication> favouritePublications = new ArrayList<>();
@@ -137,8 +137,8 @@ public class User {
     @ManyToMany
     @JoinTable (
         name = "likedComments", 
-        joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), 
-        inverseJoinColumns = @JoinColumn(name = "comment_id")
+        joinColumns = @JoinColumn(name = "userId", referencedColumnName = "id"), 
+        inverseJoinColumns = @JoinColumn(name = "commentId")
 
     )
     private List<Comment> likedComments = new ArrayList<>();
@@ -146,8 +146,8 @@ public class User {
     @ManyToMany
     @JoinTable (
         name = "dislikedComments", 
-        joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), 
-        inverseJoinColumns = @JoinColumn(name = "comment_id")
+        joinColumns = @JoinColumn(name = "userId", referencedColumnName = "id"), 
+        inverseJoinColumns = @JoinColumn(name = "commentId")
 
     )
     private List<Comment> dislikedComments = new ArrayList<>();
@@ -160,8 +160,8 @@ public class User {
     @ManyToMany
     @JoinTable (
         name = "favTags", 
-        joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "name_tag")
+        joinColumns = @JoinColumn(name = "userId", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "nameTag")
     )
     private List<Tag> favTags = new ArrayList<>();
 
@@ -255,12 +255,12 @@ public class User {
         this.description = description;
     }
 
-    public byte[] getProfile_pic() {
-        return this.profile_pic;
+    public byte[] getProfilePic() {
+        return this.profilePic;
     }
 
-    public void setProfile_pic(byte[] profile_pic) {
-        this.profile_pic = profile_pic;
+    public void setProfilePic(byte[] profilePic) {
+        this.profilePic = profilePic;
     }
 
     public Rank getRank() {

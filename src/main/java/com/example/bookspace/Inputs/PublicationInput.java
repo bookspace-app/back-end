@@ -5,20 +5,21 @@ import java.util.List;
 public class PublicationInput {
     private String title;
     private String content; 
-    private Long author_id; 
+    private Long authorId; 
     private String category;
     private List<Long> tags;
     private List<Long> mentions;
 
-    public PublicationInput(String title, String content, Long author_id, String category, List<Long> mentions, List<Long> tags) {
+    public PublicationInput(String title, String content, Long authorId, String category, List<Long> mentions, List<Long> tags) {
         this.title = title;
         this.content = content;
-        this.author_id = author_id;
+        this.authorId = authorId;
         this.category = category;
         this.tags = tags;
         this.mentions = mentions;
 
     }
+
 
     public String getTitle() {
         return this.title;
@@ -37,13 +38,12 @@ public class PublicationInput {
     }
 
     public Long getAuthorId() {
-        return this.author_id;
+        return this.authorId;
     }
 
-    public void setAuthorId(Long author_id) {
-        this.author_id = author_id;
+    public void setAuthorId(Long authorId) {
+        this.authorId = authorId;
     }
-
 
     public String getCategory() {
         return this.category;
@@ -51,14 +51,6 @@ public class PublicationInput {
 
     public void setCategory(String category) {
         this.category = category;
-    }
-
-    public List<Long> getMentions() {
-        return this.mentions;
-    }
-
-    public void setMentions(List<Long> mentions) {
-        this.mentions = mentions;
     }
 
     public List<Long> getTags() {
@@ -69,6 +61,14 @@ public class PublicationInput {
         this.tags = tags;
     }
 
+    public List<Long> getMentions() {
+        return this.mentions;
+    }
+
+    public void setMentions(List<Long> mentions) {
+        this.mentions = mentions;
+    }
+    
     
 
     

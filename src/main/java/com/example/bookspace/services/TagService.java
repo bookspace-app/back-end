@@ -33,7 +33,7 @@ public class TagService {
 
 	public TagOutput postTag(TagInput tagDetails) {
 
-		User author = userRepository.getOne(tagDetails.getAuthor());
+		User author = userRepository.getOne(tagDetails.getAuthorId());
 		Publication publication = publicationRepository.getOne(tagDetails.getPublication());
 
 		Tag tag = new Tag(tagDetails.getName(), author, publication);

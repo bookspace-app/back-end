@@ -35,7 +35,7 @@ public class Tag {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "author_id")
+    @JoinColumn(name = "authorId")
     private User author;
 
     @ManyToMany(mappedBy = "tags")

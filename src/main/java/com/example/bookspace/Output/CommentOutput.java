@@ -13,7 +13,7 @@ public class CommentOutput extends OutputManager {
     private String publication;
     private Integer likes;
     private Integer dislikes;
-    private Integer n_likes;
+    private Integer nLikes;
     private String likedBy;
     private String dislikedBy;
     private String answers;
@@ -25,6 +25,7 @@ public class CommentOutput extends OutputManager {
         this.dop = c.getDop();
         this.likes = c.getLikedBy().size();
         this.dislikes = c.getDislikedBy().size();
+        this.nLikes = this.likes-this.dislikes;
         this.author = getURL() + "/users/" + c.getAuthor().getId();
         this.publication = getURL() +  "/publications/" + c.getPublication().getId();
         this.self = getURL() + "/comments/" + this.id;
@@ -32,6 +33,7 @@ public class CommentOutput extends OutputManager {
         this.dislikedBy = this.self + "/dislike";
         this.answers = this.self + "answers";
     }
+
 
 
     public String getSelf() {
@@ -66,7 +68,6 @@ public class CommentOutput extends OutputManager {
         this.dop = dop;
     }
 
-
     public String getAuthor() {
         return this.author;
     }
@@ -82,7 +83,6 @@ public class CommentOutput extends OutputManager {
     public void setPublication(String publication) {
         this.publication = publication;
     }
-    
 
     public Integer getLikes() {
         return this.likes;
@@ -100,12 +100,12 @@ public class CommentOutput extends OutputManager {
         this.dislikes = dislikes;
     }
 
-    public Integer getN_likes() {
-        return this.n_likes;
+    public Integer getNLikes() {
+        return this.nLikes;
     }
 
-    public void setN_likes(Integer n_likes) {
-        this.n_likes = n_likes;
+    public void setNLikes(Integer nLikes) {
+        this.nLikes = nLikes;
     }
 
     public String getLikedBy() {
@@ -131,6 +131,7 @@ public class CommentOutput extends OutputManager {
     public void setAnswers(String answers) {
         this.answers = answers;
     }
+    
 
     
 

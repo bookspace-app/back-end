@@ -2,17 +2,18 @@ package com.example.bookspace.Inputs;
 
 public class CommentInput {
     private String content;
-    private Long author_id;
-    private Long publication_id;
-    private Long parent_id;
+    private Long authorId;
+    private Long publicationId;
+    private Long parentId;
 
 
-    public CommentInput(String content, Long author_id, Long publication_id, Long parent_id) {
+    public CommentInput(String content, Long authorId, Long publicationId, Long parentId) {
         this.content = content;
-        this.author_id = author_id;
-        this.publication_id = publication_id;
-        this.parent_id = parent_id;
+        this.authorId = authorId;
+        this.publicationId = publicationId;
+        this.parentId = parentId;
     }
+
 
 
     public String getContent() {
@@ -23,28 +24,29 @@ public class CommentInput {
         this.content = content;
     }
 
-    public Long getAuthor_id() {
-        return this.author_id;
+    public Long getAuthorId() {
+        return this.authorId;
     }
 
-    public void setAuthor_id(Long author_id) {
-        this.author_id = author_id;
+    public void setAuthorId(Long authorId) {
+        this.authorId = authorId;
     }
 
-    public Long getPublication_id() {
-        return this.publication_id;
+    public Long getPublicationId() {
+        return this.publicationId;
     }
 
-    public void setPublication_id(Long publication_id) {
-        this.publication_id = publication_id;
+    public void setPublicationId(Long publicationId) {
+        this.publicationId = publicationId;
     }
 
-    public Long getParent_id() {
-        return this.parent_id;
+    public Long getParentId() {
+        return this.parentId;
     }
 
-    public void setParent_id(Long parent_id) {
-        this.parent_id = parent_id;
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
+    
 
 }
