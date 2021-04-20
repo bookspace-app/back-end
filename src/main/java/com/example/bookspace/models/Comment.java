@@ -1,6 +1,7 @@
 package com.example.bookspace.models;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -34,24 +35,24 @@ public class Comment {
     )
     private Long id;
 
-    @Column(name = "content")
+    @Column(name = "content", nullable = false, length = 5000)
     private String content;
 
-    @Column(name = "dop")
-    private LocalDateTime dop;
+    @Column(name = "dop", nullable = false)
+    private LocalDateTime dop = LocalDateTime.now();
 
     @ManyToOne
-    @JoinColumn(name = "author_id")
+    @JoinColumn(name = "author_id", nullable =  false)
     private User author;
 
     @ManyToMany(mappedBy = "likedComments")
-    private List<User> likedBy;
+    private List<User> likedBy = new ArrayList<>();
 
     @ManyToMany(mappedBy = "dislikedComments")
-    private List<User> dislikedBy;
+    private List<User> dislikedBy = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "publication_id")
+    @JoinColumn(name = "publication_id", nullable = false)
     private Publication publication;
 
     @ManyToOne
@@ -59,12 +60,116 @@ public class Comment {
     private Comment parent;
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Comment> answers;
+    private List<Comment> answers = new ArrayList<>();
 
 
-    // public Comment() {
-    //     this.id = 2L;
-    // }
+    public Comment() {
+
+    }
+
+    public Comment(String content, User author, Publication publication) {
+        this.content = content;
+        this.author = author;
+        this.publication = publication;
+    }
+
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getContent() {
+        return this.content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public LocalDateTime getDop() {
+        return this.dop;
+    }
+
+    public void setDop(LocalDateTime dop) {
+        this.dop = dop;
+    }
+
+    public User getAuthor() {
+        return this.author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
+    }
+
+    public List<User> getLikedBy() {
+        return this.likedBy;
+    }
+
+    public void setLikedBy(List<User> likedBy) {
+        this.likedBy = likedBy;
+    }
+
+    public void addLikedBy(User u) {
+        this.likedBy.add(u);
+    }
+
+    public void removeLikeBy(User u) {
+        this.likedBy.remove(u);
+    }
+
+    public List<User> getDislikedBy() {
+        return this.dislikedBy;
+    }
+
+    public void setDislikedBy(List<User> dislikedBy) {
+        this.dislikedBy = dislikedBy;
+    }
+
+    public void addDislikedBy(User u) {
+        this.dislikedBy.add(u);
+    }
+
+    public void removeDislikedBy(User u) {
+        this.dislikedBy.remove(u);
+    }
+
+    public Publication getPublication() {
+        return this.publication;
+    }
+
+    public void setPublication(Publication publication) {
+        this.publication = publication;
+    }
+
+    public Comment getParent() {
+        return this.parent;
+    }
+
+    public void setParent(Comment parent) {
+        this.parent = parent;
+    }
+
+    public List<Comment> getAnswers() {
+        return this.answers;
+    }
+
+    public void setAnswers(List<Comment> answers) {
+        this.answers = answers;
+    }
+
+    public void addAnswer(Comment answer) {
+        this.answers.add(answer);
+    }
+
+    public void removeAnswer(Comment answer) {
+        this.answers.remove(answer);
+    }
+
 
   
 }

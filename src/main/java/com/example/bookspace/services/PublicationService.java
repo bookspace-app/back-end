@@ -11,10 +11,12 @@ import com.example.bookspace.Output.PublicationOutput;
 import com.example.bookspace.Output.TagOutput;
 import com.example.bookspace.Output.UserOutput;
 import com.example.bookspace.enums.Category;
+import com.example.bookspace.models.Comment;
 import com.example.bookspace.models.Publication;
 import com.example.bookspace.models.Tag;
 import com.example.bookspace.models.User;
 import com.example.bookspace.repositories.PublicationRepository;
+import com.example.bookspace.repositories.TagRepository;
 import com.example.bookspace.repositories.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +27,13 @@ public class PublicationService {
 
     private final PublicationRepository publicationRepository;;
     private final UserRepository userRepository;
+    private final TagRepository tagRepository;
 
     @Autowired
-    public PublicationService(PublicationRepository publicationRepository, UserRepository userRepository) {
+    public PublicationService(PublicationRepository publicationRepository, UserRepository userRepository, TagRepository tagRepository) {
         this.publicationRepository = publicationRepository;
         this.userRepository = userRepository;
+        this.tagRepository = tagRepository;
     }
 
      
@@ -56,9 +60,29 @@ public class PublicationService {
             User author = userRepository.findById(publicationDetails.getAuthorId()).get();
             Category category = Category.getCategory(publicationDetails.getCategory());
             Publication publication = new Publication(publicationDetails.getTitle(), publicationDetails.getContent(), author, category);
+            if (publicationDetails.getTags() != null) {
+                for (Long tagId: publicationDetails.getTags()) {
+                    Tag tag = tagRepository.getOne(tagId);
+                    publication.addTag(tag);
+                    tag.addPublication(publication);
+                    tag = tagRepository.save(tag);
+                }
+            }
+
+            if (publicationDetails.getMentions() != null) {
+                for (Long mentionId: publicationDetails.getMentions()) {
+                    User mention = userRepository.getOne(mentionId);
+                    publication.addMention(mention);
+                    mention.addMention(publication);
+                    mention = userRepository.save(mention);
+                }
+            }
             author.addPublication(publication);
-            publicationRepository.save(publication);
+            publication = publicationRepository.save(publication);
             userRepository.save(author);
+
+            
+
             return new PublicationOutput(publication);
         }
             
@@ -72,15 +96,16 @@ public class PublicationService {
     }
 
     @Transactional
-	public PublicationOutput putPublication(Long id, PublicationInput publicationDetails) {
+	public PublicationOutput putPublication(Long id, PublicationInput publicationDetails) throws Exception {
 		Publication publication = publicationRepository.findById(id)
 					.orElseThrow(() -> new IllegalStateException(
 						"Publication with id " + id + " does not exist"));
 		
         
         if (publicationDetails.getTitle() != null) publication.setTitle(publicationDetails.getTitle());
-        if (publicationDetails.getContent() != null) publication.setContent(publicationDetails.getContent());
-        if (publicationDetails.getCategory() != null) {
+        else if (publicationDetails.getContent() != null) publication.setContent(publicationDetails.getContent());
+        else if (publicationDetails.getCategory() != null) {
+            if (!Category.existsCategory(publicationDetails.getCategory())) throw new Exception("The Category " + publicationDetails.getCategory() + " does not exist");
             Category c = Category.getCategory(publicationDetails.getCategory());
             publication.setCategory(c);
         } 
@@ -224,14 +249,26 @@ public class PublicationService {
 
         return new UserOutput(favUser);    }
 
-    public List<CommentOutput> getComments(Long id) throws Exception {
-        throw new Exception("This endpoint is not implemented yet");
+    public List<CommentOutput> getComments(Long publicationId) throws Exception {
+        Publication p = publicationRepository.getOne(publicationId);
+        List<CommentOutput> result = new ArrayList<>();
+        for (Comment c: p.getComments()) {
+            result.add(new CommentOutput(c));
+        }
+
+        return result;
     }
 
 
 
-    public List<UserOutput> getMentions(Long id) throws Exception {
-        throw new Exception("This endpoint is not implemented yet");
+    public List<UserOutput> getMentions(Long publicationId) throws Exception {
+        Publication publication = publicationRepository.getOne(publicationId);
+        List<UserOutput> result = new ArrayList<>();
+        for(User mention: publication.getMentions()) {
+            result.add(new UserOutput(mention));
+        }
+
+        return result;
     }
 
 

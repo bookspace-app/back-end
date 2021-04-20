@@ -247,6 +247,25 @@ public class Publication {
     }
 
 
+    public List<User> getMentions() {
+        return this.mentions;
+    }
+
+    public void setMentions(List<User> mentions) {
+        this.mentions = mentions;
+    }
+
+    public void addMention(User u) {
+        this.mentions.add(u);
+    }
+
+    public void removeMention(User u) {
+        this.mentions.remove(u);
+    }
+    
+
+
+
     
  
     

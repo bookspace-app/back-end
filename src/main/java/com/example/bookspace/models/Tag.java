@@ -92,6 +92,14 @@ public class Tag {
         this.publications = publications;
     }
 
+    public void addPublication(Publication p) {
+        this.publications.add(p);
+    }
+
+    public void removePublications(Publication p) {
+        this.publications.remove(p);
+    }
+
     public List<User> getUsers() {
         return this.users;
     }

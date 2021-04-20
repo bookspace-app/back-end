@@ -428,6 +428,14 @@ public class User {
         this.mentions = mentions;
     }
 
+    public void addMention(Publication p) {
+        this.mentions.add(p);
+    }
+
+    public void removeMention(Publication p) {
+        this.mentions.remove(p);
+    }
+
     
 
     
