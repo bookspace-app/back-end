@@ -51,7 +51,7 @@ public class PublicationController {
     }    
 
     @PutMapping(path = "{publicationId}") 
-    public PublicationOutput updatePublication(@PathVariable("publicationId") Long id, @RequestBody PublicationInput publicationDetails){
+    public PublicationOutput updatePublication(@PathVariable("publicationId") Long id, @RequestBody PublicationInput publicationDetails) throws Exception{
         return publicationService.putPublication(id, publicationDetails);
     }
 
