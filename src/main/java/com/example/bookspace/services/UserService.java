@@ -13,6 +13,7 @@ import com.example.bookspace.Output.PublicationOutput;
 import com.example.bookspace.Output.TagOutput;
 import com.example.bookspace.Output.UserOutput;
 import com.example.bookspace.enums.Category;
+import com.example.bookspace.models.Comment;
 import com.example.bookspace.models.Publication;
 import com.example.bookspace.models.Tag;
 import com.example.bookspace.models.User;
@@ -151,35 +152,83 @@ public class UserService {
     }
 
 	public List<PublicationOutput> getLikedPublications(Long id) throws Exception {
-		throw new Exception("This endpoint is not implemented yet");
+		User author = userRepository.getOne(id);
+		List<Publication> publications = author.getLikedPublications();
+		List<PublicationOutput> result = new ArrayList<>();
+		for (Publication p: publications) {
+			result.add(new PublicationOutput(p));
+		}
+
+		return result;
     }
 
     public List<PublicationOutput> getDislikedPublications(Long id) throws Exception {
-		throw new Exception("This endpoint is not implemented yet");
-    }
+		User author = userRepository.getOne(id);
+		List<Publication> publications = author.getDislikedPublications();
+		List<PublicationOutput> result = new ArrayList<>();
+		for (Publication p: publications) {
+			result.add(new PublicationOutput(p));
+		}
+		return result;
+	}
 	
 	public List<PublicationOutput> getFavPublications(Long id) throws Exception {
-		throw new Exception("This endpoint is not implemented yet");
-    }
+		User author = userRepository.getOne(id);
+		List<Publication> publications = author.getFavouritePublications();
+		List<PublicationOutput> result = new ArrayList<>();
+		for (Publication p: publications) {
+			result.add(new PublicationOutput(p));
+		}
+		return result;
+	}
 	
 	public List<PublicationOutput> getMentionedPublications(Long id) throws Exception {
-		throw new Exception("This endpoint is not implemented yet");
+		User author = userRepository.getOne(id);
+		List<Publication> publications = author.getMentions();
+		List<PublicationOutput> result = new ArrayList<>();
+		for (Publication p: publications) {
+			result.add(new PublicationOutput(p));
+		}
+		return result;
 	}
 
 	public List<CommentOutput> getComments(Long id) throws Exception {
-		throw new Exception("This endpoint is not implemented yet");
+		User author = userRepository.getOne(id);
+		List<Comment> comments = author.getComments();
+		List<CommentOutput> result = new ArrayList<>();
+		for (Comment c: comments) {
+			result.add(new CommentOutput(c)); //to implment
+		}
+		return result;
 	}
 
     public List<CommentOutput> getLikedComments(Long id) throws Exception {
-		throw new Exception("This endpoint is not implemented yet");
-    }
+		User author = userRepository.getOne(id);
+		List<Comment> comments = author.getLikedComments();
+		List<CommentOutput> result = new ArrayList<>();
+		for (Comment c: comments) {
+			result.add(new CommentOutput(c)); //to implment
+		}
+		return result;    }
 
 	public List<CommentOutput> getDislikedComments(Long id) throws Exception {
-		throw new Exception("This endpoint is not implemented yet");
+		User author = userRepository.getOne(id);
+		List<Comment> comments = author.getDislikedComments();
+		List<CommentOutput> result = new ArrayList<>();
+		for (Comment c: comments) {
+			result.add(new CommentOutput(c)); //to implment
+		}
+		return result;
     }
 
 	public List<TagOutput> getCreatedTags(Long id) throws Exception {
-		throw new Exception("This endpoint is not implemented yet");
+		User author = userRepository.getOne(id);
+		List<Tag> tags = author.getCreatedTags();
+		List<TagOutput> result = new ArrayList<>();
+		for (Tag t: tags) {
+			result.add(new TagOutput(t)); //to implment
+		}
+		return result;
     }
 
 	public List<TagOutput> getFavTagsUser(Long id){
@@ -193,15 +242,45 @@ public class UserService {
 	}
 
     public List<UserOutput> getBlockedUsers(Long id) throws Exception {
-		throw new Exception("This endpoint is not implemented yet");
+		User user = userRepository.getOne(id);
+		List<User> users = user.getBlockedUsers();
+		List<UserOutput> result = new ArrayList<>();
+		for (User u: users) {
+			result.add(new UserOutput(u));
+		}
+		userRepository.save(user);
+		return result;
     }
 
    	public UserOutput postBlockedUsers(Long id, Long blockedUserid) throws Exception {
-		throw new Exception("This endpoint is not implemented yet");
+		if (id == blockedUserid) throw new Exception ("You cannot block yourself!");
+		User user = userRepository.getOne(id);
+		User userToBlock = userRepository.getOne(blockedUserid);
+		boolean b = userRepository.existsById(blockedUserid);
+		if (!b){
+			throw new Exception("This user doesen't exist");
+		}
+		List<User> blockedUsers = user.getBlockedUsers();
+		if (!blockedUsers.contains(userToBlock)){
+			blockedUsers.add(userToBlock);
+			user.setBlockedUsers(blockedUsers);
+			userRepository.save(user);
+			System.out.println("User " + id + " has blocked user " + blockedUserid);
+		}
+		else throw new Exception("This user is already blocked");
+		return new UserOutput(userToBlock);
 	}
 
     public void deleteBlockedUsers(Long id, Long blockedUserid) throws Exception {
-		throw new Exception("This endpoint is not implemented yet");
+		User user = userRepository.getOne(id);
+		User userToUnblock = userRepository.getOne(blockedUserid);
+		List<User> blockedUsers = user.getBlockedUsers();
+		if (blockedUsers.contains(userToUnblock)){
+			blockedUsers.remove(userToUnblock);
+			user.setBlockedUsers(blockedUsers);
+			userRepository.save(user);
+		}
+		else throw new Exception("This user is not blocked yet");
     }
 
 	
