@@ -8,7 +8,7 @@ import com.example.bookspace.models.User;
 
 public class UserOutput extends OutputManager{
 
-    private String self ;
+    private String selfUri;
     private Long id;
     private String email;
     private String name;
@@ -42,30 +42,30 @@ public class UserOutput extends OutputManager{
         this.description = u.getDescription();
         this.dor = u.getDor();
         this.rank = u.getRank().name();
-        this.self = getURL() + "/users/" + this.id;
-        this.publicationsUri =  this.self + "/publications";
-        this.likedPublicationsUri = this.self + "/likedPublications";
-        this.dislikedPublicationsUri = this.self + "/dislikedPublications";
-        this.favouritePublicationsUri = this.self + "/favPublications";
-        this.commentsUri = this.self + "/comments";
-        this.likedCommentsUri = this.self + "/likedComments";
-        this.dislikedCommentsUri = this.self + "/dislikedComments";
-        this.blockedUsersUri = this.self + "/blockedUsers";
-        this.profilePicUri = this.self + "/profilePic";
-        this.createdTagsUri = this.self + "/tags";
-        this.favTagsUri = this.self + "/favTags";
-        this.favCategoriesUri = this.self + "/categories";
-        this.mentionsUri = this.self + "/mentions";
+        this.selfUri = getURL() + "/users/" + this.id;
+        this.publicationsUri =  this.selfUri + "/publications";
+        this.likedPublicationsUri = this.selfUri + "/likedPublications";
+        this.dislikedPublicationsUri = this.selfUri + "/dislikedPublications";
+        this.favouritePublicationsUri = this.selfUri + "/favPublications";
+        this.commentsUri = this.selfUri + "/comments";
+        this.likedCommentsUri = this.selfUri + "/likedComments";
+        this.dislikedCommentsUri = this.selfUri + "/dislikedComments";
+        this.blockedUsersUri = this.selfUri + "/blockedUsers";
+        this.profilePicUri = this.selfUri + "/profilePic";
+        this.createdTagsUri = this.selfUri + "/tags";
+        this.favTagsUri = this.selfUri + "/favTags";
+        this.favCategoriesUri = this.selfUri + "/categories";
+        this.mentionsUri = this.selfUri + "/mentions";
     }
 
 
 
     public String getSelf() {
-        return this.self;
+        return this.selfUri;
     }
 
     public void setSelf(String self) {
-        this.self = self;
+        this.selfUri = self;
     }
 
     public Long getId() {

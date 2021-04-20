@@ -6,7 +6,7 @@ import com.example.bookspace.models.Publication;
 
 
 public class PublicationOutput extends OutputManager{ 
-    private String self;
+    private String selfUri;
     private Long id;
     private String title;
     private String content;
@@ -40,13 +40,13 @@ public class PublicationOutput extends OutputManager{
         this.nComments = p.getComments().size();
         this.author = new UserOutput(p.getAuthor());
         this.category = p.getCategory().name();
-        this.self = getURL() + "/publications/" + id;
-        this.likedByUri = self + "/likedBy";
-        this.dislikedByUri = self + "/dislikedBy";
-        this.favByUri = self + "/favBy";
-        this.commentsUri = self + "/comments";
-        this.tagsUri = self + "/tags";
-        this.mentionsUri = self + "/mentions";
+        this.selfUri = getURL() + "/publications/" + id;
+        this.likedByUri = this.selfUri + "/likedBy";
+        this.dislikedByUri = this.selfUri + "/dislikedBy";
+        this.favByUri = this.selfUri + "/favBy";
+        this.commentsUri = this.selfUri + "/comments";
+        this.tagsUri = this.selfUri + "/tags";
+        this.mentionsUri = this.selfUri + "/mentions";
 
     }
    
@@ -54,11 +54,11 @@ public class PublicationOutput extends OutputManager{
 
 
     public String getSelf() {
-        return this.self;
+        return this.selfUri;
     }
 
     public void setSelf(String self) {
-        this.self = self;
+        this.selfUri = self;
     }
 
     public Long getId() {

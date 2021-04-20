@@ -5,18 +5,18 @@ import java.time.LocalDateTime;
 import com.example.bookspace.models.Comment;
 
 public class CommentOutput extends OutputManager {
-    private String self;
+    private String selfUri;
     private Long id;
     private String content;
     private LocalDateTime dop;
-    private String author;
-    private String publication;
     private Integer likes;
     private Integer dislikes;
-    private Integer nLikes;
-    private String likedBy;
-    private String dislikedBy;
-    private String answers;
+    private Integer totalLikes;
+    private String authorUri;
+    private String publicationUri;
+    private String likedByUri;
+    private String dislikedByUri;
+    private String answersUri;
 
 
     public CommentOutput(Comment c) {
@@ -25,23 +25,24 @@ public class CommentOutput extends OutputManager {
         this.dop = c.getDop();
         this.likes = c.getLikedBy().size();
         this.dislikes = c.getDislikedBy().size();
-        this.nLikes = this.likes-this.dislikes;
-        this.author = getURL() + "/users/" + c.getAuthor().getId();
-        this.publication = getURL() +  "/publications/" + c.getPublication().getId();
-        this.self = getURL() + "/comments/" + this.id;
-        this.likedBy = this.self + "/like";
-        this.dislikedBy = this.self + "/dislike";
-        this.answers = this.self + "answers";
+        this.totalLikes = this.likes-this.dislikes;
+        this.selfUri = getURL() + "/comments/" + this.id;
+        this.authorUri = getURL() + "/users/" + c.getAuthor().getId();
+        this.publicationUri = getURL() +  "/publications/" + c.getPublication().getId();
+        this.likedByUri = this.selfUri + "/like";
+        this.dislikedByUri = this.selfUri + "/dislike";
+        this.answersUri = this.selfUri + "answers";
     }
 
 
 
-    public String getSelf() {
-        return this.self;
+
+    public String getSelfUri() {
+        return this.selfUri;
     }
 
-    public void setSelf(String self) {
-        this.self = self;
+    public void setSelfUri(String selfUri) {
+        this.selfUri = selfUri;
     }
 
     public Long getId() {
@@ -68,22 +69,6 @@ public class CommentOutput extends OutputManager {
         this.dop = dop;
     }
 
-    public String getAuthor() {
-        return this.author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public String getPublication() {
-        return this.publication;
-    }
-
-    public void setPublication(String publication) {
-        this.publication = publication;
-    }
-
     public Integer getLikes() {
         return this.likes;
     }
@@ -100,37 +85,54 @@ public class CommentOutput extends OutputManager {
         this.dislikes = dislikes;
     }
 
-    public Integer getNLikes() {
-        return this.nLikes;
+    public Integer getTotalLikes() {
+        return this.totalLikes;
     }
 
-    public void setNLikes(Integer nLikes) {
-        this.nLikes = nLikes;
+    public void setTotalLikes(Integer totalLikes) {
+        this.totalLikes = totalLikes;
     }
 
-    public String getLikedBy() {
-        return this.likedBy;
+    public String getAuthorUri() {
+        return this.authorUri;
     }
 
-    public void setLikedBy(String likedBy) {
-        this.likedBy = likedBy;
+    public void setAuthorUri(String authorUri) {
+        this.authorUri = authorUri;
     }
 
-    public String getDislikedBy() {
-        return this.dislikedBy;
+    public String getPublicationUri() {
+        return this.publicationUri;
     }
 
-    public void setDislikedBy(String dislikedBy) {
-        this.dislikedBy = dislikedBy;
+    public void setPublicationUri(String publicationUri) {
+        this.publicationUri = publicationUri;
     }
 
-    public String getAnswers() {
-        return this.answers;
+    public String getLikedByUri() {
+        return this.likedByUri;
     }
 
-    public void setAnswers(String answers) {
-        this.answers = answers;
+    public void setLikedByUri(String likedByUri) {
+        this.likedByUri = likedByUri;
     }
+
+    public String getDislikedByUri() {
+        return this.dislikedByUri;
+    }
+
+    public void setDislikedByUri(String dislikedByUri) {
+        this.dislikedByUri = dislikedByUri;
+    }
+
+    public String getAnswersUri() {
+        return this.answersUri;
+    }
+
+    public void setAnswersUri(String answersUri) {
+        this.answersUri = answersUri;
+    }
+    
     
 
     
