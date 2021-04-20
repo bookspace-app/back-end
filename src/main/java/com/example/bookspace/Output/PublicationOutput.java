@@ -29,7 +29,6 @@ public class PublicationOutput extends OutputManager{
 
     public PublicationOutput(Publication p) {
         this.id = p.getId();
-        this.self = getURL() + "/publications/" + id;
         this.title = p.getTitle();
         this.content = p.getContent();
         this.dop = p.getDop();
@@ -41,6 +40,7 @@ public class PublicationOutput extends OutputManager{
         this.n_comments = p.getComments().size();
         this.author = new UserOutput(p.getAuthor());
         this.category = p.getCategory().name();
+        this.self = getURL() + "/publications/" + id;
         this.likedBy = self + "/likedBy";
         this.dislikedBy = self + "/dislikedBy";
         this.favBy = self + "/favBy";

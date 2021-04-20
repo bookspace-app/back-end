@@ -3,14 +3,14 @@ package com.example.bookspace.Inputs;
 public class TagInput { //preguntar si solo se necesita inputear el nombre 
     
     private String name;
-    private Long author;
+    private Long author_id;
     private Long publication;
 
     public TagInput() {}
 
-    public TagInput(String tag, Long author, Long publication) {
+    public TagInput(String tag, Long author_id, Long publication) {
         this.name = tag;
-        this.author = author;
+        this.author_id = author_id;
         this.publication = publication;
     }
 
@@ -25,11 +25,11 @@ public class TagInput { //preguntar si solo se necesita inputear el nombre
     
 
     public Long getAuthor() {
-        return this.author;
+        return this.author_id;
     }
 
-    public void setAuthor(Long author) {
-        this.author = author;
+    public void setAuthor(Long author_id) {
+        this.author_id = author_id;
     }
 
     public Long getPublication() {

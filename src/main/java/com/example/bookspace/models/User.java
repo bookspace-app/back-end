@@ -353,6 +353,14 @@ public class User {
         this.favouritePublications = favouritePublications;
     }
 
+    public void addFavPublication(Publication p) {
+        this.favouritePublications.add(p);
+    }
+
+    public void removeFavPublication(Publication p) {
+        this.favouritePublications.remove(p);
+    }
+
     public List<Comment> getComments() {
         return this.comments;
     }
@@ -418,6 +426,14 @@ public class User {
 
     public void setMentions(List<Publication> mentions) {
         this.mentions = mentions;
+    }
+
+    public void addMention(Publication p) {
+        this.mentions.add(p);
+    }
+
+    public void removeMention(Publication p) {
+        this.mentions.remove(p);
     }
 
     

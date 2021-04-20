@@ -53,15 +53,6 @@ public class PublicationInput {
         this.category = category;
     }
 
-
-    public Long getAuthor_id() {
-        return this.author_id;
-    }
-
-    public void setAuthor_id(Long author_id) {
-        this.author_id = author_id;
-    }
-
     public List<Long> getMentions() {
         return this.mentions;
     }

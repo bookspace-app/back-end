@@ -38,10 +38,10 @@ public class Publication {
     )
     private Long id;
 
-    @Column(name = "title", nullable = false)
+    @Column(name = "title", nullable = false, length = 500)
     private String title;
 
-    @Column(name = "content", nullable = false)
+    @Column(name = "content", nullable = false, length = 5000)
     private String content;
 
     @Column(name = "dop", nullable = false)
@@ -245,6 +245,25 @@ public class Publication {
     public Integer getDislikes() {
         return dislikedBy.size();
     }
+
+
+    public List<User> getMentions() {
+        return this.mentions;
+    }
+
+    public void setMentions(List<User> mentions) {
+        this.mentions = mentions;
+    }
+
+    public void addMention(User u) {
+        this.mentions.add(u);
+    }
+
+    public void removeMention(User u) {
+        this.mentions.remove(u);
+    }
+    
+
 
 
     

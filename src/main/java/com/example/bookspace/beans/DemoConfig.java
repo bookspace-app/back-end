@@ -32,7 +32,7 @@ public class DemoConfig {
             UserInput userDetails = new UserInput("demoEmail", "demoName", "demoUsername", "demoPassword", LocalDate.of(1998, 12, 2), "demoDescriprion", List.of("ACTION"));
             user = new User(userDetails.getEmail(), userDetails.getName(), userDetails.getUsername(), userDetails.getPassword(), userDetails.getDob());
             user = userRepository.save(user);
-            category = Category.ACTION;
+            category = Category.Accion;
             PublicationInput publicationDetails = new PublicationInput("demoTitle", "demoContent", user.getId(), category.name(), null, null);
             publication = new Publication(publicationDetails.getTitle(), publicationDetails.getContent(), user, category);
             publication = publicationRepository.save(publication);
