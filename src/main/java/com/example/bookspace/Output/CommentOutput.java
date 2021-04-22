@@ -33,7 +33,7 @@ public class CommentOutput extends OutputManager {
         this.publicationUri = getURL() +  "/publications/" + c.getPublication().getId();
         this.likedByUri = this.selfUri + "/like";
         this.dislikedByUri = this.selfUri + "/dislike";
-        this.answersUri = this.selfUri + "answers";
+        this.answersUri = this.selfUri + "/answers";
     }
 
 
