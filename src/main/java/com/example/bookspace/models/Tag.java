@@ -52,13 +52,7 @@ public class Tag {
         this.author = author;
         this.publications.add(publication);
     }
-
-    public Tag (String name, User author, List<Publication> publications) {
-        this.name = name;
-        this.author = author;
-        this.publications = publications;
-    }
-
+    
 
     public Long getId() {
         return this.id;
@@ -92,14 +86,6 @@ public class Tag {
         this.publications = publications;
     }
 
-    public void addPublication(Publication p) {
-        this.publications.add(p);
-    }
-
-    public void removePublications(Publication p) {
-        this.publications.remove(p);
-    }
-
     public List<User> getUsers() {
         return this.users;
     }
@@ -108,5 +94,4 @@ public class Tag {
         this.users = users;
     }
 
-   
 }

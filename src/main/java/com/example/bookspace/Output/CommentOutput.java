@@ -12,7 +12,8 @@ public class CommentOutput extends OutputManager {
     private Integer likes;
     private Integer dislikes;
     private Integer totalLikes;
-    private String authorUri;
+    private UserOutput author;
+    private Integer nReplies;
     private String publicationUri;
     private String likedByUri;
     private String dislikedByUri;
@@ -27,15 +28,15 @@ public class CommentOutput extends OutputManager {
         this.dop = c.getDop();
         this.likes = c.getLikedBy().size();
         this.dislikes = c.getDislikedBy().size();
+        this.nReplies = c.getAnswers().size();
+        this.author = new UserOutput(c.getAuthor());
         this.totalLikes = this.likes-this.dislikes;
         this.selfUri = getURL() + "/comments/" + this.id;
-        this.authorUri = getURL() + "/users/" + c.getAuthor().getId();
         this.publicationUri = getURL() +  "/publications/" + c.getPublication().getId();
         this.likedByUri = this.selfUri + "/like";
         this.dislikedByUri = this.selfUri + "/dislike";
         this.answersUri = this.selfUri + "/answers";
     }
-
 
 
 
@@ -95,12 +96,20 @@ public class CommentOutput extends OutputManager {
         this.totalLikes = totalLikes;
     }
 
-    public String getAuthorUri() {
-        return this.authorUri;
+    public UserOutput getAuthor() {
+        return this.author;
     }
 
-    public void setAuthorUri(String authorUri) {
-        this.authorUri = authorUri;
+    public void setAuthor(UserOutput author) {
+        this.author = author;
+    }
+
+    public Integer getNReplies() {
+        return this.nReplies;
+    }
+
+    public void setNReplies(Integer nReplies) {
+        this.nReplies = nReplies;
     }
 
     public String getPublicationUri() {
@@ -134,8 +143,7 @@ public class CommentOutput extends OutputManager {
     public void setAnswersUri(String answersUri) {
         this.answersUri = answersUri;
     }
-    
-    
+
 
     
 

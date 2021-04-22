@@ -64,7 +64,7 @@ public class PublicationService {
                 for (Long tagId: publicationDetails.getTags()) {
                     Tag tag = tagRepository.getOne(tagId);
                     publication.addTag(tag);
-                    tag.addPublication(publication);
+                    tag.getPublications().add(publication);
                     tag = tagRepository.save(tag);
                 }
             }
