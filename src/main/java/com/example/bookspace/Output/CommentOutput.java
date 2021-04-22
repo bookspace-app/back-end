@@ -38,7 +38,7 @@ public class CommentOutput extends OutputManager {
         this.mentionsUri = this.selfUri + "/mentions";
         this.likedByUri = this.selfUri + "/like";
         this.dislikedByUri = this.selfUri + "/dislike";
-        this.repliesUri = this.selfUri + "replies";
+        this.repliesUri = this.selfUri + "/replies";
     }
 
 
