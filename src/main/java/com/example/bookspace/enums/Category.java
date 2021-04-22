@@ -37,7 +37,8 @@ public enum Category {
     Familiar,
     Western,
     Religion,
-    Futurismo;
+    Futurismo, 
+    Otro;
     
 
     public static boolean existsCategory(String category) {

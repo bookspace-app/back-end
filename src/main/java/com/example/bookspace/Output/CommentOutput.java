@@ -18,6 +18,8 @@ public class CommentOutput extends OutputManager {
     private String dislikedByUri;
     private String answersUri;
 
+    public CommentOutput(){}
+
 
     public CommentOutput(Comment c) {
         this.id = c.getId();

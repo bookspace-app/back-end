@@ -19,6 +19,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 
+
 @Entity
 @Table (name = "comments")
 public class Comment {
@@ -56,8 +57,8 @@ public class Comment {
     private Publication publication;
 
     @ManyToOne
-    @JoinColumn(name = "parentId")
-    private Comment parent;
+    @JoinColumn(name = "parentId", nullable = true)
+    private Comment parent = null;
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Comment> answers = new ArrayList<>();
