@@ -1,19 +1,22 @@
 package com.example.bookspace.Inputs;
 
+import java.util.List;
+
 public class CommentInput {
     private String content;
     private Long authorId;
     private Long publicationId;
     private Long parentId;
+    private List<Long> mentions;
 
 
-    public CommentInput(String content, Long authorId, Long publicationId, Long parentId) {
+    public CommentInput(String content, Long authorId, Long publicationId, Long parentId, List<Long> mentions) {
         this.content = content;
         this.authorId = authorId;
         this.publicationId = publicationId;
         this.parentId = parentId;
+        this.mentions = mentions;
     }
-
 
 
     public String getContent() {
@@ -47,6 +50,15 @@ public class CommentInput {
     public void setParentId(Long parentId) {
         this.parentId = parentId;
     }
+
+    public List<Long> getMentions() {
+        return this.mentions;
+    }
+
+    public void setMentions(List<Long> mentions) {
+        this.mentions = mentions;
+    }
+
     
 
 }

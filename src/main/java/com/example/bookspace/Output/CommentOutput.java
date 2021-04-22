@@ -15,9 +15,11 @@ public class CommentOutput extends OutputManager {
     private UserOutput author;
     private Integer nReplies;
     private String publicationUri;
+    private String mentionsUri;
     private String likedByUri;
     private String dislikedByUri;
-    private String answersUri;
+    private String repliesUri;
+    
 
     public CommentOutput(){}
 
@@ -28,14 +30,15 @@ public class CommentOutput extends OutputManager {
         this.dop = c.getDop();
         this.likes = c.getLikedBy().size();
         this.dislikes = c.getDislikedBy().size();
-        this.nReplies = c.getAnswers().size();
+        this.nReplies = c.getReplies().size();
         this.author = new UserOutput(c.getAuthor());
         this.totalLikes = this.likes-this.dislikes;
         this.selfUri = getURL() + "/comments/" + this.id;
         this.publicationUri = getURL() +  "/publications/" + c.getPublication().getId();
+        this.mentionsUri = this.selfUri + "/mentions";
         this.likedByUri = this.selfUri + "/like";
         this.dislikedByUri = this.selfUri + "/dislike";
-        this.answersUri = this.selfUri + "/answers";
+        this.repliesUri = this.selfUri + "/replies";
     }
 
 
@@ -120,6 +123,16 @@ public class CommentOutput extends OutputManager {
         this.publicationUri = publicationUri;
     }
 
+
+    public String getMentionsUri() {
+        return this.mentionsUri;
+    }
+
+    public void setMentionsUri(String mentionsUri) {
+        this.mentionsUri = mentionsUri;
+    }
+
+
     public String getLikedByUri() {
         return this.likedByUri;
     }
@@ -136,12 +149,12 @@ public class CommentOutput extends OutputManager {
         this.dislikedByUri = dislikedByUri;
     }
 
-    public String getAnswersUri() {
-        return this.answersUri;
+    public String getRepliesUri() {
+        return this.repliesUri;
     }
 
-    public void setAnswersUri(String answersUri) {
-        this.answersUri = answersUri;
+    public void setRpliesUri(String repliesUri) {
+        this.repliesUri = repliesUri;
     }
 
 

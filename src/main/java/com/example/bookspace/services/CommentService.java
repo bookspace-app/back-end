@@ -49,15 +49,28 @@ public class CommentService {
         //Create the comment
         Comment newComment = new Comment(commentDetails.getContent(), author, publication);
 
+        //If there are mentioned users, assign to them 
+        if (commentDetails.getMentions() != null) {
+            for (Long mentionedId: commentDetails.getMentions()) {
+                User mentioned = userRepository.getOne(mentionedId);
+                mentioned.getCommentMentions().add(newComment);
+                newComment.getCommentMentions().add(mentioned);
+                mentioned = userRepository.save(mentioned);
+                newComment = commentRepository.save(newComment);
+            }
+        }
+
         //If is an aswer, take the parent
         if (commentDetails.getParentId() != null)  {
             Comment parent = commentRepository.getOne(commentDetails.getParentId());
             newComment.setParent(parent);
-            parent.addAnswer(newComment);    
+            parent.getReplies().add(newComment);   
             
             parent = commentRepository.save(parent);
             newComment = commentRepository.save(newComment);
         } 
+
+
         
         newComment = commentRepository.save(newComment);
 
@@ -80,7 +93,7 @@ public class CommentService {
 
         if (commentDetails.getAuthorId() != null && commentDetails.getAuthorId() != comment.getAuthor().getId()) new Exception("Can't change the comment's author");
         if (commentDetails.getPublicationId() != null && commentDetails.getPublicationId() != comment.getPublication().getId()) throw new Exception("Can't change the comment's publication");
-        if (commentDetails.getParentId() != null && comment.getParent() == null) throw new Exception("Can't change a parent comment to an answer");
+        if (commentDetails.getParentId() != null && comment.getParent() == null) throw new Exception("Can't change a parent comment to a reply");
         if (commentDetails.getParentId() != null && commentDetails.getParentId() != comment.getParent().getId()) throw new Exception("Can't change the parent of a comment");
 
         if (commentDetails.getContent() != null) {
@@ -95,11 +108,11 @@ public class CommentService {
         commentRepository.delete(comment);
     }
 
-    public List<CommentOutput> getCommentAnswers(Long commentId) {
+    public List<CommentOutput> getCommentReplies(Long commentId) {
         Comment comment = commentRepository.getOne(commentId);
         List<CommentOutput> result = new ArrayList<>();
-        for (Comment answer: comment.getAnswers()) {
-            result.add(new CommentOutput(answer));
+        for (Comment reply: comment.getReplies()) {
+            result.add(new CommentOutput(reply));
         }
 
         return result;
@@ -195,6 +208,17 @@ public class CommentService {
         like = userRepository.save(like);
 
         return new CommentOutput(comment);
+    }
+
+    public List<UserOutput> getCommentMentions(Long commentId) {
+
+        Comment comment = commentRepository.getOne(commentId);
+        List<UserOutput> result = new ArrayList<>();
+        for (User mentionedUser: comment.getCommentMentions()) {
+            result.add(new UserOutput(mentionedUser));
+        }
+
+        return result;
     }
 
    
