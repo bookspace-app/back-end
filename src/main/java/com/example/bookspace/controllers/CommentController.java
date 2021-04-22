@@ -54,9 +54,14 @@ public class CommentController {
         commentService.deleteComment(commentId);
 	}
 
-    @GetMapping(path = "{commentId}/answers")   
-	public List<CommentOutput> getCommentAnswers(@PathVariable("commentId") Long commentId) {
-        return commentService.getCommentAnswers(commentId);
+    @GetMapping(path = "{commentId}/replies")   
+	public List<CommentOutput> getCommentReplies(@PathVariable("commentId") Long commentId) {
+        return commentService.getCommentReplies(commentId);
+    }
+
+    @GetMapping(path = "{commentId}/mentions")   
+	public List<UserOutput> getCommentMentions(@PathVariable("commentId") Long commentId) {
+        return commentService.getCommentMentions(commentId);
     }
 
     @GetMapping(path = "{commentId}/like")   

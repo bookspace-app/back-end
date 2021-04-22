@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -61,7 +62,15 @@ public class Comment {
     private Comment parent = null;
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Comment> answers = new ArrayList<>();
+    private List<Comment> replies = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable (
+        name = "commentMentions", 
+        joinColumns = @JoinColumn(name = "commentId"),
+        inverseJoinColumns = @JoinColumn(name = "userId")
+    )
+    private List<User> commentMentions = new ArrayList<>();
 
 
     public Comment() {
@@ -155,21 +164,24 @@ public class Comment {
         this.parent = parent;
     }
 
-    public List<Comment> getAnswers() {
-        return this.answers;
+    public List<Comment> getReplies() {
+        return this.replies;
     }
 
-    public void setAnswers(List<Comment> answers) {
-        this.answers = answers;
+    public void setReplies(List<Comment> replies) {
+        this.replies = replies;
     }
 
-    public void addAnswer(Comment answer) {
-        this.answers.add(answer);
+
+    public List<User> getCommentMentions() {
+        return this.commentMentions;
     }
 
-    public void removeAnswer(Comment answer) {
-        this.answers.remove(answer);
+    public void setCommentMentions(List<User> commentMentions) {
+        this.commentMentions = commentMentions;
     }
+    
+
 
 
   

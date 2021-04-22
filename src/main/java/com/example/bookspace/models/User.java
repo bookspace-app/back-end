@@ -152,6 +152,9 @@ public class User {
     )
     private List<Comment> dislikedComments = new ArrayList<>();
 
+    @ManyToMany(mappedBy = "commentMentions")
+    private List<Comment> commentMentions = new ArrayList<>();
+
     @Column(name = "createdTags")
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Tag> createdTags = new ArrayList<>();
@@ -384,6 +387,18 @@ public class User {
     public void setDislikedComments(List<Comment> dislikedComments) {
         this.dislikedComments = dislikedComments;
     }
+
+    public List<Comment> getCommentMentions() {
+        return this.commentMentions;
+    }
+
+    public void setCommentMentions(List<Comment> commentMentions) {
+        this.commentMentions = commentMentions;
+    }
+    public void setFavTags(List<Tag> favTags) {
+        this.favTags = favTags;
+    }
+
 
     public List<User> getBlockedUsers() {
         return this.blockedUsers;
