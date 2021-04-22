@@ -12,6 +12,7 @@ public class CommentOutput extends OutputManager {
     private Integer likes;
     private Integer dislikes;
     private Integer totalLikes;
+    private Long parentId;
     private UserOutput author;
     private Integer nReplies;
     private String publicationUri;
@@ -39,6 +40,7 @@ public class CommentOutput extends OutputManager {
         this.likedByUri = this.selfUri + "/like";
         this.dislikedByUri = this.selfUri + "/dislike";
         this.repliesUri = this.selfUri + "/replies";
+        if (c.getParent() != null) this.parentId = c.getParent().getId();
     }
 
 
@@ -153,7 +155,14 @@ public class CommentOutput extends OutputManager {
         return this.repliesUri;
     }
 
-    public void setRpliesUri(String repliesUri) {
+    public Long getParentId() {
+        return this.parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+    public void setRepliesUri(String repliesUri) {
         this.repliesUri = repliesUri;
     }
 
