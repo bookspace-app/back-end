@@ -41,6 +41,7 @@ public class CommentOutput extends OutputManager {
         this.dislikedByUri = this.selfUri + "/dislike";
         this.repliesUri = this.selfUri + "/replies";
         if (c.getParent() != null) this.parentId = c.getParent().getId();
+        else this.parentId = 0L;
     }
 
 
