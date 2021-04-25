@@ -21,6 +21,7 @@ import java.util.List;
 
 import com.example.bookspace.Inputs.UserInput;
 import com.example.bookspace.Output.UserOutput;
+import com.example.bookspace.models.User;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserControllerAccTest
@@ -55,7 +56,7 @@ class UserControllerAccTest
 
         HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
         List<String> fav_cat = new ArrayList<>();
-        fav_cat.add("ACTION");
+        fav_cat.add("action");
 		UserInput u1 = new UserInput("email1", "name1", "username1", "password1", LocalDate.now(), "description1", fav_cat);
         requestEntity = new HttpEntity<>(u1, headers);
 
@@ -85,7 +86,7 @@ class UserControllerAccTest
 
         HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
         List<String> fav_cat = new ArrayList<>();
-        fav_cat.add("ACTION");
+        fav_cat.add("action");
 		UserInput u1 = new UserInput("emailUpd", "nameUpd", "usernameUpd", "passwordUpd", LocalDate.now(), "descriptionUpd", fav_cat);
         requestEntity = new HttpEntity<>(u1, headers);
 
@@ -118,7 +119,7 @@ class UserControllerAccTest
         ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/categories", ArrayList.class);
         assertEquals(OK, responseEntity.getStatusCode());
         assertEquals(true, responseEntity.hasBody());
-        assertEquals("ACTION", responseEntity.getBody().get(0));
+        assertEquals("action", responseEntity.getBody().get(0));
     }
 
     @Test
@@ -130,81 +131,85 @@ class UserControllerAccTest
         assertEquals(1, responseEntity.getBody().size());
     }
 
-    /*@Test
+    @Test
     void testgetLikedPublications() throws Exception {
 
         ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/likedPublications", ArrayList.class);
         assertEquals(OK, responseEntity.getStatusCode());
-    }*/
+    }
 
-    /*@Test
+    @Test
     void testgetDislikedPublications() throws Exception {
 
         ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/dislikedPublications", ArrayList.class);
         assertEquals(OK, responseEntity.getStatusCode());
-    }*/
+    }
 
-    /*@Test
+    @Test
     void testgetFavPublications() throws Exception {
 
         ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/favPublications", ArrayList.class);
         assertEquals(OK, responseEntity.getStatusCode());
-    }*/
+    }
 
-    /*@Test
+    @Test
     void testgetMentionedPublications() throws Exception {
 
         ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/mentions", ArrayList.class);
         assertEquals(OK, responseEntity.getStatusCode());
-    }*/
+    }
 
-    /*@Test
+    @Test
     void testgetComments() throws Exception {
 
         ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/comments", ArrayList.class);
         assertEquals(OK, responseEntity.getStatusCode());
-    }*/
+    }
 
-    /*@Test
+    @Test
     void testgetLikedComments() throws Exception {
 
         ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/likedComments", ArrayList.class);
         assertEquals(OK, responseEntity.getStatusCode());
-    }*/
+    }
 
-    /*@Test
+    @Test
     void testgetDislikedComments() throws Exception {
 
         ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/dislikedComments", ArrayList.class);
         assertEquals(OK, responseEntity.getStatusCode());
-    }*/
+    }
 
-    /*@Test
+    @Test
     void testgetCreatedTags() throws Exception {
 
         ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/tags", ArrayList.class);
         assertEquals(OK, responseEntity.getStatusCode());
-    }*/
+    }
 
     @Test
     void getFavTagsUser() throws Exception {
 
         ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/favTags", ArrayList.class);
         assertEquals(OK, responseEntity.getStatusCode());
-        assertEquals(true, responseEntity.hasBody());
     }
 
-    /*@Test
+    @Test
     void testgetBlockedUsers() throws Exception {
 
         ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/blockedUsers", ArrayList.class);
         assertEquals(OK, responseEntity.getStatusCode());
-    }*/
+    }
 
-    /*@Test
+    @Test
     void testpostBlockedUsers() throws Exception {
 
-        ResponseEntity<UserOutput> responseEntity = restTemplate.postForEntity(url + "/1/blockedUsers", UserOutput.class);
-        assertEquals(OK, responseEntity.getStatusCode());
-    }*/
+        HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<UserOutput> responseEntity = restTemplate.exchange(url + "1/blockedUsers/2", HttpMethod.POST, requestEntity, UserOutput.class);
+        assertEquals(OK, responseEntity.getStatusCode());	
+    }
 }

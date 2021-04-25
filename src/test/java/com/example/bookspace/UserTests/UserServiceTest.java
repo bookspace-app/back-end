@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import com.example.bookspace.Inputs.UserInput;
+import com.example.bookspace.Output.CommentOutput;
 import com.example.bookspace.Output.PublicationOutput;
 import com.example.bookspace.Output.TagOutput;
 import com.example.bookspace.Output.UserOutput;
@@ -12,6 +13,7 @@ import com.example.bookspace.enums.Category;
 import com.example.bookspace.services.UserService;
 import com.example.bookspace.models.User;
 import com.example.bookspace.models.Tag;
+import com.example.bookspace.models.Comment;
 import com.example.bookspace.models.Publication;
 import com.example.bookspace.repositories.UserRepository;
 
@@ -35,21 +37,38 @@ class UserServiceTest {
 
         User u1 = new User("email1", "name1", "username1", "password1", LocalDate.now());
         List<String> fav_cat = new ArrayList<>();
-        fav_cat.add("ACTION");
+        fav_cat.add("action");
         List<Category> cateogories = Category.getCategories(fav_cat);
 		u1.setFavCategories(cateogories);
 
         List<Publication> pub = new ArrayList<>();
-        Publication p = new Publication("title", "content", u1, Category.ACTION);
+        Publication p = new Publication("title", "content", u1, Category.action);
         pub.add(p);
         u1.setPublications(pub);
+        u1.setLikedPublications(pub);
+        u1.setDislikedPublications(pub);
+        u1.setFavouritePublications(pub);
+        u1.setMentions(pub);
+
+        List<Comment> com = new ArrayList<>();
+        Comment c = new Comment("commentExp", u1, p);
+        com.add(c);
+        u1.setComments(com);
+        u1.setLikedComments(com);
+        u1.setDislikedComments(com);
 
         List<Tag> tgs = new ArrayList<>();
-        Tag t = new Tag("name1", u1, pub);
+        Tag t = new Tag("name1", u1, p);
         tgs.add(t);
         u1.setfavTags(tgs);
+        u1.setCreatedTags(tgs);
 
 		User u2 = new User("email2", "name2", "username2", "password2", LocalDate.now());
+        User u3 = new User("email3", "name3", "username3", "password3", LocalDate.now());
+
+        List<User> bloks = new ArrayList<>();
+        bloks.add(u2);
+        u1.setBlockedUsers(bloks);
 
 		users.add(u1);
 		users.add(u2);
@@ -62,6 +81,9 @@ class UserServiceTest {
         when(userRepository.findUserByUsername("username3")).thenReturn(ou3);
         when(userRepository.existsById(1L)).thenReturn(true);
         when(userRepository.getOne(1L)).thenReturn(u1);
+        when(userRepository.getOne(2L)).thenReturn(u2);
+        when(userRepository.getOne(3L)).thenReturn(u3);
+        when(userRepository.existsById(3L)).thenReturn(true);
         when(userRepository.findById(1L)).thenReturn(ou1);
 
         this.userService = new UserService(userRepository);
@@ -115,7 +137,6 @@ class UserServiceTest {
 
     @Test
     void testdeleteUser() {
-
         userService.deleteUser(1L);
     }
 
@@ -136,16 +157,14 @@ class UserServiceTest {
 
     @Test
     void testgetFavCategoriesUser() {
-
         List<String> result = userService.getFavCategoriesUser(1L);
 
         assertThat(result.size()).isEqualTo(1);
-        assertThat(result.get(0)).isEqualTo("ACTION");
+        assertThat(result.get(0)).isEqualTo("action");
     }
 
     @Test
     void testgetPublicationsUser() {
-
         List<PublicationOutput> result = userService.getPublicationsUser(1L);
 
         assertThat(result.size()).isEqualTo(1);
@@ -153,48 +172,71 @@ class UserServiceTest {
     }
 
     @Test
-    void testgetLikedPublications() {
-        //Not implemented yet
+    void testgetLikedPublications() throws Exception {
+        List<PublicationOutput> result = userService.getLikedPublications(1L);
+
+        assertThat(result.size()).isEqualTo(1);
+        assertThat(result.get(0).getContent()).isEqualTo("content");
     }
 
     @Test
-    void testgetDislikedPublications() {
-        //Not implemented yet
+    void testgetDislikedPublications() throws Exception {
+        List<PublicationOutput> result = userService.getDislikedPublications(1L);
+
+        assertThat(result.size()).isEqualTo(1);
+        assertThat(result.get(0).getContent()).isEqualTo("content");
     }
 
     @Test
-    void testgetFavPublications() {
-        //Not implemented yet
+    void testgetFavPublications() throws Exception {
+        List<PublicationOutput> result = userService.getFavPublications(1L);
+
+        assertThat(result.size()).isEqualTo(1);
+        assertThat(result.get(0).getContent()).isEqualTo("content");
     }
 
     @Test
-    void testgetMentionedPublications() {
-        //Not implemented yet
+    void testgetMentionedPublications() throws Exception {
+        List<PublicationOutput> result = userService.getMentionedPublications(1L);
+
+        assertThat(result.size()).isEqualTo(1);
+        assertThat(result.get(0).getContent()).isEqualTo("content");
     }
 
     @Test
-    void testgetComments() {
-        //Not implemented yet
+    void testgetComments() throws Exception {
+        List<CommentOutput> result = userService.getComments(1L);
+
+        assertThat(result.size()).isEqualTo(1);
+        assertThat(result.get(0).getContent()).isEqualTo("commentExp");
     }
 
     @Test
-    void testgetLikedComments() {
-        //Not implemented yet
+    void testgetLikedComments() throws Exception {
+        List<CommentOutput> result = userService.getLikedComments(1L);
+
+        assertThat(result.size()).isEqualTo(1);
+        assertThat(result.get(0).getContent()).isEqualTo("commentExp");
     }
 
     @Test
-    void testgetDislikedComments() {
-        //Not implemented yet
+    void testgetDislikedComments() throws Exception {
+        List<CommentOutput> result = userService.getDislikedComments(1L);
+
+        assertThat(result.size()).isEqualTo(1);
+        assertThat(result.get(0).getContent()).isEqualTo("commentExp");
     }
 
     @Test
-    void testgetCreatedTags() {
-        //Not implemented yet
+    void testgetCreatedTags() throws Exception {
+        List<TagOutput> result = userService.getCreatedTags(1L);
+
+        assertThat(result.size()).isEqualTo(1);
+        assertThat(result.get(0).getName()).isEqualTo("name1");
     }
 
     @Test
     void testgetFavTagsUser() {
-
         List<TagOutput> result = new ArrayList<>();
 		result = userService.getFavTagsUser(1L);
 
@@ -203,17 +245,22 @@ class UserServiceTest {
     }
 
     @Test
-    void testgetBlockedUsers() {
-        //Not implemented yet
+    void testgetBlockedUsers() throws Exception {
+        List<UserOutput> result = userService.getBlockedUsers(1L);
+
+        assertThat(result.size()).isEqualTo(1);
+        assertThat(result.get(0).getEmail()).isEqualTo("email2");
     }
 
     @Test
-    void testpostBlockedUsers() {
-        //Not implemented yet
+    void testpostBlockedUsers() throws Exception {
+        UserOutput result = userService.postBlockedUsers(1L, 3L);
+
+        assertThat(result.getEmail()).isEqualTo("email3");
     }
 
     @Test
-    void testdeleteBlockedUsers() {
-        //Not implemented yet
+    void testdeleteBlockedUsers() throws Exception {
+        userService.deleteBlockedUsers(1L, 2L);
     }
 }
