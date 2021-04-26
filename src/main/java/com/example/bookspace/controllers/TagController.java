@@ -34,13 +34,13 @@ public class TagController {
     }
 
     @GetMapping
-    public List<Tag> getAllTags(){
+    public List<TagOutput> getAllTags(){
         return tagService.getTags();
     }
 
-    @GetMapping(path = "{IdTag}")   
-	public Optional<Tag> getTagById(@PathVariable("IdTag") Long IdTag) {
-        return tagService.getTag(IdTag);
+    @GetMapping(path = "{idTag}")   
+	public TagOutput getTagById(@PathVariable("idTag") Long idTag) {
+        return tagService.getTag(idTag);
     }
 
     @PostMapping
@@ -56,8 +56,8 @@ public class TagController {
         tagService.updateTag(IdTag,author,tagged_publications,favTags);
     }
 
-    @DeleteMapping(path = "{IdTag}")
-    public void deleteTag(@PathVariable("IdTag") Long IdTag){
-        tagService.deleteTag(IdTag);
+    @DeleteMapping(path = "{idTag}")
+    public void deleteTag(@PathVariable("idTag") Long idTag){
+        tagService.deleteTag(idTag);
     }
 }
