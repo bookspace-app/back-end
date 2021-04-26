@@ -32,6 +32,10 @@ public class UserOutput extends OutputManager{
     private String favCategoriesUri;
     private String mentionsUri;
     
+    public UserOutput() {
+        
+    }
+
     public UserOutput(User u) {
         this.id = u.getId();
         this.email = u.getEmail();
