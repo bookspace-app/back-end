@@ -14,8 +14,6 @@ public class TagInput { //preguntar si solo se necesita inputear el nombre
         this.publication = publication;
     }
 
-
-
     public String getName() {
         return this.name;
     }
