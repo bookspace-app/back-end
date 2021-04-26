@@ -6,24 +6,24 @@ import com.example.bookspace.models.Publication;
 
 
 public class PublicationOutput extends OutputManager{ 
-    private String self;
+    private String selfUri;
     private Long id;
     private String title;
     private String content;
     private LocalDateTime dop;
     private Integer likes;
     private Integer dislikes;
-    private Integer n_views;
-    private Integer n_likes;
-    private Integer n_comments;
+    private Integer nViews;
+    private Integer totalLikes;
+    private Integer nComments;
     private String category; 
     private UserOutput author; 
-    private String likedBy;
-    private String dislikedBy;
-    private String favBy;
-    private String comments;
-    private String tags;   
-    private String mentions;
+    private String likedByUri;
+    private String dislikedByUri;
+    private String favByUri;
+    private String commentsUri;
+    private String tagsUri;   
+    private String mentionsUri;
     
 
 
@@ -34,31 +34,31 @@ public class PublicationOutput extends OutputManager{
         this.dop = p.getDop();
         this.likes = p.getLikes();
         this.dislikes = p.getDislikes();
-        this.n_views = p.getViews();
-        this.n_likes = p.getTotalLikes();
+        this.nViews = p.getViews();
+        this.totalLikes = p.getTotalLikes();
         this.category = p.getCategory().name();
-        this.n_comments = p.getComments().size();
+        this.nComments = p.getComments().size();
         this.author = new UserOutput(p.getAuthor());
         this.category = p.getCategory().name();
-        this.self = getURL() + "/publications/" + id;
-        this.likedBy = self + "/likedBy";
-        this.dislikedBy = self + "/dislikedBy";
-        this.favBy = self + "/favBy";
-        this.comments = self + "/comments";
-        this.tags = self + "/tags";
-        this.mentions = self + "/mentions";
+        this.selfUri = getURL() + "/publications/" + id;
+        this.likedByUri = this.selfUri + "/likedBy";
+        this.dislikedByUri = this.selfUri + "/dislikedBy";
+        this.favByUri = this.selfUri + "/favBy";
+        this.commentsUri = this.selfUri + "/comments";
+        this.tagsUri = this.selfUri + "/tags";
+        this.mentionsUri = this.selfUri + "/mentions";
 
     }
+   
 
-    
 
 
     public String getSelf() {
-        return this.self;
+        return this.selfUri;
     }
 
     public void setSelf(String self) {
-        this.self = self;
+        this.selfUri = self;
     }
 
     public Long getId() {
@@ -109,28 +109,28 @@ public class PublicationOutput extends OutputManager{
         this.dislikes = dislikes;
     }
 
-    public Integer getN_views() {
-        return this.n_views;
+    public Integer getNViews() {
+        return this.nViews;
     }
 
-    public void setN_views(Integer n_views) {
-        this.n_views = n_views;
+    public void setNViews(Integer nViews) {
+        this.nViews = nViews;
     }
 
-    public Integer getN_likes() {
-        return this.n_likes;
+    public Integer getTotalLikes() {
+        return this.totalLikes;
     }
 
-    public void setN_likes(Integer n_likes) {
-        this.n_likes = n_likes;
+    public void setTotalLikes(Integer totalLikes) {
+        this.totalLikes = totalLikes;
     }
 
-    public Integer getN_comments() {
-        return this.n_comments;
+    public Integer getNComments() {
+        return this.nComments;
     }
 
-    public void setN_comments(Integer n_comments) {
-        this.n_comments = n_comments;
+    public void setNComments(Integer nComments) {
+        this.nComments = nComments;
     }
 
     public String getCategory() {
@@ -149,55 +149,56 @@ public class PublicationOutput extends OutputManager{
         this.author = author;
     }
 
-    public String getLikedBy() {
-        return this.likedBy;
+    public String getLikedByUri() {
+        return this.likedByUri;
     }
 
-    public void setLikedBy(String likedBy) {
-        this.likedBy = likedBy;
+    public void setLikedByUri(String likedByUri) {
+        this.likedByUri = likedByUri;
     }
 
-    public String getDislikedBy() {
-        return this.dislikedBy;
+    public String getDislikedByUri() {
+        return this.dislikedByUri;
     }
 
-    public void setDislikedBy(String dislikedBy) {
-        this.dislikedBy = dislikedBy;
+    public void setDislikedByUri(String dislikedByUri) {
+        this.dislikedByUri = dislikedByUri;
     }
 
-    public String getFavBy() {
-        return this.favBy;
+    public String getFavByUri() {
+        return this.favByUri;
     }
 
-    public void setFavBy(String favBy) {
-        this.favBy = favBy;
+    public void setFavByUri(String favByUri) {
+        this.favByUri = favByUri;
     }
 
-    public String getComments() {
-        return this.comments;
+    public String getCommentsUri() {
+        return this.commentsUri;
     }
 
-    public void setComments(String comments) {
-        this.comments = comments;
+    public void setCommentsUri(String commentsUri) {
+        this.commentsUri = commentsUri;
     }
 
-    public String getTags() {
-        return this.tags;
+    public String getTagsUri() {
+        return this.tagsUri;
     }
 
-    public void setTags(String tags) {
-        this.tags = tags;
+    public void setTagsUri(String tagsUri) {
+        this.tagsUri = tagsUri;
     }
 
-
-    public String getMentions() {
-        return this.mentions;
+    public String getMentionsUri() {
+        return this.mentionsUri;
     }
 
-    public void setMentions(String mentions) {
-        this.mentions = mentions;
+    public void setMentionsUri(String mentionsUri) {
+        this.mentionsUri = mentionsUri;
     }
+    
 
+    
     
     
 

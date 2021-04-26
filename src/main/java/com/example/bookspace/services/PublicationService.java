@@ -52,7 +52,7 @@ public class PublicationService {
     public PublicationOutput postPublication(PublicationInput publicationDetails) throws Exception {
         if (publicationDetails.getTitle() == null) throw new Exception("The title can't be empty");
         else if (publicationDetails.getContent() == null) throw new Exception("The content can't be empty");
-        else if (publicationDetails.getAuthorId() == null) throw new Exception("The author_id can't be empty");
+        else if (publicationDetails.getAuthorId() == null) throw new Exception("The authorId can't be empty");
         else if (!userRepository.existsById(publicationDetails.getAuthorId())) throw new Exception("There are no users with this id");
         else if (publicationDetails.getCategory() == null) throw new Exception("The category can't be empty");
         else if (!Category.existsCategory(publicationDetails.getCategory())) throw new Exception ("There are not categories with that name");
@@ -64,7 +64,7 @@ public class PublicationService {
                 for (Long tagId: publicationDetails.getTags()) {
                     Tag tag = tagRepository.getOne(tagId);
                     publication.addTag(tag);
-                    tag.addPublication(publication);
+                    tag.getPublications().add(publication);
                     tag = tagRepository.save(tag);
                 }
             }

@@ -5,18 +5,24 @@ import java.time.LocalDateTime;
 import com.example.bookspace.models.Comment;
 
 public class CommentOutput extends OutputManager {
-    private String self;
+    private String selfUri;
     private Long id;
     private String content;
     private LocalDateTime dop;
-    private String author;
-    private String publication;
     private Integer likes;
     private Integer dislikes;
-    private Integer n_likes;
-    private String likedBy;
-    private String dislikedBy;
-    private String answers;
+    private Integer totalLikes;
+    private Long parentId;
+    private UserOutput author;
+    private Integer nReplies;
+    private String publicationUri;
+    private String mentionsUri;
+    private String likedByUri;
+    private String dislikedByUri;
+    private String repliesUri;
+    
+
+    public CommentOutput(){}
 
 
     public CommentOutput(Comment c) {
@@ -25,21 +31,27 @@ public class CommentOutput extends OutputManager {
         this.dop = c.getDop();
         this.likes = c.getLikedBy().size();
         this.dislikes = c.getDislikedBy().size();
-        this.author = getURL() + "/users/" + c.getAuthor().getId();
-        this.publication = getURL() +  "/publications/" + c.getPublication().getId();
-        this.self = getURL() + "/comments/" + this.id;
-        this.likedBy = this.self + "/like";
-        this.dislikedBy = this.self + "/dislike";
-        this.answers = this.self + "answers";
+        this.nReplies = c.getReplies().size();
+        this.author = new UserOutput(c.getAuthor());
+        this.totalLikes = this.likes-this.dislikes;
+        this.selfUri = getURL() + "/comments/" + this.id;
+        this.publicationUri = getURL() +  "/publications/" + c.getPublication().getId();
+        this.mentionsUri = this.selfUri + "/mentions";
+        this.likedByUri = this.selfUri + "/like";
+        this.dislikedByUri = this.selfUri + "/dislike";
+        this.repliesUri = this.selfUri + "/replies";
+        if (c.getParent() != null) this.parentId = c.getParent().getId();
+        else this.parentId = 0L;
     }
 
 
-    public String getSelf() {
-        return this.self;
+
+    public String getSelfUri() {
+        return this.selfUri;
     }
 
-    public void setSelf(String self) {
-        this.self = self;
+    public void setSelfUri(String selfUri) {
+        this.selfUri = selfUri;
     }
 
     public Long getId() {
@@ -66,24 +78,6 @@ public class CommentOutput extends OutputManager {
         this.dop = dop;
     }
 
-
-    public String getAuthor() {
-        return this.author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public String getPublication() {
-        return this.publication;
-    }
-
-    public void setPublication(String publication) {
-        this.publication = publication;
-    }
-    
-
     public Integer getLikes() {
         return this.likes;
     }
@@ -100,37 +94,79 @@ public class CommentOutput extends OutputManager {
         this.dislikes = dislikes;
     }
 
-    public Integer getN_likes() {
-        return this.n_likes;
+    public Integer getTotalLikes() {
+        return this.totalLikes;
     }
 
-    public void setN_likes(Integer n_likes) {
-        this.n_likes = n_likes;
+    public void setTotalLikes(Integer totalLikes) {
+        this.totalLikes = totalLikes;
     }
 
-    public String getLikedBy() {
-        return this.likedBy;
+    public UserOutput getAuthor() {
+        return this.author;
     }
 
-    public void setLikedBy(String likedBy) {
-        this.likedBy = likedBy;
+    public void setAuthor(UserOutput author) {
+        this.author = author;
     }
 
-    public String getDislikedBy() {
-        return this.dislikedBy;
+    public Integer getNReplies() {
+        return this.nReplies;
     }
 
-    public void setDislikedBy(String dislikedBy) {
-        this.dislikedBy = dislikedBy;
+    public void setNReplies(Integer nReplies) {
+        this.nReplies = nReplies;
     }
 
-    public String getAnswers() {
-        return this.answers;
+    public String getPublicationUri() {
+        return this.publicationUri;
     }
 
-    public void setAnswers(String answers) {
-        this.answers = answers;
+    public void setPublicationUri(String publicationUri) {
+        this.publicationUri = publicationUri;
     }
+
+
+    public String getMentionsUri() {
+        return this.mentionsUri;
+    }
+
+    public void setMentionsUri(String mentionsUri) {
+        this.mentionsUri = mentionsUri;
+    }
+
+
+    public String getLikedByUri() {
+        return this.likedByUri;
+    }
+
+    public void setLikedByUri(String likedByUri) {
+        this.likedByUri = likedByUri;
+    }
+
+    public String getDislikedByUri() {
+        return this.dislikedByUri;
+    }
+
+    public void setDislikedByUri(String dislikedByUri) {
+        this.dislikedByUri = dislikedByUri;
+    }
+
+    public String getRepliesUri() {
+        return this.repliesUri;
+    }
+
+    public Long getParentId() {
+        return this.parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+    public void setRepliesUri(String repliesUri) {
+        this.repliesUri = repliesUri;
+    }
+
 
     
 

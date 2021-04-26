@@ -54,7 +54,7 @@ public class Publication {
     private Category category;
 
     @ManyToOne
-    @JoinColumn(name = "author_id", nullable = false)
+    @JoinColumn(name = "authorId", nullable = false)
     private User author;
 
     @ManyToMany(mappedBy = "likedPublications")
@@ -71,17 +71,17 @@ public class Publication {
 
     @ManyToMany
     @JoinTable (
-        name = "mentioned_users", 
-        joinColumns = @JoinColumn(name = "publication_id"),
-        inverseJoinColumns = @JoinColumn(name = "user_id")
+        name = "mentionedUsers", 
+        joinColumns = @JoinColumn(name = "publicationId"),
+        inverseJoinColumns = @JoinColumn(name = "userId")
     )
     private List<User> mentions = new ArrayList<>();
 
     @ManyToMany
     @JoinTable (
-        name = "tagged_publications", 
-        joinColumns = @JoinColumn(name = "publication_id"), 
-        inverseJoinColumns = @JoinColumn(name = "tag_name")
+        name = "taggedPublications", 
+        joinColumns = @JoinColumn(name = "publicationId"), 
+        inverseJoinColumns = @JoinColumn(name = "tagName")
 
     )
     private List<Tag> tags = new ArrayList<>();
