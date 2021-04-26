@@ -1,5 +1,6 @@
 package com.example.bookspace.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -39,28 +40,28 @@ public class TagService {
 		Tag tag = new Tag(tagDetails.getName(), author, publication);
 		tag = tagRepository.save(tag);
 		author.addCreatedTag(tag);
-		userRepository.save(author);
+		author = userRepository.save(author);
 		publication.addTag(tag);
-		publicationRepository.save(publication);	
+		publication = publicationRepository.save(publication);	
 		return new TagOutput(tag);
     }
 
-	public List<Tag> getTags(){
+	public List<TagOutput> getTags(){
 		
-		return tagRepository.findAll();
+		List<TagOutput> result = new ArrayList<>();
+		for (Tag t: tagRepository.findAll()) {
+			TagOutput to = new TagOutput(t);
+			result.add(to);
+		}
+		return result;
 	}
 
-    public Optional<Tag> getTag(Long IdTag) {
-		boolean exists = tagRepository.existsById(IdTag);
-		if(!exists) throw new IllegalStateException("The tag with IdTag " + IdTag + " does not exist");
-        return tagRepository.findById(IdTag);
+    public TagOutput getTag(Long idTag) {
+        Tag t = tagRepository.getOne(idTag);
+		return new TagOutput(t);
     }
 
 	public void deleteTag(Long IdTag){
-		boolean b = tagRepository.existsById(IdTag);
-		if(!b) {
-			throw new IllegalStateException("Tag with IdTag " + IdTag + " does not exists");
-		}
 		tagRepository.deleteById(IdTag);
 	}
 
