@@ -38,11 +38,11 @@ public class TagService {
 		Publication publication = publicationRepository.getOne(tagDetails.getPublication());
 
 		Tag tag = new Tag(tagDetails.getName(), author, publication);
+		tag = tagRepository.save(tag);
 		author.addCreatedTag(tag);
 		author = userRepository.save(author);
 		publication.addTag(tag);
 		publication = publicationRepository.save(publication);	
-		tag = tagRepository.save(tag);
 		return new TagOutput(tag);
     }
 
