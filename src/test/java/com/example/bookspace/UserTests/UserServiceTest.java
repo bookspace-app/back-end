@@ -23,6 +23,7 @@ import java.util.Optional;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 class UserServiceTest {
@@ -65,6 +66,7 @@ class UserServiceTest {
 
 		User u2 = new User("email2", "name2", "username2", "password2", LocalDate.now());
         User u3 = new User("email3", "name3", "username3", "password3", LocalDate.now());
+        User u4 = new User("email3", "name3", "username3", "password3", LocalDate.of(1998, 12, 2));
 
         List<User> bloks = new ArrayList<>();
         bloks.add(u2);
@@ -85,6 +87,8 @@ class UserServiceTest {
         when(userRepository.getOne(3L)).thenReturn(u3);
         when(userRepository.existsById(3L)).thenReturn(true);
         when(userRepository.findById(1L)).thenReturn(ou1);
+        when(userRepository.save(u1)).thenReturn(u1);
+        when(userRepository.save(any(User.class))).thenReturn(u4);
 
         this.userService = new UserService(userRepository);
     }
@@ -106,7 +110,7 @@ class UserServiceTest {
     void testpostUser() throws Exception {
 
         List<String> fav_cat = new ArrayList<>();
-        UserInput ui1 = new UserInput("email3", "name3", "username3", "password3", LocalDate.now(), "description3", fav_cat);
+        UserInput ui1 = new UserInput("email3", "name3", "username3", "password3", LocalDate.of(1998, 12, 2), "description3", fav_cat);
 
         UserOutput result = userService.postUser(ui1);
         assertThat(result).isNotNull();
@@ -126,7 +130,7 @@ class UserServiceTest {
     void testputUser() {
 
         List<String> fav_cat = new ArrayList<>();
-        UserInput ui1 = new UserInput("email3", "name3", "username3", "password3", LocalDate.now(), "description3", fav_cat);
+        UserInput ui1 = new UserInput("email3", "name3", "username3", "password3", LocalDate.of(1998, 12, 2), "description3", fav_cat);
 
         UserOutput result;
 		result = userService.putUser(1L, ui1);

@@ -21,7 +21,6 @@ import java.util.List;
 
 import com.example.bookspace.Inputs.UserInput;
 import com.example.bookspace.Output.UserOutput;
-import com.example.bookspace.models.User;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserControllerAccTest
@@ -66,7 +65,7 @@ class UserControllerAccTest
         ResponseEntity<UserOutput> responseEntity2 = restTemplate.getForEntity(url + "/2", UserOutput.class);
         assertEquals(OK, responseEntity2.getStatusCode());
         assertEquals(true, responseEntity2.hasBody());
-        assertEquals("email1", responseEntity2.getBody().getEmail());
+        assertEquals("demoEmail2", responseEntity2.getBody().getEmail());
     }
 
     @Test
@@ -209,7 +208,7 @@ class UserControllerAccTest
 
         HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
 
-        ResponseEntity<UserOutput> responseEntity = restTemplate.exchange(url + "1/blockedUsers/2", HttpMethod.POST, requestEntity, UserOutput.class);
+        ResponseEntity<UserOutput> responseEntity = restTemplate.exchange(url + "/1/blockedUsers/2", HttpMethod.POST, requestEntity, UserOutput.class);
         assertEquals(OK, responseEntity.getStatusCode());	
     }
 }
