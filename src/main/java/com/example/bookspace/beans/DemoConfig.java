@@ -22,6 +22,7 @@ import org.springframework.context.annotation.Configuration;
 public class DemoConfig {
 
     User user;
+    User user2;
     Publication publication;
     Tag tag;
     Category category;
@@ -29,10 +30,17 @@ public class DemoConfig {
     @Bean
     CommandLineRunner commandLineRunner(UserRepository userRepository, PublicationRepository publicationRepository, TagRepository tagRepository) {
         return args ->  {
-            UserInput userDetails = new UserInput("demoEmail", "demoName", "demoUsername", "demoPassword", LocalDate.of(1998, 12, 2), "demoDescriprion", List.of("ACTION"));
+            UserInput userDetails = new UserInput("demoEmail", "demoName", "demoUsername", "demoPassword", LocalDate.of(1998, 12, 2), "demoDescriprion", List.of("action"));
             user = new User(userDetails.getEmail(), userDetails.getName(), userDetails.getUsername(), userDetails.getPassword(), userDetails.getDob());
-            user = userRepository.save(user);
+
+            UserInput userDetails2 = new UserInput("demoEmail2", "demoName2", "demoUsername2", "demoPassword2", LocalDate.of(2000, 6, 1), "demoDescriprion2", List.of("romantic"));
+            user2 = new User(userDetails2.getEmail(), userDetails2.getName(), userDetails2.getUsername(), userDetails2.getPassword(), userDetails2.getDob());
+
             category = Category.action;
+            user.addFavCategory(category);
+            user2.addFavCategory(category);
+            user = userRepository.save(user);
+            user2 = userRepository.save(user2);
             PublicationInput publicationDetails = new PublicationInput("demoTitle", "demoContent", user.getId(), category.name(), null, null);
             publication = new Publication(publicationDetails.getTitle(), publicationDetails.getContent(), user, category);
             publication = publicationRepository.save(publication);

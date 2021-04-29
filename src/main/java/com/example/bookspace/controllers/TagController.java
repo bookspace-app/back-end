@@ -1,12 +1,10 @@
 package com.example.bookspace.controllers;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.example.bookspace.Inputs.TagInput;
 import com.example.bookspace.Output.TagOutput;
 import com.example.bookspace.models.Publication;
-import com.example.bookspace.models.Tag;
 import com.example.bookspace.models.User;
 import com.example.bookspace.services.TagService;
 
