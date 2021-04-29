@@ -44,7 +44,7 @@ public class TagController {
     }
 
     @PostMapping
-    public TagOutput postTag(@RequestBody TagInput tagDetails) {
+    public TagOutput postTag(@RequestBody TagInput tagDetails) throws Exception {
         return tagService.postTag(tagDetails);
     }
 
