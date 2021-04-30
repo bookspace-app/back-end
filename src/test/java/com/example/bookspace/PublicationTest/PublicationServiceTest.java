@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 class PublicationServiceTest {
@@ -81,6 +82,7 @@ class PublicationServiceTest {
         p1.setFavouriteBy(fav_by);
 
         User u3 = new User("email3", "name3", "username3", "password3", LocalDate.now());
+        Publication p3 = new Publication("title3", "content3", u3, Category.romantic);
 
         publications.add(p1);
         publications.add(p2);
@@ -93,11 +95,14 @@ class PublicationServiceTest {
         when(userRepository.existsById(3L)).thenReturn(true);
         when(userRepository.findById(3L)).thenReturn(ou3);
         when(publicationRepository.getOne(1L)).thenReturn(p1);
+        when(publicationRepository.getOne(3L)).thenReturn(p3);
         when(publicationRepository.findById(1L)).thenReturn(op1);
         when(publicationRepository.existsById(1L)).thenReturn(true);
         when(userRepository.getOne(3L)).thenReturn(u3);
         when(userRepository.getOne(2L)).thenReturn(u2);
         when(userRepository.getOne(1L)).thenReturn(u1);
+        when(publicationRepository.save(any(Publication.class))).thenReturn(p3);
+        when(userRepository.save(any(User.class))).thenReturn(u3);
 
 
         when(userRepository.findById(1L)).thenReturn(ou1);
@@ -143,12 +148,12 @@ class PublicationServiceTest {
     void testputPublication() throws Exception {
 
         List<Long> nl = new ArrayList<>();
-        PublicationInput pi1 = new PublicationInput("titleNEW", "content3", 3L, "potential", nl, nl);
+        PublicationInput pi1 = new PublicationInput("title3", "content3", 3L, "potential", nl, nl);
 
         PublicationOutput result;
 		result = publicationService.putPublication(1L, pi1);
         assertThat(result).isNotNull();
-        assertThat(result.getTitle()).isEqualTo("titleNEW");
+        assertThat(result.getTitle()).isEqualTo("title3");
     }
 
     @Test
@@ -167,9 +172,9 @@ class PublicationServiceTest {
 
     @Test
     void testpostLike() throws Exception {
-        PublicationOutput result = publicationService.postLike(1L, 2L);
+        PublicationOutput result = publicationService.postLike(3L, 2L);
 
-        assertThat(result.getContent()).isEqualTo("content1");
+        assertThat(result.getContent()).isEqualTo("content3");
     }
 
     @Test
@@ -187,9 +192,9 @@ class PublicationServiceTest {
 
     @Test
     void testpostDislike() throws Exception {
-        PublicationOutput result = publicationService.postDislike(1L, 2L);
+        PublicationOutput result = publicationService.postDislike(3L, 2L);
 
-        assertThat(result.getContent()).isEqualTo("content1");
+        assertThat(result.getContent()).isEqualTo("content3");
     }
 
     @Test

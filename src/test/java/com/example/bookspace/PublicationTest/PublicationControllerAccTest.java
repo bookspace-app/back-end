@@ -84,7 +84,7 @@ class PublicationControllerAccTest
 
         HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
         List<Long> nl = new ArrayList<>();
-        PublicationInput p1 = new PublicationInput("titleUpd", "contentNew", 1L, "romantic", nl, nl);
+        PublicationInput p1 = new PublicationInput("demoTitle", "contentNew", 1L, "romantic", nl, nl);
         requestEntity = new HttpEntity<>(p1, headers);
 
         ResponseEntity<PublicationOutput> responseEntity = restTemplate.exchange(url + "/1", HttpMethod.PUT, requestEntity, PublicationOutput.class);
@@ -93,7 +93,7 @@ class PublicationControllerAccTest
         ResponseEntity<PublicationOutput> responseEntity2 = restTemplate.getForEntity(url + "/1", PublicationOutput.class);
         assertEquals(OK, responseEntity2.getStatusCode());
         assertEquals(true, responseEntity2.hasBody());
-        assertEquals("titleUpd", responseEntity2.getBody().getTitle());
+        assertEquals("demoTitle", responseEntity2.getBody().getTitle());
     }
 
     @Test
@@ -152,18 +152,6 @@ class PublicationControllerAccTest
         ResponseEntity<UserOutput> responseEntity = restTemplate.postForEntity(url + "/1/fav/1", requestEntity, UserOutput.class);
         assertEquals(OK, responseEntity.getStatusCode());
         assertEquals("demoName", responseEntity.getBody().getName());
-    }
-
-    @Test
-    void testpostLike() throws Exception {
-
-        HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-
-        HttpEntity requestEntity = new HttpEntity<>(headers);
-
-        ResponseEntity<PublicationOutput> responseEntity = restTemplate.postForEntity(url + "1/likes", requestEntity, PublicationOutput.class);
-        assertEquals(OK, responseEntity.getStatusCode());
     }
 
     @Test
