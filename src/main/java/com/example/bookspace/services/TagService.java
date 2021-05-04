@@ -3,7 +3,6 @@ package com.example.bookspace.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import javax.transaction.Transactional;
 
 import com.example.bookspace.Inputs.TagInput;
@@ -32,18 +31,17 @@ public class TagService {
 		this.publicationRepository = publicationRepository;
 	}
 
-	public TagOutput postTag(TagInput tagDetails) {
-
+	public TagOutput postTag(TagInput tagDetails) throws Exception {
 		User author = userRepository.getOne(tagDetails.getAuthorId());
-		Publication publication = publicationRepository.getOne(tagDetails.getPublication());
-
-		Tag tag = new Tag(tagDetails.getName(), author, publication);
-		tag = tagRepository.save(tag);
-		author.addCreatedTag(tag);
-		author = userRepository.save(author);
-		publication.addTag(tag);
-		publication = publicationRepository.save(publication);	
-		return new TagOutput(tag);
+		List<Tag> authorFavs = author.getFavTags();
+		if (tagRepository.findTagByName(tagDetails.getName()).isPresent()) throw new Exception ("This tag already exists");
+		else {
+			Tag tag = new Tag(tagDetails.getName(), author);
+			authorFavs.add(tag);
+			tag = tagRepository.save(tag);
+			author = userRepository.save(author);
+			return new TagOutput(tag);
+		}
     }
 
 	public List<TagOutput> getTags(){

@@ -15,7 +15,7 @@ public class CommentOutput extends OutputManager {
     private Long parentId;
     private UserOutput author;
     private Integer nReplies;
-    private String publicationUri;
+    private Long publicationId;
     private String mentionsUri;
     private String likedByUri;
     private String dislikedByUri;
@@ -35,7 +35,7 @@ public class CommentOutput extends OutputManager {
         this.author = new UserOutput(c.getAuthor());
         this.totalLikes = this.likes-this.dislikes;
         this.selfUri = getURL() + "/comments/" + this.id;
-        this.publicationUri = getURL() +  "/publications/" + c.getPublication().getId();
+        this.publicationId = c.getPublication().getId();
         this.mentionsUri = this.selfUri + "/mentions";
         this.likedByUri = this.selfUri + "/like";
         this.dislikedByUri = this.selfUri + "/dislike";
@@ -118,13 +118,15 @@ public class CommentOutput extends OutputManager {
         this.nReplies = nReplies;
     }
 
-    public String getPublicationUri() {
-        return this.publicationUri;
+
+    public Long getPublicationId() {
+        return this.publicationId;
     }
 
-    public void setPublicationUri(String publicationUri) {
-        this.publicationUri = publicationUri;
+    public void setPublicationId(Long publicationId) {
+        this.publicationId = publicationId;
     }
+    
 
 
     public String getMentionsUri() {
