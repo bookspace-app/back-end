@@ -24,8 +24,10 @@ public class PublicationOutput extends OutputManager{
     private String commentsUri;
     private String tagsUri;   
     private String mentionsUri;
-    
 
+    public PublicationOutput() {
+
+    }
 
     public PublicationOutput(Publication p) {
         this.id = p.getId();

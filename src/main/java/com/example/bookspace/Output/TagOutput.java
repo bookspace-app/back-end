@@ -11,6 +11,9 @@ public class TagOutput extends OutputManager{
     private String publications;
     private String users;
 
+    public TagOutput() {
+        
+    }
 
     public TagOutput(Tag tag) {
         this.id = tag.getId();

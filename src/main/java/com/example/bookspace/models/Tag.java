@@ -52,6 +52,11 @@ public class Tag {
         this.author = author;
         this.publications.add(publication);
     }
+
+    public Tag (String name, User author) {
+        this.name = name;
+        this.author = author;
+    }
     
 
     public Long getId() {
