@@ -70,11 +70,13 @@ public class PublicationService {
             }
 
             if (publicationDetails.getMentions() != null) {
-                for (Long mentionId: publicationDetails.getMentions()) {
-                    User mention = userRepository.getOne(mentionId);
-                    publication.addMention(mention);
-                    mention.addMention(publication);
-                    mention = userRepository.save(mention);
+                for (String username: publicationDetails.getMentions()) {
+                    if(userRepository.findUserByUsername(username).isPresent()) {
+                        User user = userRepository.getUserByUsername(username);
+                        publication.addMention(user);
+                        user.addMention(publication);
+                        user = userRepository.save(user);
+                    }
                 }
             }
             author.addPublication(publication);

@@ -8,9 +8,9 @@ public class PublicationInput {
     private Long authorId; 
     private String category;
     private List<Long> tags;
-    private List<Long> mentions;
+    private List<String> mentions;
 
-    public PublicationInput(String title, String content, Long authorId, String category, List<Long> mentions, List<Long> tags) {
+    public PublicationInput(String title, String content, Long authorId, String category, List<String> mentions, List<Long> tags) {
         this.title = title;
         this.content = content;
         this.authorId = authorId;
@@ -61,11 +61,11 @@ public class PublicationInput {
         this.tags = tags;
     }
 
-    public List<Long> getMentions() {
+    public List<String> getMentions() {
         return this.mentions;
     }
 
-    public void setMentions(List<Long> mentions) {
+    public void setMentions(List<String> mentions) {
         this.mentions = mentions;
     }
     
