@@ -51,12 +51,14 @@ public class CommentService {
 
         //If there are mentioned users, assign to them 
         if (commentDetails.getMentions() != null) {
-            for (Long mentionedId: commentDetails.getMentions()) {
-                User mentioned = userRepository.getOne(mentionedId);
-                mentioned.getCommentMentions().add(newComment);
-                newComment.getCommentMentions().add(mentioned);
-                mentioned = userRepository.save(mentioned);
-                newComment = commentRepository.save(newComment);
+            for (String username: commentDetails.getMentions()) {
+                if (userRepository.findUserByUsername(username).isPresent()) {
+                    User mentioned = userRepository.getUserByUsername(username);
+                    mentioned.getCommentMentions().add(newComment);
+                    newComment.getCommentMentions().add(mentioned);
+                    mentioned = userRepository.save(mentioned);
+                    newComment = commentRepository.save(newComment);
+                }
             }
         }
 
