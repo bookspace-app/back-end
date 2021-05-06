@@ -283,6 +283,13 @@ public class UserService {
 		else throw new Exception("This user is not blocked yet");
     }
 
+	public UserOutput getUserByUsername(String username) throws Exception {
+		if (!userRepository.findUserByUsername(username).isPresent()) throw new Exception("It does not exists a user with username " + username);
+		User user = userRepository.getUserByUsername(username);
+		return new UserOutput(user);
+		
+	}
+
 	
 
     

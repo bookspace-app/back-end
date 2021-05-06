@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(path = "api/tags")
-
+//Controller class for Tag
 public class TagController {
 
     private final TagService tagService;
@@ -32,21 +32,25 @@ public class TagController {
     }
 
     @GetMapping
+    //An endpoint that returns all created Tags in DB
     public List<TagOutput> getAllTags(){
         return tagService.getTags();
     }
 
-    @GetMapping(path = "{idTag}")   
+    @GetMapping(path = "{idTag}")  
+    //An endpoint that when is given an ID returns the Tag associated with it in the DB 
 	public TagOutput getTagById(@PathVariable("idTag") Long idTag) {
         return tagService.getTag(idTag);
     }
 
     @PostMapping
+    //An endpoint that when is given a Tag details it posts the Tag and returns it
     public TagOutput postTag(@RequestBody TagInput tagDetails) throws Exception {
         return tagService.postTag(tagDetails);
     }
 
     @PutMapping(path = "{IdTag}") 
+    //An endpoint that when is given an ID and some Tag details it updates the Tag associated with it in the DB and returns it
     public void updateTag(@PathVariable("IdTag") Long IdTag,
                                       @RequestParam(required = false) User author,
                                       @RequestParam(required = false) List<Publication> taggedPublications,
@@ -55,6 +59,7 @@ public class TagController {
     }
 
     @DeleteMapping(path = "{idTag}")
+    //An endpoint that when is given an ID it deletes the Tag associated with it in the DB
     public void deleteTag(@PathVariable("idTag") Long idTag){
         tagService.deleteTag(idTag);
     }

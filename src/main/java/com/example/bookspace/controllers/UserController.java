@@ -36,6 +36,7 @@ public class UserController {
         return userService.getUsers();
     }
 
+
     @PostMapping
     public UserOutput postUser(@RequestBody UserInput userDetails) throws Exception{
        return userService.postUser(userDetails);
@@ -44,6 +45,11 @@ public class UserController {
     @GetMapping(path = "{userId}")   
 	public UserOutput getUserById(@PathVariable("userId") Long id) {
         return userService.getUser(id);
+    }
+
+    @GetMapping(path = "/username/{username}")   
+	public UserOutput getUserByUsername(@PathVariable("username") String username) throws Exception {
+        return userService.getUserByUsername(username);
     }
 
     @PutMapping(path = "{userId}") 
