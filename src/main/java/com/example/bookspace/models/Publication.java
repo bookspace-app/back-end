@@ -1,6 +1,10 @@
 package com.example.bookspace.models;
 
+<<<<<<< HEAD
 import java.time.LocalDate;
+=======
+import java.time.LocalDateTime;
+>>>>>>> development
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,8 +22,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
-import com.example.bookspace.Inputs.PublicationInput;
 import com.example.bookspace.enums.Category;
 
 
@@ -40,46 +42,59 @@ public class Publication {
     )
     private Long id;
 
-    @Column(name = "title", nullable = false)
+    @Column(name = "title", nullable = false, length = 500)
     private String title;
 
-    @Column(name = "content", nullable = false)
+    @Column(name = "content", nullable = false, length = 5000)
     private String content;
 
     @Column(name = "dop", nullable = false)
+<<<<<<< HEAD
     private LocalDate dop; 
+=======
+    private LocalDateTime dop = LocalDateTime.now(); 
+>>>>>>> development
 
     @Column(name = "views")
-    private Long views;
+    private Integer views = 0;
 
-    @ManyToOne
-    @JoinColumn(name = "author_id")
-    private User author;
-
-    @ManyToMany(mappedBy = "votedPublications")
-    private List<User> votedBy;
-
-    @ManyToMany(mappedBy = "favouritePublications")
-    private List<User> favouriteBy;
-
-    @OneToMany(mappedBy = "publication", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Comment> comments;
-
-    @Column
+    @Column(name = "category", nullable = false)
     private Category category;
 
-    @Column
-    private Long likes;
+    @ManyToOne
+    @JoinColumn(name = "authorId", nullable = false)
+    private User author;
 
+    @ManyToMany(mappedBy = "likedPublications")
+    private List<User> likedBy = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "dislikedPublications")
+    private List<User> dislikedBy = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "favouritePublications")
+    private List<User> favouriteBy = new ArrayList<>();
+
+    @OneToMany(mappedBy = "publication", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Comment> comments = new ArrayList<>();
 
     @ManyToMany
     @JoinTable (
-        name = "tagged_publications", 
-        joinColumns = @JoinColumn(name = "publication_id"), 
-        inverseJoinColumns = @JoinColumn(name = "tag_name")
+        name = "mentionedUsers", 
+        joinColumns = @JoinColumn(name = "publicationId"),
+        inverseJoinColumns = @JoinColumn(name = "userId")
+    )
+    private List<User> mentions = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable (
+        name = "taggedPublications", 
+        joinColumns = @JoinColumn(name = "publicationId"), 
+        inverseJoinColumns = @JoinColumn(name = "tagName")
 
     )
-    private List<Tag> tags;
+    private List<Tag> tags = new ArrayList<>();
+
+
     // private Collection<Chat> chats;
 
 
@@ -87,21 +102,27 @@ public class Publication {
     public Publication() {     
     }
 
+<<<<<<< HEAD
     public Publication(String title, String content, User author, String category) {
         this.title = title;
         this.content = content;
         this.dop = LocalDate.now();
+=======
+    
+
+    public Publication(String title, String content, User author, Category category) {
+        this.title = title;
+        this.content = content;
+>>>>>>> development
         this.author = author;
-        this.votedBy = new ArrayList<>();
-        this.favouriteBy = new ArrayList<>();
-        this.comments = new ArrayList<>();
-        this.category = Category.POTENTIAL;
-        this.tags = new ArrayList<>();
-        this.views = 0L;
-        this.likes = 0L;
+        this.category = category;
     }
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> development
     public Long getId() {
         return this.id;
     }
@@ -126,28 +147,31 @@ public class Publication {
         this.content = content;
     }
 
+<<<<<<< HEAD
     public LocalDate getDop() {
+=======
+    public LocalDateTime getDop() {
+>>>>>>> development
         return this.dop;
     }
 
     public void setDop(LocalDate dop) {
         this.dop = dop;
     }
+<<<<<<< HEAD
 
     public List<User> getVotedBy() {
         return this.votedBy;
     }
+=======
+>>>>>>> development
 
-    public void setVotedBy(List<User> votedBy) {
-        this.votedBy = votedBy;
+    public Integer getViews() {
+        return this.views;
     }
 
-    public List<Comment> getComments() {
-        return this.comments;
-    }
-
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
+    public void setViews(Integer views) {
+        this.views = views;
     }
 
     public Category getCategory() {
@@ -158,22 +182,46 @@ public class Publication {
         this.category = category;
     }
 
-    public List<Tag> getTags() {
-        return this.tags;
+    public Integer getTotalLikes() {
+        return this.likedBy.size()-this.dislikedBy.size();
     }
-
-    public void setTags(List<Tag> tags) {
-        this.tags = tags;
-    }
-   
 
     public User getAuthor() {
         return this.author;
     }
+<<<<<<< HEAD
+   
+=======
 
     public void setAuthor(User author) {
         this.author = author;
     }
+
+    public List<User> getLikedBy() {
+        return this.likedBy;
+    }
+>>>>>>> development
+
+    public void setLikedBy(List<User> likedBy) {
+        this.likedBy = likedBy;
+    }
+    
+    public List<User> getDislikedBy() {
+        return this.dislikedBy;
+    }
+
+    public void setDislikedBy(List<User> dislikedBy) {
+        this.dislikedBy = dislikedBy;
+    }
+
+    public void addLikedUser(User user) {
+        this.likedBy.add(user);
+    }
+
+    public void addDislikedUser(User user) {
+        this.dislikedBy.add(user);
+    }
+
 
     public List<User> getFavouriteBy() {
         return this.favouriteBy;
@@ -181,18 +229,38 @@ public class Publication {
 
     public void setFavouriteBy(List<User> favouriteBy) {
         this.favouriteBy = favouriteBy;
-    }
+    } 
 
     public void addFavUser(User favUser) {
         this.favouriteBy.add(favUser);
     }
 
-    public Long getViews() {
-        return this.views;
+    public void removeFavUser(User user) {
+        this.favouriteBy.remove(user);
     }
 
-    public void setViews(Long views) {
-        this.views = views;
+    public List<Comment> getComments() {
+        return this.comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public List<Tag> getTags() {
+        return this.tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public void addTag(Tag tag) {
+        this.tags.add(tag);
+    }
+
+    public void removeTag(Tag tag) {
+        this.tags.remove(tag);
     }
 
     public void addView() {
@@ -200,22 +268,38 @@ public class Publication {
     }
 
 
-    public Long getLikes() {
-        return this.likes;
-    }
 
-    public void setLikes(Long likes) {
-        this.likes = likes;
-    }
-
-    public void addLike() {
-        this.likes++;
-    }
-
-    public void removeLike() {
-        this.likes--;
+    public Integer getLikes() {
+        return likedBy.size();
     }
 
 
+
+    public Integer getDislikes() {
+        return dislikedBy.size();
+    }
+
+
+    public List<User> getMentions() {
+        return this.mentions;
+    }
+
+    public void setMentions(List<User> mentions) {
+        this.mentions = mentions;
+    }
+
+    public void addMention(User u) {
+        this.mentions.add(u);
+    }
+
+    public void removeMention(User u) {
+        this.mentions.remove(u);
+    }
+    
+
+
+
+    
+ 
     
 }

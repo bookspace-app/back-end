@@ -34,16 +34,16 @@ public class Configuration {
     private Mode mode = Mode.LIGHT;
 
     /*Estado del perfil, 0 -> privado, 1-> publico*/
-    @Column(name = "profile_state")
-    private Boolean profile_state = false; 
+    @Column(name = "profileState")
+    private Boolean profileState = false; 
 
     public Configuration() {
     }
 
-    public Configuration(Boolean available, Mode mode, Boolean profile_state) {
+    public Configuration(Boolean available, Mode mode, Boolean profileState) {
         this.available = available;
         this.mode = mode;
-        this.profile_state = profile_state;
+        this.profileState = profileState;
     }
 
 
@@ -67,17 +67,27 @@ public class Configuration {
         this.mode = mode;
     }
 
-    public Boolean isProfile_state() {
-        return this.profile_state;
+
+    public Long getId() {
+        return this.id;
     }
 
-    public Boolean getProfile_state() {
-        return this.profile_state;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setProfile_state(Boolean profile_state) {
-        this.profile_state = profile_state;
+    public Boolean isProfileState() {
+        return this.profileState;
     }
+
+    public Boolean getProfileState() {
+        return this.profileState;
+    }
+
+    public void setProfileState(Boolean profileState) {
+        this.profileState = profileState;
+    }
+    
     
 
 }

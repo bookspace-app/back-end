@@ -12,9 +12,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> development
 @Entity
 @Table(name = "tag")
+//Tag model class
 public class Tag {
 
     @Id
@@ -31,72 +35,98 @@ public class Tag {
     private Long id;
     
     @Column(name = "tag", unique = true)
-    private String tag;
+    private String name;
 
     @ManyToOne
-    @JoinColumn(name = "author_id")
+    @JoinColumn(name = "authorId")
     private User author;
 
     @ManyToMany(mappedBy = "tags")
-    private List<Publication> publications;
+    private List<Publication> publications = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "preferedTags")
-    private List<User> preferedBy;
+    @ManyToMany(mappedBy = "favTags")
+    private List<User> users = new ArrayList<>();
 
-    public Tag(String tag) {
-        this.tag = tag;
-    }
+    //Default constructor
+    public Tag() {}
 
+<<<<<<< HEAD
     public String getTag() {
         return this.tag;
+=======
+    //Constructor given attributes --> {name, authorId, publication}
+    public Tag (String name, User author, Publication publication) {
+        this.name = name;
+        this.author = author;
+        this.publications.add(publication);
     }
 
-    public void setTag(String tag) {
-        this.tag = tag;
+    //Constructor given attributes --> {name, authorId}
+    public Tag (String name, User author) {
+        this.name = name;
+        this.author = author;
+>>>>>>> development
     }
-
     
-
-    public List<Publication> getTagged_publications() {
-        return this.publications;
-    }
-
-    public void setTagged_publications(List<Publication> tagged_publications) {
-        this.publications = tagged_publications;
-    }
-
-    public List<User> getPreferedTags() {
-        return this.preferedBy;
-    }
-
-    public void setPrefered_tags(List<User> preferedBy) {
-        this.preferedBy = preferedBy;
-    }
-
+    //Getter of {id} attribute
     public Long getId() {
         return this.id;
     }
 
+    //Setter of {id} attribute
     public void setId(Long id) {
         this.id = id;
     }
 
+    //Getter of {name} attribute
+    public String getName() {
+        return this.name;
+    }
+
+    //Setter of {name} attribute
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    //Getter of {author} attribute
     public User getAuthor() {
         return this.author;
     }
 
+    //Setter of {author} attribute
     public void setAuthor(User author) {
         this.author = author;
     }
 
+<<<<<<< HEAD
+=======
+    //Getter of {publications} attribute
+    public List<Publication> getPublications() {
+        return this.publications;
+    }
+>>>>>>> development
 
+    //Setter of {publications} attribute
+    public void setPublications(List<Publication> publications) {
+        this.publications = publications;
+    }
 
+<<<<<<< HEAD
     //Test constructor
     public Tag() {
         this.tag = "Tag1";
         this.author = null;
         this.publications = null;
         this.preferedBy = null;
+=======
+    //Getter of {users} attribute
+    public List<User> getUsers() {
+        return this.users;
+>>>>>>> development
     }
 
+    //Setter of {users} attribute
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
 }

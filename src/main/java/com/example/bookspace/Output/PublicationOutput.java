@@ -1,14 +1,23 @@
 package com.example.bookspace.Output;
 
+<<<<<<< HEAD
 import java.time.LocalDate;
 
 import com.example.bookspace.models.Publication;
 
+=======
+import java.time.LocalDateTime;
+
+import com.example.bookspace.models.Publication;
+
+
+>>>>>>> development
 public class PublicationOutput extends OutputManager{ 
-    private String self = getURL() + "/publications/";
+    private String selfUri;
     private Long id;
     private String title;
     private String content;
+<<<<<<< HEAD
     private LocalDate dop;
     private Long views;
     private Long likes;
@@ -20,14 +29,33 @@ public class PublicationOutput extends OutputManager{
     private String tags;
     private Integer nComments;
     
+=======
+    private LocalDateTime dop;
+    private Integer likes;
+    private Integer dislikes;
+    private Integer nViews;
+    private Integer totalLikes;
+    private Integer nComments;
+    private String category; 
+    private UserOutput author; 
+    private String likedByUri;
+    private String dislikedByUri;
+    private String favByUri;
+    private String commentsUri;
+    private String tagsUri;   
+    private String mentionsUri;
+>>>>>>> development
 
+    public PublicationOutput() {
+
+    }
 
     public PublicationOutput(Publication p) {
         this.id = p.getId();
-        this.self = self + id;
         this.title = p.getTitle();
         this.content = p.getContent();
         this.dop = p.getDop();
+<<<<<<< HEAD
         this.views = p.getViews();
         this.author = new UserOutput(p.getAuthor());
         this.votedusers = self + "/votedusers";
@@ -42,6 +70,36 @@ public class PublicationOutput extends OutputManager{
     }
 
     
+=======
+        this.likes = p.getLikes();
+        this.dislikes = p.getDislikes();
+        this.nViews = p.getViews();
+        this.totalLikes = p.getTotalLikes();
+        this.category = p.getCategory().name();
+        this.nComments = p.getComments().size();
+        this.author = new UserOutput(p.getAuthor());
+        this.category = p.getCategory().name();
+        this.selfUri = getURL() + "/publications/" + id;
+        this.likedByUri = this.selfUri + "/likedBy";
+        this.dislikedByUri = this.selfUri + "/dislikedBy";
+        this.favByUri = this.selfUri + "/favBy";
+        this.commentsUri = this.selfUri + "/comments";
+        this.tagsUri = this.selfUri + "/tags";
+        this.mentionsUri = this.selfUri + "/mentions";
+
+    }
+   
+
+
+
+    public String getSelf() {
+        return this.selfUri;
+    }
+
+    public void setSelf(String self) {
+        this.selfUri = self;
+    }
+>>>>>>> development
 
     public Long getId() {
         return this.id;
@@ -67,6 +125,7 @@ public class PublicationOutput extends OutputManager{
         this.content = content;
     }
 
+<<<<<<< HEAD
     public UserOutput getAuthor() {
         return this.author;
     }
@@ -83,6 +142,55 @@ public class PublicationOutput extends OutputManager{
     public void setDop(LocalDate dop) {
         this.dop = dop;
     }      
+=======
+    public LocalDateTime getDop() {
+        return this.dop;
+    }
+
+    public void setDop(LocalDateTime dop) {
+        this.dop = dop;
+    }
+
+    public Integer getLikes() {
+        return this.likes;
+    }
+
+    public void setLikes(Integer likes) {
+        this.likes = likes;
+    }
+
+    public Integer getDislikes() {
+        return this.dislikes;
+    }
+
+    public void setDislikes(Integer dislikes) {
+        this.dislikes = dislikes;
+    }
+
+    public Integer getNViews() {
+        return this.nViews;
+    }
+
+    public void setNViews(Integer nViews) {
+        this.nViews = nViews;
+    }
+
+    public Integer getTotalLikes() {
+        return this.totalLikes;
+    }
+
+    public void setTotalLikes(Integer totalLikes) {
+        this.totalLikes = totalLikes;
+    }
+
+    public Integer getNComments() {
+        return this.nComments;
+    }
+
+    public void setNComments(Integer nComments) {
+        this.nComments = nComments;
+    }
+>>>>>>> development
 
     public String getCategory() {
         return this.category;
@@ -94,37 +202,59 @@ public class PublicationOutput extends OutputManager{
 
 
 
+<<<<<<< HEAD
     public String getSelf() {
         return this.self;
     }
 
     public void setSelf(String self) {
         this.self = self;
+=======
+    public String getLikedByUri() {
+        return this.likedByUri;
+    }
+
+    public void setLikedByUri(String likedByUri) {
+        this.likedByUri = likedByUri;
+    }
+
+    public String getDislikedByUri() {
+        return this.dislikedByUri;
+>>>>>>> development
     }
     
 
+<<<<<<< HEAD
     public String getFavusers() {
         return this.favusers;
     }
 
     public void setFavusers(String favusers) {
         this.favusers = favusers;
+=======
+    public void setDislikedByUri(String dislikedByUri) {
+        this.dislikedByUri = dislikedByUri;
     }
 
-    public String getComments() {
-        return this.comments;
+    public String getFavByUri() {
+        return this.favByUri;
+>>>>>>> development
     }
 
-    public void setComments(String comments) {
-        this.comments = comments;
+    public void setFavByUri(String favByUri) {
+        this.favByUri = favByUri;
     }
 
-    public String getTags() {
-        return this.tags;
+    public String getCommentsUri() {
+        return this.commentsUri;
     }
 
-    public void setTags(String tags) {
-        this.tags = tags;
+    public void setCommentsUri(String commentsUri) {
+        this.commentsUri = commentsUri;
+    }
+
+    public String getTagsUri() {
+        return this.tagsUri;
     }
     
 
@@ -136,14 +266,34 @@ public class PublicationOutput extends OutputManager{
         this.votedusers = votedusers;
     }
 
+    public void setTagsUri(String tagsUri) {
+        this.tagsUri = tagsUri;
+    }
 
+<<<<<<< HEAD
     public Long getViews() {
         return this.views;
     }
 
     public void setViews(Long views) {
         this.views = views;
+=======
+    public String getMentionsUri() {
+        return this.mentionsUri;
     }
+
+    public void setMentionsUri(String mentionsUri) {
+        this.mentionsUri = mentionsUri;
+>>>>>>> development
+    }
+    
+
+    
+    
+    
+
+
+    
 
 
     public Long getLikes() {

@@ -2,10 +2,12 @@ package com.example.bookspace.models;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -17,9 +19,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
-import com.example.bookspace.Inputs.UserInput;
+import com.example.bookspace.enums.Category;
 import com.example.bookspace.enums.Rank;
 
 import org.hibernate.type.ImageType;
@@ -30,8 +31,6 @@ import org.hibernate.type.ImageType;
 @Table(name = "users")
 
 public class User {
-
-    public User(){}
 
     @Id
     @SequenceGenerator(
@@ -44,10 +43,14 @@ public class User {
         strategy = GenerationType.SEQUENCE, 
         generator = "user_sequence"
     )
+<<<<<<< HEAD
     private Long id;
+=======
+    private Long id;    
+>>>>>>> development
 
     @Column(name = "email", unique = true, nullable = false)
-    private String email; 
+    private String email ; 
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -55,26 +58,41 @@ public class User {
     @Column(name = "username", unique = true, nullable = false)
     private String username;
 
+    @Column(name = "password", nullable = false)
+    private String password; 
+
     //date of birth
     @Column(name = "dob", nullable = false)
     private LocalDate dob;
 
+<<<<<<< HEAD
     @Column(name = "description", nullable = false)
     private String description;
+=======
+    @Column(name = "description")
+    private String description = "";
+
+    //@Lob
+    @Column(name = "profilePic")
+    private byte[] profilePic;
+>>>>>>> development
 
     @Column(name = "rank", nullable = false)
-    private Rank rank; 
+    private Rank rank = Rank.WORKER; 
 
     //date of register
     @Column(name = "dor", nullable = false)
-    private LocalDate dor; 
+    private LocalDate dor = LocalDate.now(); 
+
+    @ElementCollection
+    private List<Category> favCategories = new ArrayList<>();
 
     /*
     User publication    
     Cascade deletion 
     */
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY) 
-    private List<Publication> publications;
+    private List<Publication> publications = new ArrayList<>();
  
     /*
     User voted publications
@@ -82,34 +100,44 @@ public class User {
     */
     @ManyToMany
     @JoinTable (
-        name = "votedPublications", 
-        joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), 
-        inverseJoinColumns = @JoinColumn(name = "publication_id")
+        name = "likedPublications", 
+        joinColumns = @JoinColumn(name = "userId", referencedColumnName = "id"), 
+        inverseJoinColumns = @JoinColumn(name = "publicationId")
 
     )
-    private List<Publication> votedPublications;
+    private List<Publication> likedPublications = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable (
+        name = "dislikedPublications", 
+        joinColumns = @JoinColumn(name = "userId", referencedColumnName = "id"), 
+        inverseJoinColumns = @JoinColumn(name = "publicationId")
+
+    )
+    private List<Publication> dislikedPublications = new ArrayList<>();
 
     /*
     User favourite publications
-    New table is created
-    */
+    New table is created */
+    
     @ManyToMany
     @JoinTable (
         name = "favouritePublications", 
-        joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), 
-        inverseJoinColumns = @JoinColumn(name = "publication_id")
+        joinColumns = @JoinColumn(name = "userId", referencedColumnName = "id"), 
+        inverseJoinColumns = @JoinColumn(name = "publicationId")
 
     )
-    private List<Publication> favouritePublications;
+    private List<Publication> favouritePublications = new ArrayList<>();
 
+    @ManyToMany(mappedBy = "mentions")
+    private List<Publication> mentions = new ArrayList<>();
 
     /*
     User comments
     Cascade deletion
     */
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Comment> comments;
-
+    private List<Comment> comments = new ArrayList<>();
 
     /*
     Voted comments
@@ -117,12 +145,42 @@ public class User {
     */
     @ManyToMany
     @JoinTable (
-        name = "votedComments", 
-        joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), 
-        inverseJoinColumns = @JoinColumn(name = "comment_id")
+        name = "likedComments", 
+        joinColumns = @JoinColumn(name = "userId", referencedColumnName = "id"), 
+        inverseJoinColumns = @JoinColumn(name = "commentId")
 
     )
-    private List<Comment> votedComments;
+    private List<Comment> likedComments = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable (
+        name = "dislikedComments", 
+        joinColumns = @JoinColumn(name = "userId", referencedColumnName = "id"), 
+        inverseJoinColumns = @JoinColumn(name = "commentId")
+
+    )
+    private List<Comment> dislikedComments = new ArrayList<>();
+
+<<<<<<< HEAD
+    @Column(name = "profile_pic")
+    private ImageType profile_pic;
+=======
+    @ManyToMany(mappedBy = "commentMentions")
+    private List<Comment> commentMentions = new ArrayList<>();
+>>>>>>> development
+
+    @Column(name = "createdTags")
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Tag> createdTags = new ArrayList<>();
+
+
+    @ManyToMany
+    @JoinTable (
+        name = "favTags", 
+        joinColumns = @JoinColumn(name = "userId", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "nameTag")
+    )
+    private List<Tag> favTags = new ArrayList<>();
 
     /*
     Blocked users
@@ -133,31 +191,16 @@ public class User {
         joinColumns = @JoinColumn(name="blocker", referencedColumnName = "id"), 
         inverseJoinColumns = @JoinColumn(name = "blocked")
     )
-    private List<User> blockedUsers;
-
-    @Transient //This attribute can be calculated from some other attributes
-    private int age;
-
-    @Column(name = "profile_pic")
-    private ImageType profile_pic;
-
-    @Column(name = "createdTags")
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Tag> createdTags;
+    private List<User> blockedUsers = new ArrayList<>();
 
 
-    @ManyToMany
-    @JoinTable (
-        name = "preferedTags", 
-        joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "name_tag")
-    )
-    private List<Tag> preferedTags;
+  
 
     
     // private Collection<Message> messages;
     // private Collection<Chat> chats;
 
+<<<<<<< HEAD
     public User (UserInput userDetails) {
         this.email = userDetails.getEmail();
         this.name = userDetails.getName();
@@ -181,6 +224,19 @@ public class User {
         
 
     }
+=======
+    public User() {}    
+  
+
+    public User(String email, String name, String username, String password, LocalDate dob) {
+        this.email = email;
+        this.name = name;
+        this.username = username;
+        this.password = password;
+        this.dob = dob;
+    }
+
+>>>>>>> development
 
     public Long getId() {
         return this.id;
@@ -222,12 +278,24 @@ public class User {
         this.dob = dob;
     }
 
+    public Integer getAge() {
+        return Period.between(this.dob, LocalDate.now()).getYears();
+    }
+
     public String getDescription() {
         return this.description;
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public byte[] getProfilePic() {
+        return this.profilePic;
+    }
+
+    public void setProfilePic(byte[] profilePic) {
+        this.profilePic = profilePic;
     }
 
     public Rank getRank() {
@@ -246,6 +314,22 @@ public class User {
         this.dor = dor;
     }
 
+    public List<Category> getFavCategories() {
+        return this.favCategories;
+    }
+
+    public void setFavCategories(List<Category> favCategories) {
+        this.favCategories = favCategories;
+    }
+
+    public void addFavCategory(Category category) {
+        this.favCategories.add(category);
+    }
+
+    public void removeFavCategory(Category category) {
+        this.favCategories.remove(category);
+    }
+    
     public List<Publication> getPublications() {
         return this.publications;
     }
@@ -254,13 +338,47 @@ public class User {
         this.publications = publications;
     }
 
-    public List<Publication> getVotedPublications() {
-        return this.votedPublications;
+    public void addPublication(Publication publication) {
+        this.publications.add(publication);
     }
 
-    public void setVotedPublications(List<Publication> votedPublications) {
-        this.votedPublications = votedPublications;
+    public void removePublication(Publication publication) {
+        this.publications.remove(publication);
     }
+
+    public List<Publication> getLikedPublications() {
+        return this.likedPublications;
+    }
+
+    public void setLikedPublications(List<Publication> likedPublications) {
+        this.likedPublications = likedPublications;
+    }
+
+    public void addLikedPublication(Publication publication) {
+        this.likedPublications.add(publication);
+    }
+
+    public void removeLikedPublication(Publication publication) {
+        this.likedPublications.remove(publication);
+    }
+
+    public List<Publication> getDislikedPublications() {
+        return this.dislikedPublications;
+    }
+
+    public void setDislikedPublications(List<Publication> dislikedPublications) {
+        this.dislikedPublications = dislikedPublications;
+    }
+
+    public void addDislikedPublication(Publication publication) {
+        this.dislikedPublications.add(publication);
+    }
+
+    public void removeDislikedPublication(Publication publication) {
+        this.dislikedPublications.remove(publication);
+    }
+
+
 
     public List<Publication> getFavouritePublications() {
         return this.favouritePublications;
@@ -268,6 +386,14 @@ public class User {
 
     public void setFavouritePublications(List<Publication> favouritePublications) {
         this.favouritePublications = favouritePublications;
+    }
+
+    public void addFavPublication(Publication p) {
+        this.favouritePublications.add(p);
+    }
+
+    public void removeFavPublication(Publication p) {
+        this.favouritePublications.remove(p);
     }
 
     public List<Comment> getComments() {
@@ -278,22 +404,23 @@ public class User {
         this.comments = comments;
     }
 
-    public List<Comment> getVotedComments() {
-        return this.votedComments;
+    public List<Comment> getLikedComments() {
+        return this.likedComments;
     }
 
-    public void setVotedComments(List<Comment> votedComments) {
-        this.votedComments = votedComments;
+    public void setLikedComments(List<Comment> likedComments) {
+        this.likedComments = likedComments;
     }
 
-    public List<User> getBlockedUsers() {
-        return this.blockedUsers;
+    public List<Comment> getDislikedComments() {
+        return this.dislikedComments;
     }
 
-    public void setBlockedUsers(List<User> blockedUsers) {
-        this.blockedUsers = blockedUsers;
+    public void setDislikedComments(List<Comment> dislikedComments) {
+        this.dislikedComments = dislikedComments;
     }
 
+<<<<<<< HEAD
     public Integer getAge() {
         return this.age;
         }
@@ -301,14 +428,35 @@ public class User {
     public void setAge(LocalDate dob) {
         Period period = Period.between(dob, LocalDate.now());
         this.age = period.getYears();
+=======
+    public List<Comment> getCommentMentions() {
+        return this.commentMentions;
     }
 
+    public void setCommentMentions(List<Comment> commentMentions) {
+        this.commentMentions = commentMentions;
+>>>>>>> development
+    }
+    public void setFavTags(List<Tag> favTags) {
+        this.favTags = favTags;
+    }
+
+
+<<<<<<< HEAD
     public ImageType getProfile_pic() {
         return this.profile_pic;
     }
 
     public void setProfile_pic(ImageType profile_pic) {
         this.profile_pic = profile_pic;
+=======
+    public List<User> getBlockedUsers() {
+        return this.blockedUsers;
+    }
+
+    public void setBlockedUsers(List<User> blockedUsers) {
+        this.blockedUsers = blockedUsers;
+>>>>>>> development
     }
 
     public List<Tag> getCreatedTags() {
@@ -319,28 +467,50 @@ public class User {
         this.createdTags = createdTags;
     }
 
+<<<<<<< HEAD
     public List<Tag> getPreferedTags() {
         return this.preferedTags;
+=======
+    public void addCreatedTag(Tag tag) {
+        this.createdTags.add(tag);
     }
 
-    public void setPreferedTags(List<Tag> preferedTags) {
-        this.preferedTags = preferedTags;
-    }
-   
-
-    public void votePublication(Publication p) throws Exception {
-
-        if (!this.publications.contains(p))  this.votedPublications.add(p);        
-        else throw new Exception("A User can not vote it's own publication");
+    public List<Tag> getFavTags() {
+        return this.favTags;
     }
 
+    public void setfavTags(List<Tag> favTags) {
+        this.favTags = favTags;
+>>>>>>> development
+    }
 
-    public void addPublication(Publication publication) {
-        this.publications.add(publication);
+    public void addFavTag(Tag tag) {
+        this.favTags.add(tag);
     }
-    public void addFavPublication(Publication p) {
-        this.favouritePublications.add(p);
+
+    public void removeFavTag(Tag tag) {
+        this.favTags.remove(tag);
     }
+    public List<Publication> getMentions() {
+        return this.mentions;
+    }
+
+    public void setMentions(List<Publication> mentions) {
+        this.mentions = mentions;
+    }
+
+    public void addMention(Publication p) {
+        this.mentions.add(p);
+    }
+
+    public void removeMention(Publication p) {
+        this.mentions.remove(p);
+    }
+
+    
+
+    
+    
 
 
     
