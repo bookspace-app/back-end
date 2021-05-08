@@ -62,17 +62,13 @@ public class CommentService {
             }
         }
 
-        //If is an aswer, take the parent
+        //If is an aswer, get  parent
         if (commentDetails.getParentId() != null)  {
             Comment parent = commentRepository.getOne(commentDetails.getParentId());
             newComment.setParent(parent);
-            parent.getReplies().add(newComment);   
-            
+            parent.getReplies().add(newComment);               
             parent = commentRepository.save(parent);
-            newComment = commentRepository.save(newComment);
         } 
-
-
         
         newComment = commentRepository.save(newComment);
 
