@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 
 import com.example.bookspace.Inputs.UserInput;
 import com.example.bookspace.Output.CommentOutput;
+import com.example.bookspace.Output.MentionOutput;
 import com.example.bookspace.Output.PublicationOutput;
 import com.example.bookspace.Output.TagOutput;
 import com.example.bookspace.Output.UserOutput;
@@ -182,13 +183,18 @@ public class UserService {
 		return result;
 	}
 	
-	public List<PublicationOutput> getMentionedPublications(Long id) throws Exception {
+	public List<MentionOutput> getMentions(Long id) throws Exception {
 		User author = userRepository.getOne(id);
 		List<Publication> publications = author.getMentions();
-		List<PublicationOutput> result = new ArrayList<>();
+		List<Comment> comments = author.getCommentMentions();
+		List<MentionOutput> result = new ArrayList<>();
 		for (Publication p: publications) {
-			result.add(new PublicationOutput(p));
+			result.add(new MentionOutput(p));
 		}
+		for (Comment c: comments) {
+			result.add(new MentionOutput(c));
+		}
+
 		return result;
 	}
 
