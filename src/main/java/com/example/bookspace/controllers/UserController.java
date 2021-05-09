@@ -7,6 +7,7 @@ import com.example.bookspace.Output.CommentOutput;
 import com.example.bookspace.Output.MentionOutput;
 import com.example.bookspace.Output.PublicationOutput;
 import com.example.bookspace.Output.TagOutput;
+import com.example.bookspace.Output.UserCredentials;
 import com.example.bookspace.Output.UserOutput;
 import com.example.bookspace.services.UserService;
 
@@ -37,11 +38,21 @@ public class UserController {
         return userService.getUsers();
     }
 
-
     @PostMapping
-    public UserOutput postUser(@RequestBody UserInput userDetails) throws Exception{
-       return userService.postUser(userDetails);
+    public void postUser(@RequestBody UserInput userDetails) throws Exception{
+       userService.postUser(userDetails);
     }
+
+    @PostMapping(path = "/login")
+    public UserCredentials loginUser(@RequestBody UserInput userDetails) throws Exception {
+        return userService.loginUser(userDetails);
+    }
+
+    @PostMapping(path = "/logout")
+    public void logoutUser(@RequestBody UserCredentials userCredentials) throws Exception {
+        userService.logout(userCredentials);
+    }
+    
     
     @GetMapping(path = "{userId}")   
 	public UserOutput getUserById(@PathVariable("userId") Long id) {
@@ -54,8 +65,8 @@ public class UserController {
     }
 
     @PutMapping(path = "{userId}") 
-    public UserOutput updateUser(@PathVariable("userId") Long id, @RequestBody UserInput userDetails) throws Exception{
-        return userService.putUser(id, userDetails);
+    public UserOutput updateUser(@PathVariable("userId") Long id, @RequestBody UserInput userDetails, @RequestBody UserCredentials userCredentialsS) throws Exception{
+        return userService.putUser(id, userDetails, userCredentialsS);
     }
 
     @DeleteMapping(path = "{userId}")
@@ -148,6 +159,7 @@ public class UserController {
 	public void deleteBlockedUsers(@PathVariable("userId") Long id, @PathVariable("blockedUserId") Long blockedUserid) throws Exception {
         userService.deleteBlockedUsers(id, blockedUserid);
     }
+
  
 
  

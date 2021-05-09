@@ -71,6 +71,8 @@ public class User {
     @Column(name = "rank", nullable = false)
     private Rank rank = Rank.WORKER; 
 
+    private String token;
+
     //date of register
     @Column(name = "dor", nullable = false)
     private LocalDate dor = LocalDate.now(); 
@@ -450,6 +452,16 @@ public class User {
     public void removeMention(Publication p) {
         this.mentions.remove(p);
     }
+
+
+    public String getToken() {
+        return this.token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
 
     
 

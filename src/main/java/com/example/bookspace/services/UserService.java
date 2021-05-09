@@ -12,6 +12,7 @@ import com.example.bookspace.Output.CommentOutput;
 import com.example.bookspace.Output.MentionOutput;
 import com.example.bookspace.Output.PublicationOutput;
 import com.example.bookspace.Output.TagOutput;
+import com.example.bookspace.Output.UserCredentials;
 import com.example.bookspace.Output.UserOutput;
 import com.example.bookspace.enums.Category;
 import com.example.bookspace.models.Comment;
@@ -21,7 +22,13 @@ import com.example.bookspace.models.User;
 import com.example.bookspace.repositories.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.interceptor.CacheOperationInvoker.ThrowableWrapper;
+import org.springframework.http.HttpMessage;
+import org.springframework.http.converter.HttpMessageConversionException;
+import org.springframework.jdbc.datasource.UserCredentialsDataSourceAdapter;
 import org.springframework.stereotype.Service;
+
+import net.bytebuddy.utility.RandomString;
 
 @Service
 public class UserService {
@@ -68,57 +75,63 @@ public class UserService {
     }
 
 	@Transactional
-	public UserOutput putUser(Long id, UserInput userDetails) {
-		User user = userRepository.findById(id)
-					.orElseThrow(() -> new IllegalStateException(
-						"User with id " + id + " does not exist"));
-		
-		if (userDetails.getDescription() != null && userDetails.getDescription().length() > 0 &&
-			!Objects.equals(user.getDescription(), userDetails.getDescription())){
-				user.setDescription(userDetails.getDescription());
-			}
-		
-		if (userDetails.getEmail() != null && userDetails.getEmail().length() > 0 &&
-			!Objects.equals(user.getEmail(), userDetails.getEmail())){
-				Optional<User> userOptional = userRepository.findUserByEmail(userDetails.getEmail());
-				if(userOptional.isPresent()){
-					throw new IllegalStateException("email already taken");
+	public UserOutput putUser(Long id, UserInput userDetails, UserCredentials userCredentials) {
+		if (id == userCredentials.getId() && userRepository.getOne(userCredentials.getId()).getToken().equals(userCredentials.getToken())) {
+			User user = userRepository.findById(id)
+						.orElseThrow(() -> new IllegalStateException(
+							"User with id " + id + " does not exist"));
+			
+			if (userDetails.getDescription() != null && userDetails.getDescription().length() > 0 &&
+				!Objects.equals(user.getDescription(), userDetails.getDescription())){
+					user.setDescription(userDetails.getDescription());
 				}
-				user.setEmail(userDetails.getEmail());
-			}
-
-		if (userDetails.getName() != null && userDetails.getName().length() > 0 &&
-			!Objects.equals(user.getName(), userDetails.getName())){
-				user.setName(userDetails.getName());
-			}
-
-		if (userDetails.getUsername() != null && userDetails.getUsername() .length() > 0 &&
-			!Objects.equals(user.getUsername(), userDetails.getUsername() )){
-				Optional<User> userOptional = userRepository.findUserByUsername(userDetails.getUsername() );
-				if(userOptional.isPresent()){
-					throw new IllegalStateException("username already taken");
+			
+			if (userDetails.getEmail() != null && userDetails.getEmail().length() > 0 &&
+				!Objects.equals(user.getEmail(), userDetails.getEmail())){
+					Optional<User> userOptional = userRepository.findUserByEmail(userDetails.getEmail());
+					if(userOptional.isPresent()){
+						throw new IllegalStateException("email already taken");
+					}
+					user.setEmail(userDetails.getEmail());
 				}
-				user.setUsername(userDetails.getUsername() );
+
+			if (userDetails.getName() != null && userDetails.getName().length() > 0 &&
+				!Objects.equals(user.getName(), userDetails.getName())){
+					user.setName(userDetails.getName());
+				}
+
+			if (userDetails.getUsername() != null && userDetails.getUsername() .length() > 0 &&
+				!Objects.equals(user.getUsername(), userDetails.getUsername() )){
+					Optional<User> userOptional = userRepository.findUserByUsername(userDetails.getUsername() );
+					if(userOptional.isPresent()){
+						throw new IllegalStateException("username already taken");
+					}
+					user.setUsername(userDetails.getUsername() );
+				}
+			
+			if (userDetails.getDob()  != null && !Objects.equals(user.getDob(), userDetails.getDob() )){
+					user.setDob(userDetails.getDob() );
+				}
+			
+			if (userDetails.getFavCategories() != null){
+				List<Category> cateogories = Category.getCategories(userDetails.getFavCategories());
+				user.setFavCategories(cateogories);
 			}
-		
-		if (userDetails.getDob()  != null && !Objects.equals(user.getDob(), userDetails.getDob() )){
-				user.setDob(userDetails.getDob() );
-			}
-		
-		if (userDetails.getFavCategories() != null){
-			List<Category> cateogories = Category.getCategories(userDetails.getFavCategories());
-			user.setFavCategories(cateogories);
+			user = userRepository.save(user);
+			return new UserOutput(user);
 		}
-		user = userRepository.save(user);
-		return new UserOutput(user);
+
+		else throw new HttpMessageConversionException("You are not authorized to do this action");
 	}
 
 	public void deleteUser(Long userId){
-		boolean b = userRepository.existsById(userId);
-		if(!b) {
-			throw new IllegalStateException("User with id " + userId + " does not exists");
-		}
-		userRepository.deleteById(userId);
+		if (userId == userCredentials.getId() && userRepository.getOne(userCredentials.getId()).getToken().equals(userCredentials.getToken())) {
+
+			boolean b = userRepository.existsById(userId);
+			if(!b) {
+				throw new IllegalStateException("User with id " + userId + " does not exists");
+			}
+			userRepository.deleteById(userId);
 
 	}
 
@@ -295,6 +308,45 @@ public class UserService {
 		return new UserOutput(user);
 		
 	}
+
+	public UserCredentials loginUser(UserInput userDetails) throws Exception {
+
+		if (userDetails.getEmail() == null) throw new HttpMessageConversionException("The mail can't be null");
+		if (userDetails.getPassword() == null) new HttpMessageConversionException("The password can't be null");
+		Optional<User> optUser = userRepository.findUserByEmail(userDetails.getEmail());
+		if (optUser.isPresent()) {
+			User user = userRepository.getUserByEmail(userDetails.getEmail());
+			if (user.getPassword().equals(userDetails.getPassword())) {
+				String token = RandomString.make();
+				user.setToken(token);
+				userRepository.save(user);
+				return new UserCredentials(user.getId(), user.getToken());
+			}
+			else throw new HttpMessageConversionException("The password is incorrect");
+
+		}
+		else throw new HttpMessageConversionException("The email is not registered");
+
+
+
+			
+	}
+
+    public void logout(UserCredentials userCredentials) {
+		if (userCredentials.getId() == null) throw new HttpMessageConversionException("The id can't be null");
+		if (userCredentials.getToken() == null) new HttpMessageConversionException("The token can't be null");
+		Optional<User> optUser = userRepository.findUserById(userCredentials.getId());
+		if (optUser.isPresent()) {
+			User user = userRepository.getOne(userCredentials.getId());
+			if (user.getToken().equals(userCredentials.getToken())) {
+				user.setToken(null);
+				userRepository.save(user);
+			}
+			else throw new HttpMessageConversionException("The token is incorrect");
+
+		}
+		else throw new HttpMessageConversionException("The id not correspond to a user");
+    }
 
 	
 
