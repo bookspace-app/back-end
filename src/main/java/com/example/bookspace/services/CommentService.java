@@ -42,7 +42,7 @@ public class CommentService {
 
     public CommentOutput postComment(CommentInput commentDetails) throws Exception {
         if (commentDetails.getAuthorId() == null) throw new Exception("The userId can't be null");
-        if (commentDetails.getPublicationId() == null) throw new Exception("The publication can't be null");
+        else if (commentDetails.getPublicationId() == null) throw new Exception("The publication can't be null");
         User author = userRepository.getOne(commentDetails.getAuthorId());
         Publication publication = publicationRepository.getOne(commentDetails.getPublicationId());
         
