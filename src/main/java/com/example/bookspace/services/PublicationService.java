@@ -58,6 +58,7 @@ public class PublicationService {
         else if (!Category.existsCategory(publicationDetails.getCategory())) throw new Exception ("There are not categories with that name");
         else {
             User author = userRepository.findById(publicationDetails.getAuthorId()).get();
+            
             Category category = Category.getCategory(publicationDetails.getCategory());
             Publication publication = new Publication(publicationDetails.getTitle(), publicationDetails.getContent(), author, category);
             if (publicationDetails.getTags() != null) {
@@ -121,6 +122,10 @@ public class PublicationService {
 		if(!b) {
 			throw new IllegalStateException("Publication with id " + publicationId + " does not exists");
 		}
+        Publication publication = publicationRepository.getOne(publicationId);
+        User user = publication.getAuthor();
+        user.removePublication(publication);
+        user = userRepository.getOne(user.getId());
 		publicationRepository.deleteById(publicationId);
 
 	}
@@ -226,7 +231,7 @@ public class PublicationService {
     public UserOutput postFavUser(Long id, Long userId) throws Exception {
         Publication p = publicationRepository.getOne(id);
         User favUser = userRepository.getOne(userId);
-        if (p.getFavouriteBy().contains(favUser)) throw new Exception("This user has already faved this publication");
+        //if (p.getFavouriteBy().contains(favUser)) throw new Exception("This user has already faved this publication");
         
         p.addFavUser(favUser);
         favUser.addFavPublication(p);
@@ -285,6 +290,9 @@ public class PublicationService {
         return result;       
 
     }
+
+
+    
 
 
 
