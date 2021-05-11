@@ -7,9 +7,9 @@ import com.example.bookspace.Output.CommentOutput;
 import com.example.bookspace.Output.MentionOutput;
 import com.example.bookspace.Output.PublicationOutput;
 import com.example.bookspace.Output.TagOutput;
-import com.example.bookspace.Output.UserCredentials;
 import com.example.bookspace.Output.UserOutput;
 import com.example.bookspace.services.UserService;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -44,13 +44,13 @@ public class UserController {
     }
 
     @PostMapping(path = "/login")
-    public UserCredentials loginUser(@RequestBody UserInput userDetails) throws Exception {
+    public String loginUser(@RequestBody UserInput userDetails) throws Exception {
         return userService.loginUser(userDetails);
     }
 
-    @PostMapping(path = "/logout")
-    public void logoutUser(@RequestBody UserCredentials userCredentials) throws Exception {
-        userService.logout(userCredentials);
+    @PostMapping(path = "{userId}/logout")
+    public void logoutUser(@PathVariable("userId") Long userId, @RequestBody UserInput userDetails) throws Exception {
+        userService.logout(userId,userDetails);
     }
     
     
@@ -65,13 +65,13 @@ public class UserController {
     }
 
     @PutMapping(path = "{userId}") 
-    public UserOutput updateUser(@PathVariable("userId") Long id, @RequestBody UserInput userDetails, @RequestBody UserCredentials userCredentialsS) throws Exception{
-        return userService.putUser(id, userDetails, userCredentialsS);
+    public UserOutput updateUser(@PathVariable("userId") Long id, @RequestBody UserInput userDetails) throws Exception{
+        return userService.putUser(id, userDetails);
     }
 
     @DeleteMapping(path = "{userId}")
-    public void deleteUser(@PathVariable("userId") Long userId){
-        userService.deleteUser(userId);
+    public void deleteUser(@PathVariable("userId") Long userId, @RequestBody UserInput userDetails){
+        userService.deleteUser(userId, userDetails);
     }
 
     @GetMapping(path = "{userId}/profilePic")
@@ -151,13 +151,13 @@ public class UserController {
     }
 
     @PostMapping(path = "{userId}/blockedUsers/{blockedUserId}")   
-	public UserOutput postBlockedUsers(@PathVariable("userId") Long id, @PathVariable("blockedUserId") Long blockedUserid) throws Exception {
-        return userService.postBlockedUsers(id, blockedUserid);
+	public UserOutput postBlockedUsers(@PathVariable("userId") Long id, @PathVariable("blockedUserId") Long blockedUserid, @RequestBody UserInput userDetails) throws Exception {
+        return userService.postBlockedUsers(id, blockedUserid, userDetails);
     }
 
     @DeleteMapping(path = "{userId}/blockedUsers/{blockedUserId}")   
-	public void deleteBlockedUsers(@PathVariable("userId") Long id, @PathVariable("blockedUserId") Long blockedUserid) throws Exception {
-        userService.deleteBlockedUsers(id, blockedUserid);
+	public void deleteBlockedUsers(@PathVariable("userId") Long id, @PathVariable("blockedUserId") Long blockedUserid, @RequestBody UserInput userDetails) throws Exception {
+        userService.deleteBlockedUsers(id, blockedUserid, userDetails);
     }
 
  
