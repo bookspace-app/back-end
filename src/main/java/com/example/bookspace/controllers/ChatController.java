@@ -1,29 +1,42 @@
 package com.example.bookspace.controllers;
 
-import java.util.List;
 
-import com.example.bookspace.services.ChatService;
+import com.example.bookspace.models.ChatMessage;
+import com.example.bookspace.models.ChatNotification;
+import com.example.bookspace.services.ChatMessageService;
+import com.example.bookspace.services.ChatRoomService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping(path = "api/chat")
-
+@Controller
 public class ChatController {
-
-    private final ChatService chatService;
-
+    
     @Autowired
-    public ChatController(ChatService chatService) {
-        this.chatService = chatService;
+    private SimpMessagingTemplate messagingTemplate;
+    @Autowired
+    private ChatMessageService chatMessageService;
+    @Autowired
+    private ChatRoomService chatRoomService;
+
+    @MessageMapping("api/chat")
+    public void processMessage(@Payload ChatMessage chatMessage){
+        var chatId = chatRoomService
+                .getChatId(chatMessage.getSenderId(), chatMessage.getRecipientId(), true);
+        chatMessage.setChatId(chatId.get());
+
+        ChatMessage saved = chatMessageService.save(chatMessage);
+        
+        messagingTemplate.convertAndSendToUser(
+                chatMessage.getRecipientId(),"/queue/messages",
+                new ChatNotification(
+                        saved.getId(),
+                        saved.getSenderId(),
+                        saved.getSenderName()));
     }
 
-    @GetMapping    
-	public List<String> getChat() {
-        return chatService.getChats(); //restaurar mensaje commit
-	}
-    
 }
