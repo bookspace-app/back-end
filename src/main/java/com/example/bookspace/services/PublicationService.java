@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import javax.persistence.criteria.CriteriaBuilder.Case;
 import javax.transaction.Transactional;
 
 import com.example.bookspace.Inputs.PublicationInput;
