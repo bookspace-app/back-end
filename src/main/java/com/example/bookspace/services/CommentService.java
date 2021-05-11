@@ -42,7 +42,7 @@ public class CommentService {
 
     public CommentOutput postComment(CommentInput commentDetails) throws Exception {
         if (commentDetails.getAuthorId() == null) throw new Exception("The userId can't be null");
-        if (commentDetails.getPublicationId() == null) throw new Exception("The publication can't be null");
+        else if (commentDetails.getPublicationId() == null) throw new Exception("The publication can't be null");
         User author = userRepository.getOne(commentDetails.getAuthorId());
         Publication publication = publicationRepository.getOne(commentDetails.getPublicationId());
         
@@ -51,28 +51,25 @@ public class CommentService {
 
         //If there are mentioned users, assign to them 
         if (commentDetails.getMentions() != null) {
-            for (Long mentionedId: commentDetails.getMentions()) {
-                User mentioned = userRepository.getOne(mentionedId);
-                mentioned.getCommentMentions().add(newComment);
-                newComment.getCommentMentions().add(mentioned);
-                mentioned = userRepository.save(mentioned);
-                newComment = commentRepository.save(newComment);
+            for (String username: commentDetails.getMentions()) {
+                if (userRepository.findUserByUsername(username).isPresent()) {
+                    User mentioned = userRepository.getUserByUsername(username);
+                    mentioned.getCommentMentions().add(newComment);
+                    newComment.getCommentMentions().add(mentioned);
+                    mentioned = userRepository.save(mentioned);
+                }
             }
         }
-
-        //If is an aswer, take the parent
+        //If is an aswer, get  parent
         if (commentDetails.getParentId() != null)  {
             Comment parent = commentRepository.getOne(commentDetails.getParentId());
             newComment.setParent(parent);
             parent.getReplies().add(newComment);   
-            
-            parent = commentRepository.save(parent);
             newComment = commentRepository.save(newComment);
+            parent = commentRepository.save(parent);
+            
         } 
-
-
-        
-        newComment = commentRepository.save(newComment);
+        else newComment = commentRepository.save(newComment);
 
 
 

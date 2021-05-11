@@ -1,6 +1,8 @@
 package com.example.bookspace.services;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -38,10 +40,38 @@ public class PublicationService {
 
      
 
-    public List<PublicationOutput> getPublications() {
+    public List<PublicationOutput> getPublications(String sortString) throws Exception {
         List<PublicationOutput> result = new ArrayList<>();
+        List<Publication> publications = publicationRepository.findAll();
 
-        for (Publication p: publicationRepository.findAll()) {
+        Comparator<Publication> compareByViews = new Comparator<Publication>() {
+            @Override
+            public int compare(Publication p1, Publication p2) {
+                return p1.getViews().compareTo(p2.getViews());
+            }
+        };
+
+        Comparator<Publication> compareByLikes = new Comparator<Publication>() {
+            @Override
+            public int compare(Publication p1, Publication p2) {
+                return p1.getTotalLikes().compareTo(p2.getTotalLikes());
+            }
+        };
+       
+        if (Category.existsCategory(sortString)) {
+            publications = publicationRepository.findByCategory(Category.getCategory(sortString));
+        }
+           
+        else if (sortString.equals("views")) {
+            Collections.sort(publications, compareByViews.reversed());
+        }
+
+        else if (sortString.equals("score")) {
+            Collections.sort(publications, compareByLikes.reversed());
+        }      
+
+
+        for (Publication p: publications) {
             PublicationOutput po = new PublicationOutput(p);
             result.add(po);
         }
@@ -70,11 +100,13 @@ public class PublicationService {
             }
 
             if (publicationDetails.getMentions() != null) {
-                for (Long mentionId: publicationDetails.getMentions()) {
-                    User mention = userRepository.getOne(mentionId);
-                    publication.addMention(mention);
-                    mention.addMention(publication);
-                    mention = userRepository.save(mention);
+                for (String username: publicationDetails.getMentions()) {
+                    if(userRepository.findUserByUsername(username).isPresent()) {
+                        User user = userRepository.getUserByUsername(username);
+                        publication.addMention(user);
+                        user.addMention(publication);
+                        user = userRepository.save(user);
+                    }
                 }
             }
             author.addPublication(publication);
@@ -136,7 +168,7 @@ public class PublicationService {
     public PublicationOutput postLike(Long publicationId, Long userId) throws Exception {
         Publication p = publicationRepository.getOne(publicationId);
         User u = userRepository.getOne(userId);
-        if (p.getLikedBy().contains(u)) throw new Exception("This user has already liked this publication");
+        //if (p.getLikedBy().contains(u)) throw new Exception("This user has already liked this publication");
 
         if (p.getDislikedBy().contains(u))  {
             p.getDislikedBy().remove(u);

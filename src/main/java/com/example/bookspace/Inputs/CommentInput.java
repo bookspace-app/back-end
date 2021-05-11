@@ -7,10 +7,10 @@ public class CommentInput {
     private Long authorId;
     private Long publicationId;
     private Long parentId;
-    private List<Long> mentions;
+    private List<String> mentions;
 
 
-    public CommentInput(String content, Long authorId, Long publicationId, Long parentId, List<Long> mentions) {
+    public CommentInput(String content, Long authorId, Long publicationId, Long parentId, List<String> mentions) {
         this.content = content;
         this.authorId = authorId;
         this.publicationId = publicationId;
@@ -51,11 +51,11 @@ public class CommentInput {
         this.parentId = parentId;
     }
 
-    public List<Long> getMentions() {
+    public List<String> getMentions() {
         return this.mentions;
     }
 
-    public void setMentions(List<Long> mentions) {
+    public void setMentions(List<String> mentions) {
         this.mentions = mentions;
     }
 

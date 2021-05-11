@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.example.bookspace.Inputs.UserInput;
 import com.example.bookspace.Output.CommentOutput;
+import com.example.bookspace.Output.MentionOutput;
 import com.example.bookspace.Output.PublicationOutput;
 import com.example.bookspace.Output.TagOutput;
 import com.example.bookspace.Output.UserOutput;
@@ -36,6 +37,7 @@ public class UserController {
         return userService.getUsers();
     }
 
+
     @PostMapping
     public UserOutput postUser(@RequestBody UserInput userDetails) throws Exception{
        return userService.postUser(userDetails);
@@ -44,6 +46,11 @@ public class UserController {
     @GetMapping(path = "{userId}")   
 	public UserOutput getUserById(@PathVariable("userId") Long id) {
         return userService.getUser(id);
+    }
+
+    @GetMapping(path = "/username/{username}")   
+	public UserOutput getUserByUsername(@PathVariable("username") String username) throws Exception {
+        return userService.getUserByUsername(username);
     }
 
     @PutMapping(path = "{userId}") 
@@ -97,8 +104,9 @@ public class UserController {
     }
 
     @GetMapping (path = "{userId}/mentions")
-    public List<PublicationOutput> getMentionedPublications(@PathVariable("userId") Long id) throws Exception {
-        return userService.getMentionedPublications(id);
+    public List<MentionOutput> getMentions(@PathVariable("userId") Long id) throws Exception {
+
+        return userService.getMentions(id);
     }
 
     @GetMapping (path = "{userId}/comments")
