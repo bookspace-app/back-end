@@ -7,7 +7,7 @@ import com.example.bookspace.models.Publication;
 
 public class MentionOutput extends OutputManager{
    
-
+    private Long id;
     private UserOutput author;
     private LocalDateTime dop; 
     private String type;
@@ -17,6 +17,7 @@ public class MentionOutput extends OutputManager{
     public MentionOutput() {}
 
     public MentionOutput(Publication p) {
+        this.id = p.getId();
         this.author = new UserOutput(p.getAuthor());
         this.dop = p.getDop();
         this.type = "publication";
@@ -27,6 +28,8 @@ public class MentionOutput extends OutputManager{
     }
 
     public MentionOutput(Comment c) {
+
+        this.id = c.getId();
         this.author = new UserOutput(c.getAuthor());
         this.dop = c.getDop();
         this.type = "comment";
@@ -34,6 +37,16 @@ public class MentionOutput extends OutputManager{
         this.uri = getURL() + "/comments/" + c.getId();
 
     }
+
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
 
     public UserOutput getAuthor() {
         return this.author;
