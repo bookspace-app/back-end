@@ -231,7 +231,7 @@ public class PublicationService {
     public UserOutput postFavUser(Long id, Long userId) throws Exception {
         Publication p = publicationRepository.getOne(id);
         User favUser = userRepository.getOne(userId);
-        //if (p.getFavouriteBy().contains(favUser)) throw new Exception("This user has already faved this publication");
+        if (p.getFavouriteBy().contains(favUser)) throw new Exception("This user has already faved this publication");
         
         p.addFavUser(favUser);
         favUser.addFavPublication(p);
