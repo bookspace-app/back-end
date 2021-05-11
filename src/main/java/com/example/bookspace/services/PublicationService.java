@@ -168,7 +168,7 @@ public class PublicationService {
     public PublicationOutput postLike(Long publicationId, Long userId) throws Exception {
         Publication p = publicationRepository.getOne(publicationId);
         User u = userRepository.getOne(userId);
-        //if (p.getLikedBy().contains(u)) throw new Exception("This user has already liked this publication");
+        if (p.getLikedBy().contains(u)) throw new Exception("This user has already liked this publication");
 
         if (p.getDislikedBy().contains(u))  {
             p.getDislikedBy().remove(u);
