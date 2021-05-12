@@ -67,6 +67,14 @@ public class TagService {
 		return new TagOutput(t);
     }
 
+	//It returns the Tag associated with the given {tagName}
+    public TagOutput getTagByTagName(String name) throws Exception {
+		if (!tagRepository.findTagByName(name).isPresent()) throw new Exception("It does not exists a tag with tagName " + name);
+		Tag tag = tagRepository.getTagByName(name);
+		return new TagOutput(tag);
+		
+	}
+
 	//It deletes the Tag associated with the given {idTag}
 	public void deleteTag(Long IdTag){
 		tagRepository.deleteById(IdTag);
