@@ -1,5 +1,11 @@
 package com.example.bookspace.controllers;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 import com.example.bookspace.Inputs.UserInput;
@@ -11,6 +17,7 @@ import com.example.bookspace.Output.UserOutput;
 import com.example.bookspace.services.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +25,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping(path = "api/users")
@@ -64,18 +73,36 @@ public class UserController {
     }
 
     @GetMapping(path = "{userId}/profilePic")
-    public void getProfilePic(@PathVariable("userId") Long userId) throws Exception{
-        userService.getProfilePic(userId);
+    public String getProfilePic(@PathVariable("userId") Long userId) throws Exception{
+       //System.out.println(userService.getProfilePic(userId));
+        return userService.getProfilePic(userId);
     }
 
     @PostMapping(path = "{userId}/profilePic")
-    public void postProfilePic(@PathVariable("userId") Long userId) throws Exception{
-        userService.postProfilePic(userId);
+    public UserOutput postProfilePic(@PathVariable("userId") Long userId, @RequestParam("profilePic") MultipartFile profilePic) throws Exception{
+         String fileName = StringUtils.cleanPath(profilePic.getOriginalFilename());
+ 
+         String uploadDir = "./user-images/" + userId;
+         Path uploadPath = Paths.get(uploadDir);
+         if(!Files.exists(uploadPath)){
+             Files.createDirectories(uploadPath);
+         }
+ 
+         try (InputStream inputStream = profilePic.getInputStream()){
+             Path filePath = uploadPath.resolve(fileName);
+             System.out.println(filePath.toFile().getAbsolutePath());
+             Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+         } catch (IOException e){
+             throw new IOException("Could not save uploaded file: " + fileName);
+         }
+         return userService.postProfilePic(userId,fileName);
+
+        
     }
 
     @DeleteMapping(path = "{userId}/profilePic")
-    public void deleteProfilePic(@PathVariable("userId") Long userId) throws Exception{
-        userService.deleteProfilePic(userId);
+    public UserOutput deleteProfilePic(@PathVariable("userId") Long userId) throws Exception{
+        return userService.deleteProfilePic(userId);
     }
 
     @GetMapping(path = "{userId}/categories")   
@@ -148,6 +175,13 @@ public class UserController {
 	public void deleteBlockedUsers(@PathVariable("userId") Long id, @PathVariable("blockedUserId") Long blockedUserid) throws Exception {
         userService.deleteBlockedUsers(id, blockedUserid);
     }
+
+    @GetMapping(path = "{userId}/profilePicPath")   
+	public String getProfilePicPath(@PathVariable("userId") Long id) throws Exception {
+        return userService.getProfilePicPath(id);
+    }
+
+
  
 
  

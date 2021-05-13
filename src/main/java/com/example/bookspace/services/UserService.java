@@ -69,6 +69,7 @@ public class UserService {
 
 	@Transactional
 	public UserOutput putUser(Long id, UserInput userDetails) {
+		//guardar tambien la profilePic
 		User user = userRepository.findById(id)
 					.orElseThrow(() -> new IllegalStateException(
 						"User with id " + id + " does not exist"));
@@ -109,6 +110,7 @@ public class UserService {
 			List<Category> cateogories = Category.getCategories(userDetails.getFavCategories());
 			user.setFavCategories(cateogories);
 		}
+
 		user = userRepository.save(user);
 		return new UserOutput(user);
 	}
@@ -122,17 +124,29 @@ public class UserService {
 
 	}
 
-	public void getProfilePic(Long userId) throws Exception {
-		throw new Exception("This endpoint is not implemented yet");
+	public String getProfilePic(Long userId) throws Exception {
+		User user = userRepository.getOne(userId);
+		return user.getProfilePic();
     }
 
-	public void postProfilePic(Long userId) throws Exception {
-		throw new Exception("This endpoint is not implemented yet");
+	public String getProfilePicPath(Long userId) throws Exception{
+		User user = userRepository.getOne(userId);
+		return user.getProfilePicPath();
 	}
 
-    public void deleteProfilePic(Long userId) throws Exception {
-		throw new Exception("This endpoint is not implemented yet");
+	public UserOutput postProfilePic(Long userId, String profilePic) throws Exception {
+		User user = userRepository.getOne(userId);
+		user.setProfilePic(profilePic);
+		user = userRepository.save(user);
+		return new UserOutput(user);
 
+	}
+
+    public UserOutput deleteProfilePic(Long userId) throws Exception {
+		User user = userRepository.getOne(userId);
+		user.setProfilePic("");
+		user = userRepository.save(user);
+		return new UserOutput(user);
     }    
 	
     public List<String> getFavCategoriesUser(Long id) {

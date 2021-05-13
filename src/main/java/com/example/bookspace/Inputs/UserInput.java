@@ -83,9 +83,6 @@ public class UserInput {
     public void setFavCategories(List<String> favCategories) {
         this.favCategories = favCategories;
     }
-   
-
-
 
 
 
