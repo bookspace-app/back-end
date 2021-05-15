@@ -172,7 +172,7 @@ public class PublicationService {
 
         if (p.getDislikedBy().contains(u))  {
             p.getDislikedBy().remove(u);
-            u.getLikedPublications().remove(p); 
+            u.getDislikedPublications().remove(p); 
         }
 
         p.addLikedUser(u);
