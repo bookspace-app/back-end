@@ -79,7 +79,7 @@ public class UserController {
     }
 
     @PostMapping(path = "{userId}/profilePic")
-    public UserOutput postProfilePic(@PathVariable("userId") Long userId, @RequestParam("profilePic") MultipartFile profilePic) throws Exception{
+    public String postProfilePic(@PathVariable("userId") Long userId, @RequestParam("profilePic") MultipartFile profilePic) throws Exception{
          String fileName = StringUtils.cleanPath(profilePic.getOriginalFilename());
  
          String uploadDir = "./user-images/" + userId;
@@ -90,12 +90,14 @@ public class UserController {
  
          try (InputStream inputStream = profilePic.getInputStream()){
              Path filePath = uploadPath.resolve(fileName);
-             System.out.println(filePath.toFile().getAbsolutePath());
+             //System.out.println(filePath.toFile().getAbsolutePath());
              Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
          } catch (IOException e){
              throw new IOException("Could not save uploaded file: " + fileName);
          }
-         return userService.postProfilePic(userId,fileName);
+         
+         userService.postProfilePic(userId,fileName);
+         return uploadPath.resolve(fileName).toFile().getAbsolutePath();
 
         
     }
