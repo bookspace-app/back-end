@@ -53,7 +53,6 @@ public class UserController {
         userService.logout(userId,userDetails);
     }
     
-    
     @GetMapping(path = "{userId}")   
 	public UserOutput getUserById(@PathVariable("userId") Long id) {
         return userService.getUser(id);
@@ -159,7 +158,6 @@ public class UserController {
 	public void deleteBlockedUsers(@PathVariable("userId") Long id, @PathVariable("blockedUserId") Long blockedUserid, @RequestBody UserInput userDetails) throws Exception {
         userService.deleteBlockedUsers(id, blockedUserid, userDetails);
     }
-
  
 
  

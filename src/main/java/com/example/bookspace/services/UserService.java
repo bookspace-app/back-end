@@ -25,8 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.stereotype.Service;
 
-import net.bytebuddy.utility.RandomString;
-
 @Service
 public class UserService {
 
@@ -85,10 +83,10 @@ public class UserService {
 	
 	@Transactional
 	public UserOutput putUser(Long id, UserInput userDetails) {
-
+		User user;
 
 		if (userRepository.getOne(id).getToken().equals(userDetails.getToken())) {
-			User user = userRepository.findById(id)
+			user = userRepository.findById(id)
 						.orElseThrow(() -> new IllegalStateException(
 							"User with id " + id + " does not exist"));
 			
@@ -105,34 +103,33 @@ public class UserService {
 					}
 					user.setEmail(userDetails.getEmail());
 				}
-
-			if (userDetails.getName() != null && userDetails.getName().length() > 0 &&
-				!Objects.equals(user.getName(), userDetails.getName())){
-					user.setName(userDetails.getName());
-				}
-
-			if (userDetails.getUsername() != null && userDetails.getUsername() .length() > 0 &&
-				!Objects.equals(user.getUsername(), userDetails.getUsername() )){
-					Optional<User> userOptional = userRepository.findUserByUsername(userDetails.getUsername() );
-					if(userOptional.isPresent()){
-						throw new IllegalStateException("username already taken");
-					}
-					user.setUsername(userDetails.getUsername() );
-				}
-			
-			if (userDetails.getDob()  != null && !Objects.equals(user.getDob(), userDetails.getDob() )){
-					user.setDob(userDetails.getDob() );
-				}
-			
-			if (userDetails.getFavCategories() != null){
-				List<Category> cateogories = Category.getCategories(userDetails.getFavCategories());
-				user.setFavCategories(cateogories);
+				user.setEmail(userDetails.getEmail());
 			}
-			user = userRepository.save(user);
-			return new UserOutput(user);
-		}
 
-		else throw new HttpMessageConversionException("You are not authorized to do this action");
+		if (userDetails.getName() != null && userDetails.getName().length() > 0 &&
+			!Objects.equals(user.getName(), userDetails.getName())){
+				user.setName(userDetails.getName());
+			}
+
+		if (userDetails.getUsername() != null && userDetails.getUsername() .length() > 0 &&
+			!Objects.equals(user.getUsername(), userDetails.getUsername() )){
+				Optional<User> userOptional = userRepository.findUserByUsername(userDetails.getUsername() );
+				if(userOptional.isPresent()){
+					throw new IllegalStateException("username already taken");
+				}
+				user.setUsername(userDetails.getUsername() );
+			}
+		
+		if (userDetails.getDob()  != null && !Objects.equals(user.getDob(), userDetails.getDob() )){
+				user.setDob(userDetails.getDob() );
+			}
+		
+		if (userDetails.getFavCategories() != null){
+			List<Category> cateogories = Category.getCategories(userDetails.getFavCategories());
+			user.setFavCategories(cateogories);
+		}
+		user = userRepository.save(user);
+		return new UserOutput(user);
 	}
 
 	public void deleteUser(Long userId, UserInput userDetails){

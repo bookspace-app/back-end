@@ -43,6 +43,12 @@ public class TagController {
         return tagService.getTag(idTag);
     }
 
+    @GetMapping(path = "/tagname/{tagName}")  
+    //An endpoint that when is given an tagName returns the Tag associated with it in the DB 
+	public TagOutput getTagByName(@PathVariable("tagName") String name) throws Exception {
+        return tagService.getTagByTagName(name);
+    }
+
     @PostMapping
     //An endpoint that when is given a Tag details it posts the Tag and returns it
     public TagOutput postTag(@RequestBody TagInput tagDetails) throws Exception {

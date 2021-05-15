@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -33,9 +34,9 @@ public class PublicationController {
         this.publicationService = publicationService;
     }
 
-    @GetMapping
-	public List<PublicationOutput> getPublications() {
-        return publicationService.getPublications();
+    @GetMapping()
+	public List<PublicationOutput> getPublications(@RequestParam(value = "sort", required = false, defaultValue = "") String sort) throws Exception {
+        return publicationService.getPublications(sort);
     }
 
 

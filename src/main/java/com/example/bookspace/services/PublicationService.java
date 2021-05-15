@@ -1,6 +1,8 @@
 package com.example.bookspace.services;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -38,10 +40,38 @@ public class PublicationService {
 
      
 
-    public List<PublicationOutput> getPublications() {
+    public List<PublicationOutput> getPublications(String sortString) throws Exception {
         List<PublicationOutput> result = new ArrayList<>();
+        List<Publication> publications = publicationRepository.findAll();
 
-        for (Publication p: publicationRepository.findAll()) {
+        Comparator<Publication> compareByViews = new Comparator<Publication>() {
+            @Override
+            public int compare(Publication p1, Publication p2) {
+                return p1.getViews().compareTo(p2.getViews());
+            }
+        };
+
+        Comparator<Publication> compareByLikes = new Comparator<Publication>() {
+            @Override
+            public int compare(Publication p1, Publication p2) {
+                return p1.getTotalLikes().compareTo(p2.getTotalLikes());
+            }
+        };
+       
+        if (Category.existsCategory(sortString)) {
+            publications = publicationRepository.findByCategory(Category.getCategory(sortString));
+        }
+           
+        else if (sortString.equals("views")) {
+            Collections.sort(publications, compareByViews.reversed());
+        }
+
+        else if (sortString.equals("score")) {
+            Collections.sort(publications, compareByLikes.reversed());
+        }      
+
+
+        for (Publication p: publications) {
             PublicationOutput po = new PublicationOutput(p);
             result.add(po);
         }
@@ -142,7 +172,7 @@ public class PublicationService {
 
         if (p.getDislikedBy().contains(u))  {
             p.getDislikedBy().remove(u);
-            u.getLikedPublications().remove(p); 
+            u.getDislikedPublications().remove(p); 
         }
 
         p.addLikedUser(u);
