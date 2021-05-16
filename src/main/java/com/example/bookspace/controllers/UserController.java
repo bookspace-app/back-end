@@ -1,8 +1,7 @@
 package com.example.bookspace.controllers;
 
 import java.util.List;
-
-
+import java.util.Map;
 
 import com.example.bookspace.Exceptions.IncorrectTokenException;
 import com.example.bookspace.Exceptions.UserNotFoundException;
@@ -55,7 +54,7 @@ public class UserController {
 
     @PostMapping(path = "/login")
     @ResponseBody
-    public String loginUser(@RequestBody UserInput userDetails) throws Exception {
+    public Map<String, String> loginUser(@RequestBody UserInput userDetails) throws Exception {
         return userService.loginUser(userDetails);
     }
 

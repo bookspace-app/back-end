@@ -1,7 +1,9 @@
 package com.example.bookspace.services;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -347,7 +349,7 @@ public class UserService {
 		
 	}
 
-	public String loginUser(UserInput userDetails) throws Exception {
+	public Map<String, String> loginUser(UserInput userDetails) throws Exception {
 		
 		if (userDetails.getEmail() == null) throw new HttpMessageConversionException("The mail can't be null");
 		if (userDetails.getPassword() == null) new HttpMessageConversionException("The password can't be null");
@@ -360,10 +362,14 @@ public class UserService {
 		
 	
 		if (user.getPassword().equals(userDetails.getPassword())) {
+
+			Map<String, String> result = new HashMap<String, String>(); 
 			String token = RandomString.make();
 			user.setToken(token);
 			user = userRepository.save(user);
-			return token;
+			result.put("userId", user.getId().toString());
+			result.put("token", token);
+			return result;
 		}
 		else throw new HttpMessageConversionException("The password is incorrect");
 

@@ -1,5 +1,6 @@
 package com.example.bookspace.services;
 
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -27,11 +28,8 @@ import com.example.bookspace.repositories.PublicationRepository;
 import com.example.bookspace.repositories.TagRepository;
 import com.example.bookspace.repositories.UserRepository;
 
-import org.dom4j.util.UserDataAttribute;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Service
 public class PublicationService {
@@ -157,7 +155,8 @@ public class PublicationService {
 		if (!publicationRepository.existsById(id)) throw new PublicationNotFound(id);
 		
         Publication publication = publicationRepository.getOne(id);
-        
+
+                
         if (publicationDetails.getTitle() != null) publication.setTitle(publicationDetails.getTitle());
         else if (publicationDetails.getContent() != null) publication.setContent(publicationDetails.getContent());
         else if (publicationDetails.getCategory() != null) {
