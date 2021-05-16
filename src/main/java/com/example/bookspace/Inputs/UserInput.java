@@ -12,7 +12,6 @@ public class UserInput {
     private LocalDate dob;
     private String description;
     private List<String> favCategories;
-    private String token;
 
     public UserInput() {}
 
@@ -26,19 +25,6 @@ public class UserInput {
         this.description = description;
         this.favCategories = favCategories;
     }
-
-    public UserInput(String email, String name, String username, String password, LocalDate dob, String description, List<String> favCategories, String token) {
-        this.email = email;
-        this.name = name;
-        this.username = username;
-        this.password = password;
-        this.dob = dob;
-        this.description = description;
-        this.favCategories = favCategories;
-        this.token = token;
-    }
-
-
 
     
   
@@ -101,13 +87,12 @@ public class UserInput {
     }
 
 
-    public String getToken() {
-        return this.token;
+    public Boolean validDescription() {
+        return (this.description != null);
     }
 
-    public void setToken(String token) {
-        this.token = token;
-    }
+
+  
     
    
 

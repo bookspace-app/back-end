@@ -397,10 +397,6 @@ public class User {
     public void setCommentMentions(List<Comment> commentMentions) {
         this.commentMentions = commentMentions;
     }
-    public void setFavTags(List<Tag> favTags) {
-        this.favTags = favTags;
-    }
-
 
     public List<User> getBlockedUsers() {
         return this.blockedUsers;

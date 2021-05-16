@@ -5,8 +5,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+
 import javax.transaction.Transactional;
 
+import com.example.bookspace.Exceptions.IncorrectTokenException;
+import com.example.bookspace.Exceptions.LoginException;
+import com.example.bookspace.Exceptions.UserNotFoundException;
 import com.example.bookspace.Inputs.UserInput;
 import com.example.bookspace.Output.CommentOutput;
 import com.example.bookspace.Output.MentionOutput;
@@ -24,6 +28,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.stereotype.Service;
+
+import net.bytebuddy.utility.RandomString;
 
 @Service
 public class UserService {
@@ -52,10 +58,9 @@ public class UserService {
 	/* Registers a new user in the system 
 		Ensure there is no repetead fields with other users
 	*/
-	public void postUser(UserInput userDetails) throws Exception {
+	public UserOutput postUser(UserInput userDetails) throws Exception {
 	
 		if (userDetails.getEmail() == null) throw new HttpMessageConversionException("The email cannot be empty");
-
 		else if (userRepository.findUserByEmail(userDetails.getEmail()).isPresent()) throw new HttpMessageConversionException("This email is already used");
 		else if (userDetails.getName() == null) throw new HttpMessageConversionException("The name can't be empty");
 		else if (userDetails.getUsername() == null) throw new HttpMessageConversionException("The username can't be empty");
@@ -65,6 +70,7 @@ public class UserService {
 		else {
 			User user = new User(userDetails.getEmail(), userDetails.getName(), userDetails.getUsername(), userDetails.getPassword(), userDetails.getDob());
 			user = userRepository.save(user);
+			return new UserOutput(user);
 		}
     }
 
@@ -82,69 +88,74 @@ public class UserService {
 	The token passed in the body has to be the same as the one saved on db */
 	
 	@Transactional
-	public UserOutput putUser(Long id, UserInput userDetails) {
-		User user;
+	public UserOutput putUser(Long id, UserInput userDetails, String token) throws IncorrectTokenException, UserNotFoundException, LoginException {
+		User user = new User();
 
-		if (userRepository.getOne(id).getToken().equals(userDetails.getToken())) {
-			user = userRepository.findById(id)
-						.orElseThrow(() -> new IllegalStateException(
-							"User with id " + id + " does not exist"));
-			
-			if (userDetails.getDescription() != null && userDetails.getDescription().length() > 0 &&
-				!Objects.equals(user.getDescription(), userDetails.getDescription())){
-					user.setDescription(userDetails.getDescription());
-				}
-			
-			if (userDetails.getEmail() != null && userDetails.getEmail().length() > 0 &&
-				!Objects.equals(user.getEmail(), userDetails.getEmail())){
-					Optional<User> userOptional = userRepository.findUserByEmail(userDetails.getEmail());
-					if(userOptional.isPresent()){
-						throw new IllegalStateException("email already taken");
+		if (!userRepository.existsById(id)) throw new UserNotFoundException(id);
+
+		if (user.getToken() != null) {
+			if (user.getToken().equals(token)) {
+				user = userRepository.findById(id)
+							.orElseThrow(() -> new IllegalStateException(
+								"User with id " + id + " does not exist"));
+				
+				if (userDetails.getDescription() != null && userDetails.getDescription().length() > 0 &&
+					!Objects.equals(user.getDescription(), userDetails.getDescription())){
+						user.setDescription(userDetails.getDescription());
+					}
+				
+				if (userDetails.getEmail() != null && userDetails.getEmail().length() > 0 &&
+					!Objects.equals(user.getEmail(), userDetails.getEmail())){
+						Optional<User> userOptional = userRepository.findUserByEmail(userDetails.getEmail());
+						if(userOptional.isPresent()){
+							throw new IllegalStateException("email already taken");
+						}
+						user.setEmail(userDetails.getEmail());
 					}
 					user.setEmail(userDetails.getEmail());
-				}
-				user.setEmail(userDetails.getEmail());
-			}
+			
+				
 
-		if (userDetails.getName() != null && userDetails.getName().length() > 0 &&
-			!Objects.equals(user.getName(), userDetails.getName())){
-				user.setName(userDetails.getName());
-			}
+					if (userDetails.getName() != null && userDetails.getName().length() > 0 &&
+						!Objects.equals(user.getName(), userDetails.getName())){
+							user.setName(userDetails.getName());
+						}
 
-		if (userDetails.getUsername() != null && userDetails.getUsername() .length() > 0 &&
-			!Objects.equals(user.getUsername(), userDetails.getUsername() )){
-				Optional<User> userOptional = userRepository.findUserByUsername(userDetails.getUsername() );
-				if(userOptional.isPresent()){
-					throw new IllegalStateException("username already taken");
+					if (userDetails.getUsername() != null && userDetails.getUsername() .length() > 0 &&
+						!Objects.equals(user.getUsername(), userDetails.getUsername() )){
+							Optional<User> userOptional = userRepository.findUserByUsername(userDetails.getUsername() );
+							if(userOptional.isPresent()){
+								throw new IllegalStateException("username already taken");
+							}
+							user.setUsername(userDetails.getUsername() );
+						}
+					
+					if (userDetails.getDob()  != null && !Objects.equals(user.getDob(), userDetails.getDob() )){
+							user.setDob(userDetails.getDob() );
+						}
+					
+					if (userDetails.getFavCategories() != null){
+						List<Category> cateogories = Category.getCategories(userDetails.getFavCategories());
+						user.setFavCategories(cateogories);
+					}
 				}
-				user.setUsername(userDetails.getUsername() );
+				else throw new IncorrectTokenException();
 			}
-		
-		if (userDetails.getDob()  != null && !Objects.equals(user.getDob(), userDetails.getDob() )){
-				user.setDob(userDetails.getDob() );
-			}
-		
-		if (userDetails.getFavCategories() != null){
-			List<Category> cateogories = Category.getCategories(userDetails.getFavCategories());
-			user.setFavCategories(cateogories);
-		}
+			else throw new LoginException();
 		user = userRepository.save(user);
 		return new UserOutput(user);
 	}
 
-	public void deleteUser(Long userId, UserInput userDetails){
+	public void deleteUser(Long userId, String token) throws IncorrectTokenException, UserNotFoundException{
 
-		if (userRepository.existsById(userId)){
-			User user = userRepository.getOne(userId);
-			if (user.getToken().equals(userDetails.getToken())) {
-				userRepository.delete(user);
-				throw new HttpMessageConversionException("The user has been deleted");
-			}
-			else throw new HttpMessageConversionException("You are not authorized to do this action");
-		}
-		else throw new HttpMessageConversionException("It does not exists a user with that id"); 
+		if (!userRepository.existsById(userId)) throw new UserNotFoundException(userId);
+		User user = userRepository.getOne(userId);
 
+		if (user.getToken().equals(token)) userRepository.delete(user);
+		else throw new IncorrectTokenException();
 	}
+
+	
 
 	public void getProfilePic(Long userId) throws Exception {
 		throw new Exception("This endpoint is not implemented yet");
@@ -282,39 +293,45 @@ public class UserService {
 		return result;
     }
 
-   	public UserOutput postBlockedUsers(Long id, Long blockedUserid, UserInput userDetails) throws Exception {
+   	public UserOutput postBlockedUsers(Long id, Long blockedUserid, String token) throws Exception {
 		
-		if (userRepository.getOne(id).getToken() == userDetails.getToken()) {
-			if (id == blockedUserid) throw new Exception ("You cannot block yourself!");
-			User user = userRepository.getOne(id);
-			User userToBlock = userRepository.getOne(blockedUserid);
-			boolean b = userRepository.existsById(blockedUserid);
-			if (!b){
-				throw new Exception("This user doesen't exist");
-			}
+		if (!userRepository.existsById(id)) throw new UserNotFoundException(id);
+		User user = userRepository.getOne(id);
+
+		if (!userRepository.existsById(blockedUserid)) throw new UserNotFoundException(blockedUserid);
+		User userToBlock = userRepository.getOne(blockedUserid);
+
+		if (user.getToken().equals(token)) {
+			if (id == blockedUserid) throw new Exception("You cannot block yourself!");
+			
 			List<User> blockedUsers = user.getBlockedUsers();
 			if (!blockedUsers.contains(userToBlock)){
 				blockedUsers.add(userToBlock);
 				user.setBlockedUsers(blockedUsers);
-				userRepository.save(user);
-				System.out.println("User " + id + " has blocked user " + blockedUserid);
+				user = userRepository.save(user);
+				return new UserOutput(user);
 			}
 			else throw new Exception("This user is already blocked");
-			return new UserOutput(userToBlock); 
 		}
-		else throw new HttpMessageConversionException("You are not authorized");
+		else throw new IncorrectTokenException();
 	}
 
-    public void deleteBlockedUsers(Long id, Long blockedUserid, UserInput userDetails) throws Exception {
+    public UserOutput deleteBlockedUsers(Long id, Long blockedUserid, String token) throws Exception {
+		
+		if (!userRepository.existsById(id)) throw new UserNotFoundException(id);
+		User user = userRepository.getOne(id);
 
-		if (userRepository.getOne(id).getToken() == userDetails.getToken()) {
-			User user = userRepository.getOne(id);
-			User userToUnblock = userRepository.getOne(blockedUserid);
+		if (!userRepository.existsById(blockedUserid)) throw new UserNotFoundException(blockedUserid);
+		User userToUnblock = userRepository.getOne(blockedUserid);
+		
+		if (user.getToken().equals(token)) {
+
 			List<User> blockedUsers = user.getBlockedUsers();
 			if (blockedUsers.contains(userToUnblock)){
 				blockedUsers.remove(userToUnblock);
 				user.setBlockedUsers(blockedUsers);
-				userRepository.save(user);
+				user = userRepository.save(user);
+				return new UserOutput(user);
 			}
 			else throw new Exception("This user is not blocked yet"); 
 		}
@@ -331,43 +348,46 @@ public class UserService {
 	}
 
 	public String loginUser(UserInput userDetails) throws Exception {
-
+		
 		if (userDetails.getEmail() == null) throw new HttpMessageConversionException("The mail can't be null");
 		if (userDetails.getPassword() == null) new HttpMessageConversionException("The password can't be null");
-		Optional<User> optUser = userRepository.findUserByEmail(userDetails.getEmail());
-		if (optUser.isPresent()) {
-			User user = userRepository.getUserByEmail(userDetails.getEmail());
-			if (user.getPassword().equals(userDetails.getPassword())) {
-				String token = RandomString.make();
-				user.setToken(token);
-				userRepository.save(user);
-				return token;
-			}
-			else throw new HttpMessageConversionException("The password is incorrect");
 
+		String email = userDetails.getEmail();
+
+		if (!userRepository.findUserByEmail(email).isPresent()) throw new UserNotFoundException(email);
+		User user = userRepository.getUserByEmail(email);
+
+		
+	
+		if (user.getPassword().equals(userDetails.getPassword())) {
+			String token = RandomString.make();
+			user.setToken(token);
+			user = userRepository.save(user);
+			return token;
 		}
-		else throw new HttpMessageConversionException("The email is not registered");
-
-
+		else throw new HttpMessageConversionException("The password is incorrect");
 
 			
 	}
 
-    public void logout(Long userId, UserInput userDetails) {
-		if (userId == null) throw new HttpMessageConversionException("The id can't be null");
-		if (userDetails.getToken() == null) new HttpMessageConversionException("The token can't be null");
-		Optional<User> optUser = userRepository.findUserById(userId);
-		if (optUser.isPresent()) {
-			User user = userRepository.getOne(userId);
-			if (user.getToken().equals(userDetails.getToken())) {
+	
+    public void logout(Long userId, String token) throws UserNotFoundException, IncorrectTokenException, LoginException {
+
+		if (!userRepository.existsById(userId)) throw new UserNotFoundException(userId);
+		User user = userRepository.getOne(userId);
+
+		
+
+		if (user.getToken() != null) {
+			if (user.getToken().equals(token)) {
 				user.setToken(null);
 				userRepository.save(user);
-				throw new HttpMessageConversionException("Successfully logout");
 			}
-			else throw new HttpMessageConversionException("The token is incorrect");
-
+			else throw new IncorrectTokenException();
 		}
-		else throw new HttpMessageConversionException("The id not correspond to a user");
+		else throw new LoginException();
+
+		
     }
 
 	
