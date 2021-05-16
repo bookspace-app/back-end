@@ -12,6 +12,7 @@ public class UserInput {
     private LocalDate dob;
     private String description;
     private List<String> favCategories;
+    private String authProvider;
 
     public UserInput() {}
 
@@ -91,14 +92,11 @@ public class UserInput {
         return (this.description != null);
     }
 
-
-  
-    
+    public String getAuthProvider () {
+        return this.authProvider;
+    }
    
-
-
-
-
-
-
+    public void setAuthProvider(String authProvider) {
+        this.authProvider = authProvider;
+    }
 }
