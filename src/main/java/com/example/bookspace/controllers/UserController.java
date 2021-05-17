@@ -3,6 +3,8 @@ package com.example.bookspace.controllers;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.example.bookspace.Exceptions.IncorrectTokenException;
 import com.example.bookspace.Exceptions.UserNotFoundException;
 import com.example.bookspace.Inputs.UserInput;
@@ -41,9 +43,13 @@ public class UserController {
     }
 
     @GetMapping
-    
     public List<UserOutput> getAllUsers(){
         return userService.getUsers();
+    }
+
+    @GetMapping(path = "/token/{userId}")
+    public Map<String, String> getToken(@PathVariable(name = "userId", required = true) Long id) throws Exception {
+        return userService.getToken(id);
     }
 
     @PostMapping

@@ -396,6 +396,21 @@ public class UserService {
 		
     }
 
+	public Map<String, String> getToken(Long userId) throws Exception {
+
+        if (!userRepository.existsById(userId)) throw new UserNotFoundException(userId);		
+	
+		else {
+			User user = userRepository.getOne(userId);
+			if (user.getToken() == null) throw new LoginException();
+            Map<String, String> result = new HashMap<String, String>();
+
+            result.put("userId", user.getId().toString());
+            result.put("token", user.getToken());
+
+            return result;
+        }
+    }
 	
 
     
