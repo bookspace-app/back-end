@@ -94,7 +94,7 @@ public class UserService {
 		User user = new User();
 
 		if (!userRepository.existsById(id)) throw new UserNotFoundException(id);
-
+		user = userRepository.getOne(id);
 		if (user.getToken() != null) {
 			if (user.getToken().equals(token)) {
 				user = userRepository.findById(id)
