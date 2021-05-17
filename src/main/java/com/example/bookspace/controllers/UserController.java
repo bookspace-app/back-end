@@ -1,7 +1,11 @@
 package com.example.bookspace.controllers;
 
 import java.util.List;
+import java.util.Map;
 
+
+import com.example.bookspace.Exceptions.IncorrectTokenException;
+import com.example.bookspace.Exceptions.UserNotFoundException;
 import com.example.bookspace.Inputs.UserInput;
 import com.example.bookspace.Output.CommentOutput;
 import com.example.bookspace.Output.MentionOutput;
@@ -10,14 +14,19 @@ import com.example.bookspace.Output.TagOutput;
 import com.example.bookspace.Output.UserOutput;
 import com.example.bookspace.services.UserService;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -37,14 +46,31 @@ public class UserController {
         return userService.getUsers();
     }
 
+    @GetMapping(path = "/token/{userId}")
+    public Map<String, String> getToken(@PathVariable(name = "userId", required = true) Long id) throws Exception {
+        return userService.getToken(id);
+    }
 
     @PostMapping
+    @ResponseStatus(value = HttpStatus.CREATED, reason = "The user has been posted")
     public UserOutput postUser(@RequestBody UserInput userDetails) throws Exception{
        return userService.postUser(userDetails);
     }
+
+    @PostMapping(path = "/login")
+    @ResponseBody
+    public Map<String, String> loginUser(@RequestBody UserInput userDetails) throws Exception {
+        return userService.loginUser(userDetails);
+    }
+
+    @PostMapping(path = "{userId}/logout")
+    @ResponseStatus(value = HttpStatus.OK, reason = "The user has successfully logout")
+    public void logoutUser(@PathVariable(name = "userId", required = true) Long userId, @RequestHeader(value = "auth", required = true) String token) throws Exception {
+        userService.logout(userId, token);
+    }
     
     @GetMapping(path = "{userId}")   
-	public UserOutput getUserById(@PathVariable("userId") Long id) {
+	public UserOutput getUserById(@PathVariable(name = "userId", required = true) Long id) {
         return userService.getUser(id);
     }
 
@@ -54,13 +80,14 @@ public class UserController {
     }
 
     @PutMapping(path = "{userId}") 
-    public UserOutput updateUser(@PathVariable("userId") Long id, @RequestBody UserInput userDetails) throws Exception{
-        return userService.putUser(id, userDetails);
+    @ResponseStatus(code = HttpStatus.ACCEPTED)
+    public UserOutput updateUser(@PathVariable(name = "userId", required = true) Long id, @RequestBody UserInput userDetails, @RequestHeader(value = "auth", required = true) String token) throws Exception{
+        return userService.putUser(id, userDetails, token);
     }
 
     @DeleteMapping(path = "{userId}")
-    public void deleteUser(@PathVariable("userId") Long userId){
-        userService.deleteUser(userId);
+    public void deleteUser(@PathVariable(name = "userId", required = true) Long userId, @RequestHeader(value = "auth", required = true) String token) throws IncorrectTokenException, UserNotFoundException{  
+        userService.deleteUser(userId, token);
     }
 
     @GetMapping(path = "{userId}/profilePic")
@@ -140,13 +167,15 @@ public class UserController {
     }
 
     @PostMapping(path = "{userId}/blockedUsers/{blockedUserId}")   
-	public UserOutput postBlockedUsers(@PathVariable("userId") Long id, @PathVariable("blockedUserId") Long blockedUserid) throws Exception {
-        return userService.postBlockedUsers(id, blockedUserid);
+    @ResponseStatus(code = HttpStatus.ACCEPTED, reason = "User has been blocked")
+	public UserOutput postBlockedUsers(@PathVariable(name = "userId", required = true) Long id, @PathVariable(name = "blockedUserId", required = true) Long blockedUserid, @RequestHeader(name = "auth", required = true) String token) throws Exception {
+        return userService.postBlockedUsers(id, blockedUserid, token);
     }
 
     @DeleteMapping(path = "{userId}/blockedUsers/{blockedUserId}")   
-	public void deleteBlockedUsers(@PathVariable("userId") Long id, @PathVariable("blockedUserId") Long blockedUserid) throws Exception {
-        userService.deleteBlockedUsers(id, blockedUserid);
+    @ResponseStatus(code = HttpStatus.ACCEPTED, reason = "User has been unblocked")
+	public UserOutput deleteBlockedUser(@PathVariable(name = "userId", required = true) Long id, @PathVariable(name = "blockedUserId", required = true) Long blockedUserid, @RequestHeader(name = "auth", required = true) String token) throws Exception {
+        return userService.deleteBlockedUsers(id, blockedUserid, token);
     }
  
 

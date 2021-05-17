@@ -1,5 +1,6 @@
 package com.example.bookspace.services;
 
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -7,6 +8,12 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import com.example.bookspace.Exceptions.BadRequestPublicationException;
+import com.example.bookspace.Exceptions.CategoryNotFoundException;
+import com.example.bookspace.Exceptions.IncorrectTokenException;
+import com.example.bookspace.Exceptions.LoginException;
+import com.example.bookspace.Exceptions.PublicationNotFound;
+import com.example.bookspace.Exceptions.UserNotFoundException;
 import com.example.bookspace.Inputs.PublicationInput;
 import com.example.bookspace.Output.CommentOutput;
 import com.example.bookspace.Output.PublicationOutput;
@@ -79,44 +86,54 @@ public class PublicationService {
         return result;
     }
 
-    public PublicationOutput postPublication(PublicationInput publicationDetails) throws Exception {
-        if (publicationDetails.getTitle() == null) throw new Exception("The title can't be empty");
-        else if (publicationDetails.getContent() == null) throw new Exception("The content can't be empty");
-        else if (publicationDetails.getAuthorId() == null) throw new Exception("The authorId can't be empty");
-        else if (!userRepository.existsById(publicationDetails.getAuthorId())) throw new Exception("There are no users with this id");
-        else if (publicationDetails.getCategory() == null) throw new Exception("The category can't be empty");
-        else if (!Category.existsCategory(publicationDetails.getCategory())) throw new Exception ("There are not categories with that name");
-        else {
-            User author = userRepository.findById(publicationDetails.getAuthorId()).get();
-            Category category = Category.getCategory(publicationDetails.getCategory());
-            Publication publication = new Publication(publicationDetails.getTitle(), publicationDetails.getContent(), author, category);
-            if (publicationDetails.getTags() != null) {
-                for (Long tagId: publicationDetails.getTags()) {
-                    Tag tag = tagRepository.getOne(tagId);
-                    publication.addTag(tag);
-                    tag.getPublications().add(publication);
-                    tag = tagRepository.save(tag);
-                }
-            }
+    public PublicationOutput postPublication(PublicationInput publicationDetails, String token) throws Exception {
 
-            if (publicationDetails.getMentions() != null) {
-                for (String username: publicationDetails.getMentions()) {
-                    if(userRepository.findUserByUsername(username).isPresent()) {
-                        User user = userRepository.getUserByUsername(username);
-                        publication.addMention(user);
-                        user.addMention(publication);
-                        user = userRepository.save(user);
+        
+        if (publicationDetails.getTitle() == null) throw new BadRequestPublicationException("The title can't be empty");
+        else if (publicationDetails.getContent() == null) throw new BadRequestPublicationException("The content can't be empty");
+        else if (publicationDetails.getAuthorId() == null) throw new BadRequestPublicationException("The authorId can't be empty");
+        else if (!userRepository.existsById(publicationDetails.getAuthorId())) throw new UserNotFoundException(publicationDetails.getAuthorId());
+        else if (publicationDetails.getCategory() == null) throw new BadRequestPublicationException("The category can't be empty");
+        else if (!Category.existsCategory(publicationDetails.getCategory())) throw new CategoryNotFoundException (publicationDetails.getCategory());
+        else {
+
+                User author = userRepository.getOne(publicationDetails.getAuthorId());
+
+                if (author.getToken() == null) throw new LoginException();
+                if (!author.getToken().equals(token)) throw new IncorrectTokenException();
+
+                Category category = Category.getCategory(publicationDetails.getCategory());
+
+                Publication publication = new Publication(publicationDetails.getTitle(), publicationDetails.getContent(), author, category);
+
+
+                if (publicationDetails.getTags() != null) {
+                    for (Long tagId: publicationDetails.getTags()) {
+                        Tag tag = tagRepository.getOne(tagId);
+                        publication.addTag(tag);
+                        tag.getPublications().add(publication);
+                        tag = tagRepository.save(tag);
                     }
                 }
+
+                if (publicationDetails.getMentions() != null) {
+                    for (String username: publicationDetails.getMentions()) {
+                        if(userRepository.findUserByUsername(username).isPresent()) {
+                            User user = userRepository.getUserByUsername(username);
+                            publication.addMention(user);
+                            user.addMention(publication);
+                            user = userRepository.save(user);
+                        }
+                    }
+                }
+                author.addPublication(publication);
+                publication = publicationRepository.save(publication);
+                userRepository.save(author);
+
+                
+
+                return new PublicationOutput(publication); 
             }
-            author.addPublication(publication);
-            publication = publicationRepository.save(publication);
-            userRepository.save(author);
-
-            
-
-            return new PublicationOutput(publication);
-        }
             
     }
     
@@ -128,16 +145,24 @@ public class PublicationService {
     }
 
     @Transactional
-	public PublicationOutput putPublication(Long id, PublicationInput publicationDetails) throws Exception {
-		Publication publication = publicationRepository.findById(id)
-					.orElseThrow(() -> new IllegalStateException(
-						"Publication with id " + id + " does not exist"));
+	public PublicationOutput putPublication(Long id, PublicationInput publicationDetails, String token) throws Exception {
+
+        User author = userRepository.getOne(publicationDetails.getAuthorId());
+
+        if (author.getToken() == null) throw new LoginException();
+        if (!author.getToken().equals(token)) throw new IncorrectTokenException();
+
+		if (!publicationRepository.existsById(id)) throw new PublicationNotFound(id);
 		
-        
+        Publication publication = publicationRepository.getOne(id);
+
+                
         if (publicationDetails.getTitle() != null) publication.setTitle(publicationDetails.getTitle());
         else if (publicationDetails.getContent() != null) publication.setContent(publicationDetails.getContent());
         else if (publicationDetails.getCategory() != null) {
-            if (!Category.existsCategory(publicationDetails.getCategory())) throw new Exception("The Category " + publicationDetails.getCategory() + " does not exist");
+
+            if (!Category.existsCategory(publicationDetails.getCategory())) throw new CategoryNotFoundException(publicationDetails.getCategory());
+            
             Category c = Category.getCategory(publicationDetails.getCategory());
             publication.setCategory(c);
         } 
@@ -146,11 +171,16 @@ public class PublicationService {
 
 	}
 
-    public void deletePublication(Long publicationId){
-		boolean b = publicationRepository.existsById(publicationId);
-		if(!b) {
-			throw new IllegalStateException("Publication with id " + publicationId + " does not exists");
-		}
+    public void deletePublication(Long publicationId, String token) throws LoginException{
+
+        if (!publicationRepository.existsById(publicationId)) throw new PublicationNotFound(publicationId);
+		
+        Publication publication = publicationRepository.getOne(publicationId);
+        User author = userRepository.getOne(publication.getAuthor().getId());
+
+        if (author.getToken() == null) throw new LoginException();
+        if (!author.getToken().equals(token)) throw new IncorrectTokenException();
+
 		publicationRepository.deleteById(publicationId);
 
 	}
@@ -165,9 +195,17 @@ public class PublicationService {
         return result;
     }
 
-    public PublicationOutput postLike(Long publicationId, Long userId) throws Exception {
+    public PublicationOutput postLike(Long publicationId, Long userId, String token) throws Exception {
+        
+
+        if (!publicationRepository.existsById(publicationId)) throw new PublicationNotFound(publicationId);
+		
         Publication p = publicationRepository.getOne(publicationId);
         User u = userRepository.getOne(userId);
+
+        if (u.getToken() == null) throw new LoginException();
+        if (!u.getToken().equals(token)) throw new IncorrectTokenException();
+
         if (p.getLikedBy().contains(u)) throw new Exception("This user has already liked this publication");
 
         if (p.getDislikedBy().contains(u))  {
@@ -185,9 +223,13 @@ public class PublicationService {
 
     }
     
-    public PublicationOutput deleteLike(Long publicationId, Long userId) throws Exception {
+    public PublicationOutput deleteLike(Long publicationId, Long userId, String token) throws Exception {
+
         Publication p = publicationRepository.getOne(publicationId);
         User u = userRepository.getOne(userId);
+
+        if (u.getToken() == null) throw new LoginException();
+        if (!u.getToken().equals(token)) throw new IncorrectTokenException();
         if (!p.getLikedBy().contains(u)) throw new Exception ("This user has not liked this publication");
 
         p.getLikedBy().remove(u);
@@ -209,9 +251,13 @@ public class PublicationService {
 
 
 
-	public PublicationOutput postDislike(Long publicationId, Long userId) throws Exception {
+	public PublicationOutput postDislike(Long publicationId, Long userId, String token) throws Exception {
+		
         Publication p = publicationRepository.getOne(publicationId);
         User u = userRepository.getOne(userId);
+
+        if (u.getToken() == null) throw new LoginException();
+        if (!u.getToken().equals(token)) throw new IncorrectTokenException();
         if (p.getDislikedBy().contains(u)) throw new Exception("This user has already disliked this publication");
 
         if (p.getLikedBy().contains(u))  {
@@ -228,9 +274,13 @@ public class PublicationService {
 
 
 
-	public PublicationOutput deleteDislike(Long publicationId, Long userId) throws Exception {
+	public PublicationOutput deleteDislike(Long publicationId, Long userId, String token) throws Exception {
+		
         Publication p = publicationRepository.getOne(publicationId);
         User u = userRepository.getOne(userId);
+
+        if (u.getToken() == null) throw new LoginException();
+        if (!u.getToken().equals(token)) throw new IncorrectTokenException();
         if (!p.getDislikedBy().contains(u)) throw new Exception ("This user has not disliked this publication");
 
         p.getDislikedBy().remove(u);
@@ -253,9 +303,13 @@ public class PublicationService {
 
 
 
-    public UserOutput postFavUser(Long id, Long userId) throws Exception {
+    public UserOutput postFavUser(Long id, Long userId, String token) throws Exception {
+		
         Publication p = publicationRepository.getOne(id);
         User favUser = userRepository.getOne(userId);
+
+        if (favUser.getToken() == null) throw new LoginException();
+        if (!favUser.getToken().equals(token)) throw new IncorrectTokenException();
         if (p.getFavouriteBy().contains(favUser)) throw new Exception("This user has already faved this publication");
         
         p.addFavUser(favUser);
@@ -268,9 +322,14 @@ public class PublicationService {
 
     }
 
-    public UserOutput deleteFavUser(Long id, Long userId) throws Exception {
+    public UserOutput deleteFavUser(Long id, Long userId, String token) throws Exception {
+
+		
         Publication p = publicationRepository.getOne(id);
         User favUser = userRepository.getOne(userId);
+
+        if (favUser.getToken() == null) throw new LoginException();
+        if (!favUser.getToken().equals(token)) throw new IncorrectTokenException();
         if (!p.getFavouriteBy().contains(favUser)) throw new Exception("This user has not faved this publication");
         
         p.removeFavUser(favUser);
