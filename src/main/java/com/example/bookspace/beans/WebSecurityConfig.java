@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.example.bookspace.Inputs.UserInput;
-import com.example.bookspace.controllers.UserController;
 import com.example.bookspace.models.CustomOAuth2User;
 import com.example.bookspace.models.User;
 import com.example.bookspace.repositories.UserRepository;
@@ -97,7 +96,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                                 else response.sendRedirect("/api/users/" + user.getId());
 
                             } catch (Exception e) {
-                                // TODO Auto-generated catch block
                                 e.printStackTrace();
                             }
                             
