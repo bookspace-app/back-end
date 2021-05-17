@@ -4,8 +4,6 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 !**/src/main/**/user-images/
-src/main/java/com/example/bookspace/Output/OutputManager.java
-src/main/resources/application.properties
 
 
 
@@ -36,5 +34,4 @@ build/
 
 ### VS Code ###
 .vscode/
-src/main/resources/application.properties
-src/main/resources/application.properties
+application.properties
