@@ -15,6 +15,7 @@ public class PublicationOutput extends OutputManager{
     private Integer dislikes;
     private Integer nViews;
     private Integer totalLikes;
+    private Integer nDirectComments;
     private Integer nComments;
     private String category; 
     private UserOutput author; 
@@ -42,6 +43,7 @@ public class PublicationOutput extends OutputManager{
         this.nComments = p.getComments().size();
         this.author = new UserOutput(p.getAuthor());
         this.category = p.getCategory().name();
+        this.nDirectComments = p.getDirectComments();
         this.selfUri = getURL() + "/publications/" + id;
         this.likedByUri = this.selfUri + "/likedBy";
         this.dislikedByUri = this.selfUri + "/dislikedBy";
@@ -199,6 +201,21 @@ public class PublicationOutput extends OutputManager{
         this.mentionsUri = mentionsUri;
     }
     
+    public String getSelfUri() {
+        return this.selfUri;
+    }
+
+    public void setSelfUri(String selfUri) {
+        this.selfUri = selfUri;
+    }
+
+    public Integer getNDirectComments() {
+        return this.nDirectComments;
+    }
+
+    public void setNDirectComments(Integer nDirectComments) {
+        this.nDirectComments = nDirectComments;
+    }
 
     
     

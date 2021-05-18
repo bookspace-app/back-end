@@ -60,7 +60,7 @@ public class CommentService {
                 }
             }
         }
-        //If is an aswer, get  parent
+        //If is an aswer, get parent and associate.
         if (commentDetails.getParentId() != null)  {
             Comment parent = commentRepository.getOne(commentDetails.getParentId());
             newComment.setParent(parent);
@@ -69,7 +69,14 @@ public class CommentService {
             parent = commentRepository.save(parent);
             
         } 
-        else newComment = commentRepository.save(newComment);
+        else  {
+            /*If is a direct comment, update in publication */
+            publication.addDirectComment();
+            publication = publicationRepository.save(publication);
+            newComment = commentRepository.save(newComment);
+
+
+        }
 
 
 
@@ -102,6 +109,14 @@ public class CommentService {
 
     public void deleteComment(Long commentId) {
         Comment comment = commentRepository.getOne(commentId); 
+        
+        /*If is a direct comment, remove one from the publication attribute */
+        if (comment.getParent() == null) {
+            Publication publication = publicationRepository.getOne(comment.getPublication().getId());
+            publication.removeDirectComment();
+            publication = publicationRepository.save(publication);
+        }
+
         commentRepository.delete(comment);
     }
 
