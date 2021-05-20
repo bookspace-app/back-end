@@ -40,6 +40,7 @@ public class PublicationOutput extends OutputManager{
         this.nViews = p.getViews();
         this.totalLikes = p.getTotalLikes();
         this.category = p.getCategory().name();
+        this.nDirectComments = p.getDirectComments();
         this.nComments = p.getComments().size();
         this.author = new UserOutput(p.getAuthor());
         this.category = p.getCategory().name();

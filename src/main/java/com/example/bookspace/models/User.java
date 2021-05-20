@@ -4,7 +4,10 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
+import com.example.bookspace.enums.AuthenticationProvider;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -161,6 +164,9 @@ public class User {
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Tag> createdTags = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "auth_provider")
+    private AuthenticationProvider authProvider;
 
     @ManyToMany
     @JoinTable (
@@ -417,10 +423,6 @@ public class User {
     public void setCommentMentions(List<Comment> commentMentions) {
         this.commentMentions = commentMentions;
     }
-    public void setFavTags(List<Tag> favTags) {
-        this.favTags = favTags;
-    }
-
 
     public List<User> getBlockedUsers() {
         return this.blockedUsers;
@@ -480,6 +482,14 @@ public class User {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public AuthenticationProvider getAuthProvider () {
+        return this.authProvider;
+    }
+    
+    public void setAuthProvider(AuthenticationProvider authProvider) {
+        this.authProvider = authProvider;
     }
 
 
