@@ -55,6 +55,9 @@ public class DemoConfig {
             CommentInput commentDetails = new CommentInput("contentDemo", 1L, 1L, null, null);
             Comment comment = new Comment(commentDetails.getContent(), user, publication);
             comment = commentRepository.save(comment);
+
+            publication.addDirectComment();
+            publication = publicationRepository.save(publication);
         };
     }   
 }

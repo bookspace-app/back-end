@@ -44,6 +44,7 @@ public class PublicationOutput extends OutputManager{
         this.nComments = p.getComments().size();
         this.author = new UserOutput(p.getAuthor());
         this.category = p.getCategory().name();
+        this.nDirectComments = p.getDirectComments();
         this.selfUri = getURL() + "/publications/" + id;
         this.likedByUri = this.selfUri + "/likedBy";
         this.dislikedByUri = this.selfUri + "/dislikedBy";
@@ -216,7 +217,6 @@ public class PublicationOutput extends OutputManager{
     public void setNDirectComments(Integer nDirectComments) {
         this.nDirectComments = nDirectComments;
     }
-
 
     
     

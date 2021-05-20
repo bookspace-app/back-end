@@ -181,6 +181,7 @@ public class PublicationService {
         if (author.getToken() == null) throw new LoginException();
         if (!author.getToken().equals(token)) throw new IncorrectTokenException();
 
+
 		publicationRepository.deleteById(publicationId);
 
 	}
@@ -374,6 +375,9 @@ public class PublicationService {
         return result;       
 
     }
+
+
+    
 
 
 
