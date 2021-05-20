@@ -2,6 +2,7 @@ package com.example.bookspace.controllers;
 
 import java.util.List;
 
+import com.example.bookspace.Exceptions.LoginException;
 import com.example.bookspace.Inputs.PublicationInput;
 import com.example.bookspace.Output.CommentOutput;
 import com.example.bookspace.Output.PublicationOutput;
@@ -12,17 +13,17 @@ import com.example.bookspace.services.PublicationService;
 import com.example.bookspace.services.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -44,8 +45,8 @@ public class PublicationController {
 
 
     @PostMapping
-    public PublicationOutput postPublication(@RequestBody PublicationInput publicationDetails) throws Exception {
-        return publicationService.postPublication(publicationDetails);
+    public PublicationOutput postPublication(@RequestBody PublicationInput publicationDetails, @RequestHeader(value = "auth", required = true) String token) throws Exception {
+        return publicationService.postPublication(publicationDetails, token);
     }
 
 
@@ -55,13 +56,14 @@ public class PublicationController {
     }    
 
     @PutMapping(path = "{publicationId}") 
-    public PublicationOutput updatePublication(@PathVariable("publicationId") Long id, @RequestBody PublicationInput publicationDetails) throws Exception{
-        return publicationService.putPublication(id, publicationDetails);
+    public PublicationOutput updatePublication(@PathVariable("publicationId") Long id, @RequestBody PublicationInput publicationDetails, @RequestHeader(value = "auth", required = true) String token) throws Exception{
+        return publicationService.putPublication(id, publicationDetails, token);
     }
 
     @DeleteMapping(path = "{publicationId}")
-	public void deletePublication(@PathVariable("publicationId") Long publicationId) {
-        publicationService.deletePublication(publicationId);
+    @ResponseStatus(value = HttpStatus.OK, reason = "The publication has been deleted")
+	public void deletePublication(@PathVariable("publicationId") Long publicationId, @RequestHeader(value = "auth", required = true) String token) throws LoginException {
+        publicationService.deletePublication(publicationId, token);
 	}
 
     @GetMapping("{publicationId}/like")
@@ -70,13 +72,13 @@ public class PublicationController {
     }
 
     @PostMapping("{publicationId}/like/{userId}")
-    public PublicationOutput postLikedUsers(@PathVariable("publicationId") Long publicationId, @PathVariable("userId") Long userId) throws Exception {
-        return publicationService.postLike(publicationId, userId);
+    public PublicationOutput postLikedUsers(@PathVariable("publicationId") Long publicationId, @PathVariable("userId") Long userId, @RequestHeader(value = "auth", required = true) String token) throws Exception {
+        return publicationService.postLike(publicationId, userId, token);
     }
 
     @DeleteMapping("{publicationId}/like/{userId}")
-    public PublicationOutput deleteLikedUsers(@PathVariable("publicationId") Long publicationId, @PathVariable("userId") Long userId) throws Exception {
-        return publicationService.deleteLike(publicationId, userId);
+    public PublicationOutput deleteLikedUsers(@PathVariable("publicationId") Long publicationId, @PathVariable("userId") Long userId, @RequestHeader(value = "auth", required = true) String token) throws Exception {
+        return publicationService.deleteLike(publicationId, userId, token);
     }
 
     @GetMapping("{publicationId}/dislike")
@@ -85,13 +87,13 @@ public class PublicationController {
     }
 
     @PostMapping("{publicationId}/dislike/{userId}")
-    public PublicationOutput postDislikedUsers(@PathVariable("publicationId") Long publicationId, @PathVariable("userId") Long userId) throws Exception {
-        return publicationService.postDislike(publicationId, userId);
+    public PublicationOutput postDislikedUsers(@PathVariable("publicationId") Long publicationId, @PathVariable("userId") Long userId, @RequestHeader(value = "auth", required = true) String token) throws Exception {
+        return publicationService.postDislike(publicationId, userId, token);
     }
 
     @DeleteMapping("{publicationId}/dislike/{userId}")
-    public PublicationOutput deleteDislikedUsers(@PathVariable("publicationId") Long publicationId, @PathVariable("userId") Long userId)  throws Exception {
-        return publicationService.deleteDislike(publicationId, userId);
+    public PublicationOutput deleteDislikedUsers(@PathVariable("publicationId") Long publicationId, @PathVariable("userId") Long userId, @RequestHeader(value = "auth", required = true) String token)  throws Exception {
+        return publicationService.deleteDislike(publicationId, userId, token);
     }
 
     @GetMapping("{publicationId}/fav")
@@ -101,14 +103,14 @@ public class PublicationController {
     }
 
     @PostMapping("{publicationId}/fav/{userId}")
-    public UserOutput postFaUser(@PathVariable("publicationId") Long id, @PathVariable("userId") Long userId) throws Exception {
-        return publicationService.postFavUser(id, userId);
+    public UserOutput postFaUser(@PathVariable("publicationId") Long id, @PathVariable("userId") Long userId, @RequestHeader(value = "auth", required = true) String token) throws Exception {
+        return publicationService.postFavUser(id, userId, token);
         
     }
 
     @DeleteMapping("{publicationId}/fav/{userId}")
-    public UserOutput deleteFavUser(@PathVariable("publicationId") Long id, @PathVariable("userId") Long userId) throws Exception {
-        return publicationService.deleteFavUser(id, userId);
+    public UserOutput deleteFavUser(@PathVariable("publicationId") Long id, @PathVariable("userId") Long userId, @RequestHeader(value = "auth", required = true) String token) throws Exception {
+        return publicationService.deleteFavUser(id, userId, token);
         
     }
 

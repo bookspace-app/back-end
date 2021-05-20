@@ -69,6 +69,9 @@ public class Publication {
     @OneToMany(mappedBy = "publication", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
 
+    @Column(name = "directComments")
+    private Integer directComments = 0;
+
     @ManyToMany
     @JoinTable (
         name = "mentionedUsers", 
@@ -262,9 +265,22 @@ public class Publication {
     public void removeMention(User u) {
         this.mentions.remove(u);
     }
+    public Integer getDirectComments() {
+        return this.directComments;
+    }
 
-    
-    
+    public void setDirectComments(Integer directComments) {
+        this.directComments = directComments;
+    }
+
+    public void addDirectComment() {
+        this.directComments++;
+    }
+
+    public void removeDirectComment() {
+        this.directComments--;
+    }
+
 
 
 

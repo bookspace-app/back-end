@@ -48,7 +48,6 @@ public enum Category {
         }
 
         return false;
-
     }
 
     public static Category getCategory(String category) {
