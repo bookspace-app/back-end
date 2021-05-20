@@ -390,6 +390,7 @@ public class UserService {
 			if (user.getToken().equals(token)) {
 				user.setToken(null);
 				userRepository.save(user);
+
 			}
 			else throw new IncorrectTokenException();
 		}
