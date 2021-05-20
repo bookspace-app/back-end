@@ -9,8 +9,8 @@ public class TagOutput extends OutputManager {
     private Long id;
     private String name;
     private UserOutput author;
-    private String publications;
-    private String users;
+    private String publicationsUri;
+    private String usersUri;
 
     //Default constructor
     public TagOutput() {}
@@ -21,8 +21,8 @@ public class TagOutput extends OutputManager {
         this.name = tag.getName();
         this.author = new UserOutput(tag.getAuthor());
         this.self = self + this.id;
-        this.publications = this.self + "/publications";
-        this.users = this.self + "/users";
+        this.publicationsUri = this.self + "/publications";
+        this.usersUri = this.self + "/users";
     }
 
     //Getter of {self} attribute
@@ -67,21 +67,21 @@ public class TagOutput extends OutputManager {
 
     //Getter of {publication} attribute
     public String getPublications() {
-        return this.publications;
+        return this.publicationsUri;
     }
 
     //Setter of {publication} attribute
     public void setPublications(String publications) {
-        this.publications = publications;
+        this.publicationsUri = publications;
     }
 
     //Getter of {users} attribute
     public String getUsers() {
-        return this.users;
+        return this.usersUri;
     }
 
     //Setter of {users} attribute
     public void setUsers(String users) {
-        this.users = users;
+        this.usersUri = users;
     }
 }
