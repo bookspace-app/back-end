@@ -54,6 +54,15 @@ class TagControllerAccTest
     }
 
     @Test
+    void testgetTagByName() throws Exception {
+
+        ResponseEntity<TagOutput> responseEntity = restTemplate.getForEntity(url + "/tagname/demoTag", TagOutput.class);
+        assertEquals(OK, responseEntity.getStatusCode());
+        assertEquals(true, responseEntity.hasBody());
+        assertEquals("demoTag", responseEntity.getBody().getName());
+    }
+
+    @Test
     void testpostTag() throws Exception {
 
         HttpHeaders headers = new HttpHeaders();

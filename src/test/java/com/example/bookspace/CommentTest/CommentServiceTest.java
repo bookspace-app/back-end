@@ -39,8 +39,12 @@ class CommentServiceTest {
         List<User> mentions = new ArrayList<>();
 
         User u1 = new User("email1", "name1", "username1", "password1", LocalDate.now());
+        u1.setToken("DemoToken");
         Publication p1 = new Publication("title1", "content1", u1, Category.action);
         Comment c1 = new Comment("content1", u1, p1);
+        c1.getAuthor().setId(1L);
+        c1.getPublication().setId(1L);
+        c1.getAuthor().setToken("DemoToken");
         Comment cr1 = new Comment("contentr1", u1, p1);
         reply.add(cr1);
         c1.setReplies(reply);
@@ -62,6 +66,8 @@ class CommentServiceTest {
         when(userRepository.getOne(1L)).thenReturn(u1);
         when(userRepository.getOne(2L)).thenReturn(u2);
         when(publicationRepository.getOne(1L)).thenReturn(p1);
+        when(publicationRepository.existsById(1L)).thenReturn(true);
+        when(commentRepository.existsById(1L)).thenReturn(true);
         when(commentRepository.getOne(1L)).thenReturn(c1);
         when(commentRepository.save(any(Comment.class))).thenReturn(nc1);
         when(commentRepository.save(c1)).thenReturn(c1);
@@ -85,10 +91,10 @@ class CommentServiceTest {
     @Test
     void testpostComment() throws Exception {
 
-        List<Long> ment = new ArrayList<>();
-        ment.add(1L);
+        List<String> ment = new ArrayList<>();
+        ment.add("username1");
         CommentInput ci1 = new CommentInput("contentNEW", 1L, 1L, 1L, ment);
-        CommentOutput result = commentService.postComment(ci1);
+        CommentOutput result = commentService.postComment(ci1, "DemoToken");
         assertThat(result).isNotNull();
         assertThat(result.getContent()).isEqualTo("contentNEW");
     }
@@ -107,10 +113,10 @@ class CommentServiceTest {
 
         List<Long> ment = new ArrayList<>();
         ment.add(1L);
-        CommentInput ci1 = new CommentInput("contentNEW", null, null, null, null);
+        CommentInput ci1 = new CommentInput("contentNEW", 1L, null, null, null);
 
         CommentOutput result;
-		result = commentService.putComment(1L, ci1);
+		result = commentService.putComment(1L, ci1, "DemoToken");
 
         assertThat(result).isNotNull();
         assertThat(result.getContent()).isEqualTo("contentNEW");
@@ -118,7 +124,7 @@ class CommentServiceTest {
 
     @Test
     void testdeleteComment() {
-        commentService.deleteComment(1L);
+        commentService.deleteComment(1L, "DemoToken");
     }
 
     @Test
@@ -140,7 +146,7 @@ class CommentServiceTest {
     @Test
     void testpostLikeComment() throws Exception {
 
-        CommentOutput result = commentService.postLikeComment(1L, 2L);
+        CommentOutput result = commentService.postLikeComment(1L, 1L, "DemoToken");
         assertThat(result).isNotNull();
         assertThat(result.getContent()).isEqualTo("content1");
     }
@@ -148,7 +154,7 @@ class CommentServiceTest {
     @Test
     void testdeleteLikeComment() {
 
-        CommentOutput result = commentService.deleteLikeComment(1L, 2L);
+        CommentOutput result = commentService.deleteLikeComment(1L, 1L, "DemoToken");
 
         assertThat(result).isNotNull();
         assertThat(result.getContent()).isEqualTo("content1");
@@ -165,7 +171,7 @@ class CommentServiceTest {
     @Test
     void testpostDislikeComment() throws Exception {
 
-        CommentOutput result = commentService.postDislikeComment(1L, 2L);
+        CommentOutput result = commentService.postDislikeComment(1L, 1L, "DemoToken");
         assertThat(result).isNotNull();
         assertThat(result.getContent()).isEqualTo("content1");
     }
@@ -173,7 +179,7 @@ class CommentServiceTest {
     @Test
     void testdeleteDislikeComment() {
 
-        CommentOutput result = commentService.deleteDislikeComment(1L, 2L);
+        CommentOutput result = commentService.deleteDislikeComment(1L, 1L, "DemoToken");
 
         assertThat(result).isNotNull();
         assertThat(result.getContent()).isEqualTo("content1");

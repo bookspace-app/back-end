@@ -13,11 +13,7 @@ import static org.springframework.http.HttpStatus.OK;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-
 import java.util.ArrayList;
-import java.util.List;
-
 import com.example.bookspace.Inputs.PublicationInput;
 import com.example.bookspace.Output.PublicationOutput;
 import com.example.bookspace.Output.UserOutput;
@@ -49,16 +45,15 @@ class PublicationControllerAccTest
     @Test
     void testpostPublication() throws Exception {
 
+        PublicationInput p1 = new PublicationInput("titleNew", "contentNew", 1L, "romantic", null, null);
+
         HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Accept", "application/json");
+        headers.add("auth", "DemoToken");
 
-        HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
-        List<Long> nl = new ArrayList<>();
-        PublicationInput p1 = new PublicationInput("titleNew", "contentNew", 1L, "romantic", nl, nl);
+        HttpEntity<?> entity = new HttpEntity<Object>(p1, headers);
 
-        requestEntity = new HttpEntity<>(p1, headers);
-
-        ResponseEntity<PublicationOutput> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, PublicationOutput.class);
+        ResponseEntity<PublicationOutput> responseEntity = restTemplate.exchange(url, HttpMethod.POST, entity, PublicationOutput.class);
         assertEquals(OK, responseEntity.getStatusCode());	
 
         ResponseEntity<PublicationOutput> responseEntity2 = restTemplate.getForEntity(url + "/2", PublicationOutput.class);
@@ -79,15 +74,15 @@ class PublicationControllerAccTest
     @Test
     void testupdatePublication() throws Exception {
 
+        PublicationInput p1 = new PublicationInput("demoTitle", "contentNew", 1L, "romantic", null, null);
+
         HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Accept", "application/json");
+        headers.add("auth", "DemoToken");
 
-        HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
-        List<Long> nl = new ArrayList<>();
-        PublicationInput p1 = new PublicationInput("demoTitle", "contentNew", 1L, "romantic", nl, nl);
-        requestEntity = new HttpEntity<>(p1, headers);
+        HttpEntity<?> entity = new HttpEntity<Object>(p1, headers);
 
-        ResponseEntity<PublicationOutput> responseEntity = restTemplate.exchange(url + "/1", HttpMethod.PUT, requestEntity, PublicationOutput.class);
+        ResponseEntity<PublicationOutput> responseEntity = restTemplate.exchange(url + "/1", HttpMethod.PUT, entity, PublicationOutput.class);
         assertEquals(OK, responseEntity.getStatusCode());
 
         ResponseEntity<PublicationOutput> responseEntity2 = restTemplate.getForEntity(url + "/1", PublicationOutput.class);
@@ -107,11 +102,12 @@ class PublicationControllerAccTest
     void testpostLikedUsers() throws Exception {
 
         HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Accept", "application/json");
+        headers.add("auth", "DemoToken");
 
-        HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
-
-        ResponseEntity<PublicationOutput> responseEntity = restTemplate.exchange(url + "/1/like/1", HttpMethod.POST, requestEntity, PublicationOutput.class);
+        HttpEntity<?> entity = new HttpEntity<Object>(headers);
+        
+        ResponseEntity<PublicationOutput> responseEntity = restTemplate.exchange(url + "/1/like/1", HttpMethod.POST, entity, PublicationOutput.class);
         assertEquals(OK, responseEntity.getStatusCode());
     }
 
@@ -126,11 +122,12 @@ class PublicationControllerAccTest
     void testpostDislikedUsers() throws Exception {
 
         HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Accept", "application/json");
+        headers.add("auth", "DemoToken");
 
-        HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
+        HttpEntity<?> entity = new HttpEntity<Object>(headers);
 
-        ResponseEntity<PublicationOutput> responseEntity = restTemplate.exchange(url + "/1/dislike/1", HttpMethod.POST, requestEntity, PublicationOutput.class);
+        ResponseEntity<PublicationOutput> responseEntity = restTemplate.exchange(url + "/1/dislike/1", HttpMethod.POST, entity, PublicationOutput.class);
         assertEquals(OK, responseEntity.getStatusCode());
     }
 
@@ -145,11 +142,12 @@ class PublicationControllerAccTest
     void testpostFavUser() throws Exception {
 
         HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Accept", "application/json");
+        headers.add("auth", "DemoToken");
 
-        HttpEntity requestEntity = new HttpEntity<>(headers);
+        HttpEntity<?> entity = new HttpEntity<Object>(headers);
 
-        ResponseEntity<UserOutput> responseEntity = restTemplate.postForEntity(url + "/1/fav/1", requestEntity, UserOutput.class);
+        ResponseEntity<UserOutput> responseEntity = restTemplate.postForEntity(url + "/1/fav/1", entity, UserOutput.class);
         assertEquals(OK, responseEntity.getStatusCode());
         assertEquals("demoName", responseEntity.getBody().getName());
     }

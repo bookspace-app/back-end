@@ -13,8 +13,6 @@ import static org.springframework.http.HttpStatus.OK;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-
 import java.util.ArrayList;
 import com.example.bookspace.Inputs.CommentInput;
 import com.example.bookspace.Output.CommentOutput;
@@ -48,13 +46,12 @@ class CommentControllerAccTest
     void testpostComment() throws Exception {
 
         HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("auth", "DemoToken");
 
-        HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
         CommentInput commentDetails = new CommentInput("contentNEW", 1L, 1L, null, null);
-        requestEntity = new HttpEntity<>(commentDetails, headers);
+        HttpEntity<?> entity = new HttpEntity<Object>(commentDetails, headers);
 
-        ResponseEntity<CommentOutput> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, CommentOutput.class);
+        ResponseEntity<CommentOutput> responseEntity = restTemplate.exchange(url, HttpMethod.POST, entity, CommentOutput.class);
         assertEquals(OK, responseEntity.getStatusCode());	
 
         ResponseEntity<CommentOutput> responseEntity2 = restTemplate.getForEntity(url + "/2", CommentOutput.class);
@@ -76,13 +73,12 @@ class CommentControllerAccTest
     void testputComment() throws Exception {
 
         HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("auth", "DemoToken");
 
-        HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
-        CommentInput commentDetails = new CommentInput("contentDemo", null, null, null, null);
-        requestEntity = new HttpEntity<>(commentDetails, headers);
+        CommentInput commentDetails = new CommentInput("contentDemo", 1L, null, null, null);
+        HttpEntity<?> entity = new HttpEntity<Object>(commentDetails, headers);
 
-        ResponseEntity<CommentOutput> responseEntity = restTemplate.exchange(url + "/1", HttpMethod.PUT, requestEntity, CommentOutput.class);
+        ResponseEntity<CommentOutput> responseEntity = restTemplate.exchange(url + "/1", HttpMethod.PUT, entity, CommentOutput.class);
         assertEquals(OK, responseEntity.getStatusCode());	
 
         ResponseEntity<CommentOutput> responseEntity2 = restTemplate.getForEntity(url + "/1", CommentOutput.class);
@@ -119,18 +115,23 @@ class CommentControllerAccTest
     void testpostLikeUser() throws Exception {
 
         HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("auth", "DemoToken");
 
-        HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
+        HttpEntity<?> entity = new HttpEntity<Object>(headers);
 
-        ResponseEntity<CommentOutput> responseEntity = restTemplate.exchange(url + "/1/like/2", HttpMethod.POST, requestEntity, CommentOutput.class);
+        ResponseEntity<CommentOutput> responseEntity = restTemplate.exchange(url + "/1/like/1", HttpMethod.POST, entity, CommentOutput.class);
         assertEquals(OK, responseEntity.getStatusCode());	
     }
 
     @Test
     void testgetDislikedUsers() throws Exception {
 
-        ResponseEntity<ArrayList> responseEntity = restTemplate.getForEntity(url + "/1/dislike", ArrayList.class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("userId", "1");
+
+        HttpEntity<?> entity = new HttpEntity<Object>(headers);
+
+        ResponseEntity<ArrayList> responseEntity = restTemplate.exchange(url + "/1/dislike", HttpMethod.GET, entity, ArrayList.class);
         assertEquals(OK, responseEntity.getStatusCode());
         assertEquals(true, responseEntity.hasBody());
     }
@@ -139,11 +140,11 @@ class CommentControllerAccTest
     void testpostDislikeUser() throws Exception {
 
         HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("auth", "DemoToken");
 
-        HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
+        HttpEntity<?> entity = new HttpEntity<Object>(headers);
 
-        ResponseEntity<CommentOutput> responseEntity = restTemplate.exchange(url + "/1/dislike/2", HttpMethod.POST, requestEntity, CommentOutput.class);
+        ResponseEntity<CommentOutput> responseEntity = restTemplate.exchange(url + "/1/dislike/1", HttpMethod.POST, entity, CommentOutput.class);
         assertEquals(OK, responseEntity.getStatusCode());	
     }
 }

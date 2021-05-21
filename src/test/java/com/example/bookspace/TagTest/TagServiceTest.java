@@ -49,10 +49,14 @@ class TagServiceTest {
         Optional<Tag> ot2 = Optional.of(t1);
 
         when(userRepository.getOne(1L)).thenReturn(u1);
+        when(userRepository.getOne(2L)).thenReturn(u2);
         when(tagRepository.findTagByName("demoTag1")).thenReturn(ot1);
+        when(tagRepository.findTagByName("demoTag2")).thenReturn(ot2);
         when(tagRepository.save(any(Tag.class))).thenReturn(t1);
         when(tagRepository.findAll()).thenReturn(tags);
         when(tagRepository.getOne(1L)).thenReturn(t1);
+        when(tagRepository.getOne(2L)).thenReturn(t2);
+        when(tagRepository.getTagByName("demoTag2")).thenReturn(t2);
         when(tagRepository.findById(1L)).thenReturn(ot2);
 
         this.tagService = new TagService(tagRepository, userRepository, publicationRepository);
@@ -88,6 +92,15 @@ class TagServiceTest {
 		result = tagService.getTag(1L);
         assertThat(result).isNotNull();
         assertThat(result.getName()).isEqualTo("demoTag1");
+    }
+
+    @Test
+    void testTagByTagName() throws Exception {
+
+        TagOutput result;
+		result = tagService.getTagByTagName("demoTag2");
+        assertThat(result).isNotNull();
+        assertThat(result.getName()).isEqualTo("demoTag2");
     }
 
     @Test

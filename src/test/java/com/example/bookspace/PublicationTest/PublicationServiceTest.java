@@ -38,16 +38,19 @@ class PublicationServiceTest {
         UserRepository userRepository = Mockito.mock(UserRepository.class);
 
         List<Publication> publications = new ArrayList<>();
+        List<Publication> lp1 = new ArrayList<>();
 
         User u1 = new User("email1", "name1", "username1", "password1", LocalDate.now());
         List<String> fav_cat = new ArrayList<>();
         fav_cat.add("action");
         List<Category> cateogories = Category.getCategories(fav_cat);
 		u1.setFavCategories(cateogories);
+        u1.setToken("DemoToken1");
 
         List<Publication> pub = new ArrayList<>();
         List<User> exp = new ArrayList<>();
         Publication p1 = new Publication("title1", "content1", u1, Category.action);
+        p1.getAuthor().setId(1L);
         pub.add(p1);
         exp.add(u1);
         u1.setPublications(pub);
@@ -64,6 +67,7 @@ class PublicationServiceTest {
         List<Tag> tag = new ArrayList<>();
         tag.add(t1);
         p1.setTags(tag);
+        lp1.add(p1);
 
         List<User> fav_by = new ArrayList<>();
 
@@ -72,18 +76,20 @@ class PublicationServiceTest {
         fav_cat2.add("romantic");
         List<Category> cateogories2 = Category.getCategories(fav_cat2);
 		u2.setFavCategories(cateogories2);
+        u2.setToken("DemoToken2");
 
         List<Publication> pub2 = new ArrayList<>();
         Publication p2 = new Publication("title2", "content2", u2, Category.romantic);
         pub2.add(p2);
         u2.setPublications(pub2);
 
-        fav_by.add(u2);
-        p1.setFavouriteBy(fav_by);
-
         User u3 = new User("email3", "name3", "username3", "password3", LocalDate.now());
         Publication p3 = new Publication("title3", "content3", u3, Category.romantic);
+        u3.setToken("DemoToken");
 
+        fav_by.add(u3);
+
+        p1.setFavouriteBy(fav_by);
         publications.add(p1);
         publications.add(p2);
 
@@ -98,10 +104,12 @@ class PublicationServiceTest {
         when(publicationRepository.getOne(3L)).thenReturn(p3);
         when(publicationRepository.findById(1L)).thenReturn(op1);
         when(publicationRepository.existsById(1L)).thenReturn(true);
+        when(publicationRepository.existsById(3L)).thenReturn(true);
         when(userRepository.getOne(3L)).thenReturn(u3);
         when(userRepository.getOne(2L)).thenReturn(u2);
         when(userRepository.getOne(1L)).thenReturn(u1);
         when(publicationRepository.save(any(Publication.class))).thenReturn(p3);
+        when(publicationRepository.findByCategory(Category.getCategory("action"))).thenReturn(lp1);
         when(userRepository.save(any(User.class))).thenReturn(u3);
 
 
@@ -111,26 +119,23 @@ class PublicationServiceTest {
     }
 
     @Test
-    void testgetPublications() {
+    void testgetPublications() throws Exception {
 
         List<PublicationOutput> result = new ArrayList<>();
-		result = publicationService.getPublications();
+		result = publicationService.getPublications("action");
 
-        assertThat(result.size()).isEqualTo(2);
+        assertThat(result.size()).isEqualTo(1);
         assertThat(result.get(0).getTitle())
                         .isEqualTo("title1");
-        assertThat(result.get(1).getTitle())
-                        .isEqualTo("title2");
     }
 
     @Test
     void testpostPublication() throws Exception {
 
-        List<Long> nl = new ArrayList<>();
-        PublicationInput pi1 = new PublicationInput("title3", "content3", 3L, "romantic", nl, nl);
+        PublicationInput pi1 = new PublicationInput("title3", "content3", 3L, "romantic", null, null);
 
         PublicationOutput result;
-		result = publicationService.postPublication(pi1);
+		result = publicationService.postPublication(pi1, "DemoToken");
         assertThat(result).isNotNull();
         assertThat(result.getTitle()).isEqualTo("title3");
     }
@@ -147,11 +152,10 @@ class PublicationServiceTest {
     @Test
     void testputPublication() throws Exception {
 
-        List<Long> nl = new ArrayList<>();
-        PublicationInput pi1 = new PublicationInput("title3", "content3", 3L, "potential", nl, nl);
+        PublicationInput pi1 = new PublicationInput("title3", "content3", 3L, "potential", null, null);
 
         PublicationOutput result;
-		result = publicationService.putPublication(1L, pi1);
+		result = publicationService.putPublication(1L, pi1, "DemoToken");
         assertThat(result).isNotNull();
         assertThat(result.getTitle()).isEqualTo("title3");
     }
@@ -159,7 +163,7 @@ class PublicationServiceTest {
     @Test
     void testdeletePublication() {
 
-        publicationService.deletePublication(1L);
+        publicationService.deletePublication(1L, "DemoToken1");
     }
 
     @Test
@@ -172,14 +176,14 @@ class PublicationServiceTest {
 
     @Test
     void testpostLike() throws Exception {
-        PublicationOutput result = publicationService.postLike(3L, 2L);
+        PublicationOutput result = publicationService.postLike(3L, 1L, "DemoToken1");
 
         assertThat(result.getContent()).isEqualTo("content3");
     }
 
     @Test
     void testdeleteLike() throws Exception {
-        publicationService.deleteLike(1L, 1L);
+        publicationService.deleteLike(1L, 1L, "DemoToken1");
     }
 
     @Test
@@ -192,14 +196,14 @@ class PublicationServiceTest {
 
     @Test
     void testpostDislike() throws Exception {
-        PublicationOutput result = publicationService.postDislike(3L, 2L);
+        PublicationOutput result = publicationService.postDislike(3L, 3L, "DemoToken");
 
         assertThat(result.getContent()).isEqualTo("content3");
     }
 
     @Test
     void testdeleteDislike() throws Exception {
-        publicationService.deleteDislike(1L, 1L);
+        publicationService.deleteDislike(1L, 1L, "DemoToken1");
     }
 
     @Test
@@ -208,20 +212,19 @@ class PublicationServiceTest {
 		result = publicationService.getFavUsers(1L);
 
         assertThat(result.size()).isEqualTo(1);
-        assertThat(result.get(0).getUsername()).isEqualTo("username2");
-    }
+        assertThat(result.get(0).getUsername()).isEqualTo("username3");    }
 
     @Test
     void testpostFavUsers() throws Exception {
 
-        UserOutput result = publicationService.postFavUser(1L, 3L);
+        UserOutput result = publicationService.postFavUser(1L, 2L, "DemoToken2");
 
         assertThat(result.getUsername()).isEqualTo("username3");
     }
 
     @Test
     void testdeleteFavUser() throws Exception {
-        publicationService.deleteFavUser(1L, 2L);
+        publicationService.deleteFavUser(1L, 3L, "DemoToken");
     }
 
     @Test
