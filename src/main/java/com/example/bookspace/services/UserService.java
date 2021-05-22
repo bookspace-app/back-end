@@ -298,7 +298,7 @@ public class UserService {
 		return result;
     }
 
-   	public UserOutput postBlockedUsers(Long id, Long blockedUserid, String token)  {
+   	public UserOutput postBlockedUsers(Long id, Long blockedUserid, String token) throws UserNotFoundException  {
 		
 		if (!userRepository.existsById(id)) throw new UserNotFoundException(id);
 		User user = userRepository.getOne(id);
@@ -321,7 +321,7 @@ public class UserService {
 		else throw new IncorrectTokenException();
 	}
 
-    public UserOutput deleteBlockedUsers(Long id, Long blockedUserid, String token)  {
+    public UserOutput deleteBlockedUsers(Long id, Long blockedUserid, String token) throws UserNotFoundException  {
 		
 		if (!userRepository.existsById(id)) throw new UserNotFoundException(id);
 		User user = userRepository.getOne(id);
@@ -345,14 +345,14 @@ public class UserService {
 		
     }
 
-	public UserOutput getUserByUsername(String username)  {
+	public UserOutput getUserByUsername(String username) throws UserNotFoundException  {
 		if (!userRepository.findUserByUsername(username).isPresent()) throw new UserNotFoundException(username);
 		User user = userRepository.getUserByUsername(username);
 		return new UserOutput(user);
 		
 	}
 
-	public Map<String, String> loginUser(UserInput userDetails) throws AlreadyLoginException {
+	public Map<String, String> loginUser(UserInput userDetails) throws AlreadyLoginException, UserNotFoundException {
 		
 		if (userDetails.getEmail() == null) throw new HttpMessageConversionException("The mail can't be null");
 		if (userDetails.getPassword() == null) new HttpMessageConversionException("The password can't be null");
@@ -401,7 +401,7 @@ public class UserService {
 		
     }
 
-	public Map<String, String> getToken(Long userId)  {
+	public Map<String, String> getToken(Long userId) throws UserNotFoundException  {
 
         if (!userRepository.existsById(userId)) throw new UserNotFoundException(userId);		
 	
