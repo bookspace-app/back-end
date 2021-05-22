@@ -88,7 +88,7 @@ public class PublicationService {
         return result;
     }
 
-    public PublicationOutput postPublication(PublicationInput publicationDetails, String token) {
+    public PublicationOutput postPublication(PublicationInput publicationDetails, String token) throws UserNotFoundException {
 
         
         if (publicationDetails.getTitle() == null) throw new BadRequestPublicationException("The title can't be empty");

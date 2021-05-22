@@ -3,6 +3,7 @@ package com.example.bookspace.controllers;
 import java.util.List;
 
 import com.example.bookspace.Exceptions.LoginException;
+import com.example.bookspace.Exceptions.UserNotFoundException;
 import com.example.bookspace.Inputs.PublicationInput;
 import com.example.bookspace.Output.CommentOutput;
 import com.example.bookspace.Output.PublicationOutput;
@@ -45,7 +46,7 @@ public class PublicationController {
 
 
     @PostMapping
-    public PublicationOutput postPublication(@RequestBody PublicationInput publicationDetails, @RequestHeader(value = "auth", required = true) String token)  {
+    public PublicationOutput postPublication(@RequestBody PublicationInput publicationDetails, @RequestHeader(value = "auth", required = true) String token) throws UserNotFoundException  {
         return publicationService.postPublication(publicationDetails, token);
     }
 

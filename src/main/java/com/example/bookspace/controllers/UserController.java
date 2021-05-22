@@ -3,8 +3,9 @@ package com.example.bookspace.controllers;
 import java.util.List;
 import java.util.Map;
 
-
+import com.example.bookspace.Exceptions.AlreadyLoginException;
 import com.example.bookspace.Exceptions.IncorrectTokenException;
+import com.example.bookspace.Exceptions.LoginException;
 import com.example.bookspace.Exceptions.UserNotFoundException;
 import com.example.bookspace.Inputs.UserInput;
 import com.example.bookspace.Output.CommentOutput;
@@ -47,7 +48,7 @@ public class UserController {
     }
 
     @GetMapping(path = "/token/{userId}")
-    public Map<String, String> getToken(@PathVariable(name = "userId", required = true) Long id)  {
+    public Map<String, String> getToken(@PathVariable(name = "userId", required = true) Long id) throws UserNotFoundException  {
         return userService.getToken(id);
     }
 
@@ -59,13 +60,13 @@ public class UserController {
 
     @PostMapping(path = "/login")
     @ResponseBody
-    public Map<String, String> loginUser(@RequestBody UserInput userDetails)  {
+    public Map<String, String> loginUser(@RequestBody UserInput userDetails) throws AlreadyLoginException, UserNotFoundException  {
         return userService.loginUser(userDetails);
     }
 
     @PostMapping(path = "{userId}/logout")
     @ResponseStatus(value = HttpStatus.OK, reason = "The user has successfully logout")
-    public void logoutUser(@PathVariable(name = "userId", required = true) Long userId, @RequestHeader(value = "auth", required = true) String token)  {
+    public void logoutUser(@PathVariable(name = "userId", required = true) Long userId, @RequestHeader(value = "auth", required = true) String token) throws IncorrectTokenException, LoginException, UserNotFoundException  {
         userService.logout(userId, token);
     }
     
@@ -75,13 +76,13 @@ public class UserController {
     }
 
     @GetMapping(path = "/username/{username}")   
-	public UserOutput getUserByUsername(@PathVariable("username") String username)  {
+	public UserOutput getUserByUsername(@PathVariable("username") String username) throws UserNotFoundException  {
         return userService.getUserByUsername(username);
     }
 
     @PutMapping(path = "{userId}") 
     @ResponseStatus(code = HttpStatus.ACCEPTED)
-    public UserOutput updateUser(@PathVariable(name = "userId", required = true) Long id, @RequestBody UserInput userDetails, @RequestHeader(value = "auth", required = true) String token) {
+    public UserOutput updateUser(@PathVariable(name = "userId", required = true) Long id, @RequestBody UserInput userDetails, @RequestHeader(value = "auth", required = true) String token) throws IncorrectTokenException, LoginException, UserNotFoundException {
         return userService.putUser(id, userDetails, token);
     }
 
@@ -168,13 +169,13 @@ public class UserController {
 
     @PostMapping(path = "{userId}/blockedUsers/{blockedUserId}")   
     @ResponseStatus(code = HttpStatus.ACCEPTED, reason = "User has been blocked")
-	public UserOutput postBlockedUsers(@PathVariable(name = "userId", required = true) Long id, @PathVariable(name = "blockedUserId", required = true) Long blockedUserid, @RequestHeader(name = "auth", required = true) String token)  {
+	public UserOutput postBlockedUsers(@PathVariable(name = "userId", required = true) Long id, @PathVariable(name = "blockedUserId", required = true) Long blockedUserid, @RequestHeader(name = "auth", required = true) String token) throws UserNotFoundException  {
         return userService.postBlockedUsers(id, blockedUserid, token);
     }
 
     @DeleteMapping(path = "{userId}/blockedUsers/{blockedUserId}")   
     @ResponseStatus(code = HttpStatus.ACCEPTED, reason = "User has been unblocked")
-	public UserOutput deleteBlockedUser(@PathVariable(name = "userId", required = true) Long id, @PathVariable(name = "blockedUserId", required = true) Long blockedUserid, @RequestHeader(name = "auth", required = true) String token)  {
+	public UserOutput deleteBlockedUser(@PathVariable(name = "userId", required = true) Long id, @PathVariable(name = "blockedUserId", required = true) Long blockedUserid, @RequestHeader(name = "auth", required = true) String token) throws UserNotFoundException  {
         return userService.deleteBlockedUsers(id, blockedUserid, token);
     }
  
