@@ -45,7 +45,7 @@ public class CommentService {
         return result;
     }
 
-    public CommentOutput postComment(CommentInput commentDetails, String token) throws Exception {
+    public CommentOutput postComment(CommentInput commentDetails, String token) throws LoginException, IncorrectTokenException, PublicationNotFound, CommentNotFound {
 
         User author = userRepository.getOne(commentDetails.getAuthorId());
 
@@ -102,7 +102,7 @@ public class CommentService {
         return new CommentOutput(c);
     }
 
-    public CommentOutput putComment(Long commentId, CommentInput commentDetails, String token) throws Exception {
+    public CommentOutput putComment(Long commentId, CommentInput commentDetails, String token) {
         
         User author = userRepository.getOne(commentDetails.getAuthorId());
 

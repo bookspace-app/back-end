@@ -39,13 +39,13 @@ public class PublicationController {
     }
 
     @GetMapping()
-	public List<PublicationOutput> getPublications(@RequestParam(value = "sort", required = false, defaultValue = "") String sort) throws Exception {
+	public List<PublicationOutput> getPublications(@RequestParam(value = "sort", required = false, defaultValue = "") String sort)  {
         return publicationService.getPublications(sort);
     }
 
 
     @PostMapping
-    public PublicationOutput postPublication(@RequestBody PublicationInput publicationDetails, @RequestHeader(value = "auth", required = true) String token) throws Exception {
+    public PublicationOutput postPublication(@RequestBody PublicationInput publicationDetails, @RequestHeader(value = "auth", required = true) String token)  {
         return publicationService.postPublication(publicationDetails, token);
     }
 
@@ -56,7 +56,7 @@ public class PublicationController {
     }    
 
     @PutMapping(path = "{publicationId}") 
-    public PublicationOutput updatePublication(@PathVariable("publicationId") Long id, @RequestBody PublicationInput publicationDetails, @RequestHeader(value = "auth", required = true) String token) throws Exception{
+    public PublicationOutput updatePublication(@PathVariable("publicationId") Long id, @RequestBody PublicationInput publicationDetails, @RequestHeader(value = "auth", required = true) String token) {
         return publicationService.putPublication(id, publicationDetails, token);
     }
 
@@ -67,32 +67,32 @@ public class PublicationController {
 	}
 
     @GetMapping("{publicationId}/like")
-    public List<UserOutput> getLikedUsers(@PathVariable("publicationId") Long publicationId) throws Exception {
+    public List<UserOutput> getLikedUsers(@PathVariable("publicationId") Long publicationId)  {
         return publicationService.getLikedUsers(publicationId);
     }
 
     @PostMapping("{publicationId}/like/{userId}")
-    public PublicationOutput postLikedUsers(@PathVariable("publicationId") Long publicationId, @PathVariable("userId") Long userId, @RequestHeader(value = "auth", required = true) String token) throws Exception {
+    public PublicationOutput postLikedUsers(@PathVariable("publicationId") Long publicationId, @PathVariable("userId") Long userId, @RequestHeader(value = "auth", required = true) String token)  {
         return publicationService.postLike(publicationId, userId, token);
     }
 
     @DeleteMapping("{publicationId}/like/{userId}")
-    public PublicationOutput deleteLikedUsers(@PathVariable("publicationId") Long publicationId, @PathVariable("userId") Long userId, @RequestHeader(value = "auth", required = true) String token) throws Exception {
+    public PublicationOutput deleteLikedUsers(@PathVariable("publicationId") Long publicationId, @PathVariable("userId") Long userId, @RequestHeader(value = "auth", required = true) String token)  {
         return publicationService.deleteLike(publicationId, userId, token);
     }
 
     @GetMapping("{publicationId}/dislike")
-    public List<UserOutput> getDislikedUsers(@PathVariable("publicationId") Long publicationId) throws Exception {
+    public List<UserOutput> getDislikedUsers(@PathVariable("publicationId") Long publicationId ){
         return publicationService.getDislikedUsers(publicationId);
     }
 
     @PostMapping("{publicationId}/dislike/{userId}")
-    public PublicationOutput postDislikedUsers(@PathVariable("publicationId") Long publicationId, @PathVariable("userId") Long userId, @RequestHeader(value = "auth", required = true) String token) throws Exception {
+    public PublicationOutput postDislikedUsers(@PathVariable("publicationId") Long publicationId, @PathVariable("userId") Long userId, @RequestHeader(value = "auth", required = true) String token) {
         return publicationService.postDislike(publicationId, userId, token);
     }
 
     @DeleteMapping("{publicationId}/dislike/{userId}")
-    public PublicationOutput deleteDislikedUsers(@PathVariable("publicationId") Long publicationId, @PathVariable("userId") Long userId, @RequestHeader(value = "auth", required = true) String token)  throws Exception {
+    public PublicationOutput deleteDislikedUsers(@PathVariable("publicationId") Long publicationId, @PathVariable("userId") Long userId, @RequestHeader(value = "auth", required = true) String token)  {
         return publicationService.deleteDislike(publicationId, userId, token);
     }
 
@@ -103,30 +103,30 @@ public class PublicationController {
     }
 
     @PostMapping("{publicationId}/fav/{userId}")
-    public UserOutput postFaUser(@PathVariable("publicationId") Long id, @PathVariable("userId") Long userId, @RequestHeader(value = "auth", required = true) String token) throws Exception {
+    public UserOutput postFaUser(@PathVariable("publicationId") Long id, @PathVariable("userId") Long userId, @RequestHeader(value = "auth", required = true) String token)  {
         return publicationService.postFavUser(id, userId, token);
         
     }
 
     @DeleteMapping("{publicationId}/fav/{userId}")
-    public UserOutput deleteFavUser(@PathVariable("publicationId") Long id, @PathVariable("userId") Long userId, @RequestHeader(value = "auth", required = true) String token) throws Exception {
+    public UserOutput deleteFavUser(@PathVariable("publicationId") Long id, @PathVariable("userId") Long userId, @RequestHeader(value = "auth", required = true) String token)  {
         return publicationService.deleteFavUser(id, userId, token);
         
     }
 
     @GetMapping("{publicationId}/comments")
-    public List<CommentOutput> getComments(@PathVariable("publicationId") Long id) throws Exception {
+    public List<CommentOutput> getComments(@PathVariable("publicationId") Long id)  {
         return publicationService.getComments(id);
         
     }
 
     @GetMapping("{publicationId}/mentions")
-    public List<UserOutput> getMentions(@PathVariable("publicationId") Long id) throws Exception {
+    public List<UserOutput> getMentions(@PathVariable("publicationId") Long id) {
         return publicationService.getMentions(id);
     }
 
     @GetMapping("{publicationId}/tags")
-    public List<TagOutput> getTags(@PathVariable("publicationId") Long id) throws Exception {
+    public List<TagOutput> getTags(@PathVariable("publicationId") Long id)  {
         return publicationService.getTags(id);
     }
 

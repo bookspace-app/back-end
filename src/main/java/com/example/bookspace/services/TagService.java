@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Objects;
 import javax.transaction.Transactional;
 
+import com.example.bookspace.Exceptions.DuplicateActionException;
+import com.example.bookspace.Exceptions.TagNotFoundException;
 import com.example.bookspace.Inputs.TagInput;
 import com.example.bookspace.Output.TagOutput;
 import com.example.bookspace.models.Publication;
@@ -33,13 +35,13 @@ public class TagService {
 	}
 
 	//Given a Tag details it posts that Tag and returns it
-	public TagOutput postTag(TagInput tagDetails) throws Exception {
+	public TagOutput postTag(TagInput tagDetails) {
 		User author = userRepository.getOne(tagDetails.getAuthorId());
 		List<Tag> authorFavs = author.getFavTags();
 
 		//If the Tag {name} already exists in DB --> Error: This tag already exists
 		//Else --> Creates the new Tag doing setters where needed and saves it
-		if (tagRepository.findTagByName(tagDetails.getName()).isPresent()) throw new Exception ("This tag already exists");
+		if (tagRepository.findTagByName(tagDetails.getName()).isPresent()) throw new DuplicateActionException("This tag already exists");
 		else {
 			Tag tag = new Tag(tagDetails.getName(), author);
 			authorFavs.add(tag);
@@ -68,8 +70,8 @@ public class TagService {
     }
 
 	//It returns the Tag associated with the given {tagName}
-    public TagOutput getTagByTagName(String name) throws Exception {
-		if (!tagRepository.findTagByName(name).isPresent()) throw new Exception("It does not exists a tag with tagName " + name);
+    public TagOutput getTagByTagName(String name) {
+		if (!tagRepository.findTagByName(name).isPresent()) throw new TagNotFoundException("It does not exists a tag with tagName " + name);
 		Tag tag = tagRepository.getTagByName(name);
 		return new TagOutput(tag);
 		

@@ -39,7 +39,7 @@ public class CommentController {
 	}
 
     @PostMapping    
-	public CommentOutput postComment(@RequestBody CommentInput commentDetails, @RequestHeader(value = "auth", required = true) String token) throws Exception {
+	public CommentOutput postComment(@RequestBody CommentInput commentDetails, @RequestHeader(value = "auth", required = true) String token) {
        return commentService.postComment(commentDetails, token);
 	}
 
@@ -49,7 +49,7 @@ public class CommentController {
     }
 
     @PutMapping (path = "{commentId}")  
-	public CommentOutput putComment(@PathVariable("commentId") Long commentId, @RequestBody CommentInput commentDetails, @RequestHeader(value = "auth", required = true) String token) throws Exception {
+	public CommentOutput putComment(@PathVariable("commentId") Long commentId, @RequestBody CommentInput commentDetails, @RequestHeader(value = "auth", required = true) String token)  {
        return commentService.putComment(commentId, commentDetails, token);
 	}
 

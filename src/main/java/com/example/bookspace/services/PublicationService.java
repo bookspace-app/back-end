@@ -8,8 +8,10 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import com.example.bookspace.Exceptions.ActionNotPermited;
 import com.example.bookspace.Exceptions.BadRequestPublicationException;
 import com.example.bookspace.Exceptions.CategoryNotFoundException;
+import com.example.bookspace.Exceptions.DuplicateActionException;
 import com.example.bookspace.Exceptions.IncorrectTokenException;
 import com.example.bookspace.Exceptions.LoginException;
 import com.example.bookspace.Exceptions.PublicationNotFound;
@@ -47,7 +49,7 @@ public class PublicationService {
 
      
 
-    public List<PublicationOutput> getPublications(String sortString) throws Exception {
+    public List<PublicationOutput> getPublications(String sortString)  {
         List<PublicationOutput> result = new ArrayList<>();
         List<Publication> publications = publicationRepository.findAll();
 
@@ -86,7 +88,7 @@ public class PublicationService {
         return result;
     }
 
-    public PublicationOutput postPublication(PublicationInput publicationDetails, String token) throws Exception {
+    public PublicationOutput postPublication(PublicationInput publicationDetails, String token) {
 
         
         if (publicationDetails.getTitle() == null) throw new BadRequestPublicationException("The title can't be empty");
@@ -145,7 +147,7 @@ public class PublicationService {
     }
 
     @Transactional
-	public PublicationOutput putPublication(Long id, PublicationInput publicationDetails, String token) throws Exception {
+	public PublicationOutput putPublication(Long id, PublicationInput publicationDetails, String token)  {
 
         User author = userRepository.getOne(publicationDetails.getAuthorId());
 
@@ -187,7 +189,7 @@ public class PublicationService {
 	}
 
 
-    public List<UserOutput> getLikedUsers(Long publicationId) throws Exception {
+    public List<UserOutput> getLikedUsers(Long publicationId)  {
         List<UserOutput> result = new ArrayList<>();
         Publication p = publicationRepository.getOne(publicationId);
         for (User u: p.getLikedBy()) {
@@ -196,7 +198,7 @@ public class PublicationService {
         return result;
     }
 
-    public PublicationOutput postLike(Long publicationId, Long userId, String token) throws Exception {
+    public PublicationOutput postLike(Long publicationId, Long userId, String token)  {
         
 
         if (!publicationRepository.existsById(publicationId)) throw new PublicationNotFound(publicationId);
@@ -207,7 +209,7 @@ public class PublicationService {
         if (u.getToken() == null) throw new LoginException();
         if (!u.getToken().equals(token)) throw new IncorrectTokenException();
 
-        if (p.getLikedBy().contains(u)) throw new Exception("This user has already liked this publication");
+        if (p.getLikedBy().contains(u)) throw new DuplicateActionException("This user has already liked this publication");
 
         if (p.getDislikedBy().contains(u))  {
             p.getDislikedBy().remove(u);
@@ -224,14 +226,14 @@ public class PublicationService {
 
     }
     
-    public PublicationOutput deleteLike(Long publicationId, Long userId, String token) throws Exception {
+    public PublicationOutput deleteLike(Long publicationId, Long userId, String token)  {
 
         Publication p = publicationRepository.getOne(publicationId);
         User u = userRepository.getOne(userId);
 
         if (u.getToken() == null) throw new LoginException();
         if (!u.getToken().equals(token)) throw new IncorrectTokenException();
-        if (!p.getLikedBy().contains(u)) throw new Exception ("This user has not liked this publication");
+        if (!p.getLikedBy().contains(u)) throw new ActionNotPermited ("This user has not liked this publication");
 
         p.getLikedBy().remove(u);
         u.getLikedPublications().remove(p);
@@ -241,7 +243,7 @@ public class PublicationService {
         
     }    
     
-    public List<UserOutput> getDislikedUsers(Long publicationId) throws Exception {
+    public List<UserOutput> getDislikedUsers(Long publicationId)  {
        Publication p = publicationRepository.getOne(publicationId);
        List<UserOutput> result = new ArrayList<>();
        for (User u: p.getDislikedBy()) {
@@ -252,14 +254,14 @@ public class PublicationService {
 
 
 
-	public PublicationOutput postDislike(Long publicationId, Long userId, String token) throws Exception {
+	public PublicationOutput postDislike(Long publicationId, Long userId, String token)  {
 		
         Publication p = publicationRepository.getOne(publicationId);
         User u = userRepository.getOne(userId);
 
         if (u.getToken() == null) throw new LoginException();
         if (!u.getToken().equals(token)) throw new IncorrectTokenException();
-        if (p.getDislikedBy().contains(u)) throw new Exception("This user has already disliked this publication");
+        if (p.getDislikedBy().contains(u)) throw new DuplicateActionException("This user has already disliked this publication");
 
         if (p.getLikedBy().contains(u))  {
             p.getLikedBy().remove(u);
@@ -275,14 +277,14 @@ public class PublicationService {
 
 
 
-	public PublicationOutput deleteDislike(Long publicationId, Long userId, String token) throws Exception {
+	public PublicationOutput deleteDislike(Long publicationId, Long userId, String token)  {
 		
         Publication p = publicationRepository.getOne(publicationId);
         User u = userRepository.getOne(userId);
 
         if (u.getToken() == null) throw new LoginException();
         if (!u.getToken().equals(token)) throw new IncorrectTokenException();
-        if (!p.getDislikedBy().contains(u)) throw new Exception ("This user has not disliked this publication");
+        if (!p.getDislikedBy().contains(u)) throw new ActionNotPermited ("This user has not disliked this publication");
 
         p.getDislikedBy().remove(u);
         u.getDislikedPublications().remove(p);
@@ -304,14 +306,14 @@ public class PublicationService {
 
 
 
-    public UserOutput postFavUser(Long id, Long userId, String token) throws Exception {
+    public UserOutput postFavUser(Long id, Long userId, String token)  {
 		
         Publication p = publicationRepository.getOne(id);
         User favUser = userRepository.getOne(userId);
 
         if (favUser.getToken() == null) throw new LoginException();
         if (!favUser.getToken().equals(token)) throw new IncorrectTokenException();
-        if (p.getFavouriteBy().contains(favUser)) throw new Exception("This user has already faved this publication");
+        if (p.getFavouriteBy().contains(favUser)) throw new DuplicateActionException("This user has already faved this publication");
         
         p.addFavUser(favUser);
         favUser.addFavPublication(p);
@@ -323,7 +325,7 @@ public class PublicationService {
 
     }
 
-    public UserOutput deleteFavUser(Long id, Long userId, String token) throws Exception {
+    public UserOutput deleteFavUser(Long id, Long userId, String token)  {
 
 		
         Publication p = publicationRepository.getOne(id);
@@ -331,7 +333,7 @@ public class PublicationService {
 
         if (favUser.getToken() == null) throw new LoginException();
         if (!favUser.getToken().equals(token)) throw new IncorrectTokenException();
-        if (!p.getFavouriteBy().contains(favUser)) throw new Exception("This user has not faved this publication");
+        if (!p.getFavouriteBy().contains(favUser)) throw new ActionNotPermited("This user has not faved this publication");
         
         p.removeFavUser(favUser);
         favUser.removeFavPublication(p);
@@ -341,7 +343,7 @@ public class PublicationService {
 
         return new UserOutput(favUser);    }
 
-    public List<CommentOutput> getComments(Long publicationId) throws Exception {
+    public List<CommentOutput> getComments(Long publicationId)  {
         Publication p = publicationRepository.getOne(publicationId);
         List<CommentOutput> result = new ArrayList<>();
         for (Comment c: p.getComments()) {
@@ -353,7 +355,7 @@ public class PublicationService {
 
 
 
-    public List<UserOutput> getMentions(Long publicationId) throws Exception {
+    public List<UserOutput> getMentions(Long publicationId)  {
         Publication publication = publicationRepository.getOne(publicationId);
         List<UserOutput> result = new ArrayList<>();
         for(User mention: publication.getMentions()) {
@@ -365,7 +367,7 @@ public class PublicationService {
 
 
 
-    public List<TagOutput> getTags(Long publicationId) throws Exception {
+    public List<TagOutput> getTags(Long publicationId)  {
         Publication p = publicationRepository.getOne(publicationId);
         List<TagOutput> result = new ArrayList<>();
         for (Tag t: p.getTags()) {

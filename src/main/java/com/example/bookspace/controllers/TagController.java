@@ -51,7 +51,7 @@ public class TagController {
 
     @PostMapping
     //An endpoint that when is given a Tag details it posts the Tag and returns it
-    public TagOutput postTag(@RequestBody TagInput tagDetails) throws Exception {
+    public TagOutput postTag(@RequestBody TagInput tagDetails) {
         return tagService.postTag(tagDetails);
     }
 

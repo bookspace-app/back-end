@@ -10,7 +10,9 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import com.example.bookspace.Exceptions.ActionNotPermited;
 import com.example.bookspace.Exceptions.AlreadyLoginException;
+import com.example.bookspace.Exceptions.DuplicateActionException;
 import com.example.bookspace.Exceptions.IncorrectTokenException;
 import com.example.bookspace.Exceptions.LoginException;
 import com.example.bookspace.Exceptions.UserNotFoundException;
@@ -61,7 +63,7 @@ public class UserService {
 	/* Registers a new user in the system 
 		Ensure there is no repetead fields with other users
 	*/
-	public UserOutput postUser(UserInput userDetails) throws Exception {
+	public UserOutput postUser(UserInput userDetails)  {
 	
 		if (userDetails.getEmail() == null) throw new HttpMessageConversionException("The email cannot be empty");
 		else if (userRepository.findUserByEmail(userDetails.getEmail()).isPresent()) throw new HttpMessageConversionException("This email is already used");
@@ -160,15 +162,15 @@ public class UserService {
 
 	
 
-	public void getProfilePic(Long userId) throws Exception {
+	public void getProfilePic(Long userId) throws Exception  {
 		throw new Exception("This endpoint is not implemented yet");
     }
 
-	public void postProfilePic(Long userId) throws Exception {
+	public void postProfilePic(Long userId) throws Exception  {
 		throw new Exception("This endpoint is not implemented yet");
 	}
 
-    public void deleteProfilePic(Long userId) throws Exception {
+    public void deleteProfilePic(Long userId) throws Exception  {
 		throw new Exception("This endpoint is not implemented yet");
 
     }    
@@ -190,7 +192,7 @@ public class UserService {
 		
     }
 
-	public List<PublicationOutput> getLikedPublications(Long id) throws Exception {
+	public List<PublicationOutput> getLikedPublications(Long id)  {
 		User author = userRepository.getOne(id);
 		List<Publication> publications = author.getLikedPublications();
 		List<PublicationOutput> result = new ArrayList<>();
@@ -201,7 +203,7 @@ public class UserService {
 		return result;
     }
 
-    public List<PublicationOutput> getDislikedPublications(Long id) throws Exception {
+    public List<PublicationOutput> getDislikedPublications(Long id)  {
 		User author = userRepository.getOne(id);
 		List<Publication> publications = author.getDislikedPublications();
 		List<PublicationOutput> result = new ArrayList<>();
@@ -211,7 +213,7 @@ public class UserService {
 		return result;
 	}
 	
-	public List<PublicationOutput> getFavPublications(Long id) throws Exception {
+	public List<PublicationOutput> getFavPublications(Long id)  {
 		User author = userRepository.getOne(id);
 		List<Publication> publications = author.getFavouritePublications();
 		List<PublicationOutput> result = new ArrayList<>();
@@ -221,7 +223,7 @@ public class UserService {
 		return result;
 	}
 	
-	public List<MentionOutput> getMentions(Long id) throws Exception {
+	public List<MentionOutput> getMentions(Long id)  {
 		User author = userRepository.getOne(id);
 		List<Publication> publications = author.getMentions();
 		List<Comment> comments = author.getCommentMentions();
@@ -236,7 +238,7 @@ public class UserService {
 		return result;
 	}
 
-	public List<CommentOutput> getComments(Long id) throws Exception {
+	public List<CommentOutput> getComments(Long id)  {
 		User author = userRepository.getOne(id);
 		List<Comment> comments = author.getComments();
 		List<CommentOutput> result = new ArrayList<>();
@@ -246,7 +248,7 @@ public class UserService {
 		return result;
 	}
 
-    public List<CommentOutput> getLikedComments(Long id) throws Exception {
+    public List<CommentOutput> getLikedComments(Long id)  {
 		User author = userRepository.getOne(id);
 		List<Comment> comments = author.getLikedComments();
 		List<CommentOutput> result = new ArrayList<>();
@@ -255,7 +257,7 @@ public class UserService {
 		}
 		return result;    }
 
-	public List<CommentOutput> getDislikedComments(Long id) throws Exception {
+	public List<CommentOutput> getDislikedComments(Long id)  {
 		User author = userRepository.getOne(id);
 		List<Comment> comments = author.getDislikedComments();
 		List<CommentOutput> result = new ArrayList<>();
@@ -265,7 +267,7 @@ public class UserService {
 		return result;
     }
 
-	public List<TagOutput> getCreatedTags(Long id) throws Exception {
+	public List<TagOutput> getCreatedTags(Long id)  {
 		User author = userRepository.getOne(id);
 		List<Tag> tags = author.getCreatedTags();
 		List<TagOutput> result = new ArrayList<>();
@@ -285,7 +287,7 @@ public class UserService {
 		return result;
 	}
 
-    public List<UserOutput> getBlockedUsers(Long id) throws Exception {
+    public List<UserOutput> getBlockedUsers(Long id)  {
 		User user = userRepository.getOne(id);
 		List<User> users = user.getBlockedUsers();
 		List<UserOutput> result = new ArrayList<>();
@@ -296,7 +298,7 @@ public class UserService {
 		return result;
     }
 
-   	public UserOutput postBlockedUsers(Long id, Long blockedUserid, String token) throws Exception {
+   	public UserOutput postBlockedUsers(Long id, Long blockedUserid, String token)  {
 		
 		if (!userRepository.existsById(id)) throw new UserNotFoundException(id);
 		User user = userRepository.getOne(id);
@@ -305,7 +307,7 @@ public class UserService {
 		User userToBlock = userRepository.getOne(blockedUserid);
 
 		if (user.getToken().equals(token)) {
-			if (id == blockedUserid) throw new Exception("You cannot block yourself!");
+			if (id == blockedUserid) throw new ActionNotPermited("You cannot block yourself!");
 			
 			List<User> blockedUsers = user.getBlockedUsers();
 			if (!blockedUsers.contains(userToBlock)){
@@ -314,12 +316,12 @@ public class UserService {
 				user = userRepository.save(user);
 				return new UserOutput(user);
 			}
-			else throw new Exception("This user is already blocked");
+			else throw new DuplicateActionException("This user is already blocked");
 		}
 		else throw new IncorrectTokenException();
 	}
 
-    public UserOutput deleteBlockedUsers(Long id, Long blockedUserid, String token) throws Exception {
+    public UserOutput deleteBlockedUsers(Long id, Long blockedUserid, String token)  {
 		
 		if (!userRepository.existsById(id)) throw new UserNotFoundException(id);
 		User user = userRepository.getOne(id);
@@ -336,21 +338,21 @@ public class UserService {
 				user = userRepository.save(user);
 				return new UserOutput(user);
 			}
-			else throw new Exception("This user is not blocked yet"); 
+			else throw new ActionNotPermited("This user is not blocked yet"); 
 		}
 		else throw new HttpMessageConversionException("You are not authorized");
 
 		
     }
 
-	public UserOutput getUserByUsername(String username) throws Exception {
-		if (!userRepository.findUserByUsername(username).isPresent()) throw new Exception("It does not exists a user with username " + username);
+	public UserOutput getUserByUsername(String username)  {
+		if (!userRepository.findUserByUsername(username).isPresent()) throw new UserNotFoundException(username);
 		User user = userRepository.getUserByUsername(username);
 		return new UserOutput(user);
 		
 	}
 
-	public Map<String, String> loginUser(UserInput userDetails) throws Exception {
+	public Map<String, String> loginUser(UserInput userDetails) throws AlreadyLoginException {
 		
 		if (userDetails.getEmail() == null) throw new HttpMessageConversionException("The mail can't be null");
 		if (userDetails.getPassword() == null) new HttpMessageConversionException("The password can't be null");
@@ -399,7 +401,7 @@ public class UserService {
 		
     }
 
-	public Map<String, String> getToken(Long userId) throws Exception {
+	public Map<String, String> getToken(Long userId)  {
 
         if (!userRepository.existsById(userId)) throw new UserNotFoundException(userId);		
 	
