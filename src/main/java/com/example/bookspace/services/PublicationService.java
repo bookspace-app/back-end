@@ -106,13 +106,22 @@ public class PublicationService {
 
                 Publication publication = new Publication(publicationDetails.getTitle(), publicationDetails.getContent(), author, category);
 
+                Tag tag = new Tag();
 
                 if (publicationDetails.getTags() != null) {
-                    for (Long tagId: publicationDetails.getTags()) {
-                        Tag tag = tagRepository.getOne(tagId);
+                    for (String tagName: publicationDetails.getTags()) {
+                        if (tagRepository.existsById(tagName)) {
+                            tag = tagRepository.getOne(tagName);
+                            tag.getPublications().add(publication);
+                        }
+                        else {
+                            tag = new Tag(tagName, author, publication);
+                            author.addCreatedTag(tag);
+                            
+                        }
                         publication.addTag(tag);
-                        tag.getPublications().add(publication);
-                        tag = tagRepository.save(tag);
+                        author.addFavTag(tag); 
+
                     }
                 }
 
@@ -126,9 +135,11 @@ public class PublicationService {
                         }
                     }
                 }
+
                 author.addPublication(publication);
                 publication = publicationRepository.save(publication);
-                userRepository.save(author);
+                author = userRepository.save(author);
+                tag = tagRepository.save(tag);
 
                 
 
@@ -166,6 +177,7 @@ public class PublicationService {
             Category c = Category.getCategory(publicationDetails.getCategory());
             publication.setCategory(c);
         } 
+    
         publication = publicationRepository.save(publication);
         return new PublicationOutput(publication);
 

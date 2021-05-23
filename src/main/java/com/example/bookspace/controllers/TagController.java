@@ -37,10 +37,10 @@ public class TagController {
         return tagService.getTags();
     }
 
-    @GetMapping(path = "{idTag}")  
+    @GetMapping(path = "{tagName}")  
     //An endpoint that when is given an ID returns the Tag associated with it in the DB 
-	public TagOutput getTagById(@PathVariable("idTag") Long idTag) {
-        return tagService.getTag(idTag);
+	public TagOutput getTagById(@PathVariable("tagName") String tagName) {
+        return tagService.getTag(tagName);
     }
 
     @GetMapping(path = "/tagname/{tagName}")  
@@ -55,18 +55,18 @@ public class TagController {
         return tagService.postTag(tagDetails);
     }
 
-    @PutMapping(path = "{IdTag}") 
+    @PutMapping(path = "{tagName}") 
     //An endpoint that when is given an ID and some Tag details it updates the Tag associated with it in the DB and returns it
-    public void updateTag(@PathVariable("IdTag") Long IdTag,
+    public void updateTag(@PathVariable("tagName") String tagName,
                                       @RequestParam(required = false) User author,
                                       @RequestParam(required = false) List<Publication> taggedPublications,
                                       @RequestParam(required = false) List<User> favTags){
-        tagService.updateTag(IdTag,author,taggedPublications,favTags);
+        tagService.updateTag(tagName,author,taggedPublications,favTags);
     }
 
-    @DeleteMapping(path = "{idTag}")
+    @DeleteMapping(path = "{tagName}")
     //An endpoint that when is given an ID it deletes the Tag associated with it in the DB
-    public void deleteTag(@PathVariable("idTag") Long idTag){
-        tagService.deleteTag(idTag);
+    public void deleteTag(@PathVariable("tagName") String tagName){
+        tagService.deleteTag(tagName);
     }
 }

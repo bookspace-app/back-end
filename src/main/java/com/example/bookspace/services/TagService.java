@@ -61,33 +61,33 @@ public class TagService {
 		return result;
 	}
 
-	//It returns the Tag associated with the given {idTag}
-    public TagOutput getTag(Long idTag) {
-        Tag t = tagRepository.getOne(idTag);
+	//It returns the Tag associated with the given {tagName}
+    public TagOutput getTag(String tagName) {
+        Tag t = tagRepository.getOne(tagName);
 		return new TagOutput(t);
     }
 
 	//It returns the Tag associated with the given {tagName}
     public TagOutput getTagByTagName(String name) throws Exception {
 		if (!tagRepository.findTagByName(name).isPresent()) throw new Exception("It does not exists a tag with tagName " + name);
-		Tag tag = tagRepository.getTagByName(name);
+		Tag tag = tagRepository.getOne(name);
 		return new TagOutput(tag);
 		
 	}
 
-	//It deletes the Tag associated with the given {idTag}
-	public void deleteTag(Long IdTag){
-		tagRepository.deleteById(IdTag);
+	//It deletes the Tag associated with the given {tagName}
+	public void deleteTag(String tagName){
+		tagRepository.deleteById(tagName);
 	}
 
 	@Transactional
-	//Given a {idTag} and some Tag Details it updates the Tag associated with the {idTag} with the given details
-	public void updateTag(Long IdTag, User author, List<Publication> publications, List<User> users) {
+	//Given a {tagName} and some Tag Details it updates the Tag associated with the {tagName} with the given details
+	public void updateTag(String tagName, User author, List<Publication> publications, List<User> users) {
 
-		//If the Tag associated with {idTag} doesn't exist --> Error: Tag with IdTag " + IdTag + " does not exist
-		Tag tag = tagRepository.findById(IdTag)
+		//If the Tag associated with {tagName} doesn't exist --> Error: Tag with tagName " + tagName + " does not exist
+		Tag tag = tagRepository.findById(tagName)
 					.orElseThrow(() -> new IllegalStateException(
-						"Tag with IdTag " + IdTag + " does not exist"));
+						"Tag with tagName " + tagName + " does not exist"));
 		
 		//If attribute {author} is not null and not equal with the Tag actual author --> It sets the new author
 		if (author != null &&
