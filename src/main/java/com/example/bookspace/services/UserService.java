@@ -25,6 +25,8 @@ import com.example.bookspace.models.Publication;
 import com.example.bookspace.models.Tag;
 import com.example.bookspace.models.User;
 import com.example.bookspace.repositories.UserRepository;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -37,10 +39,12 @@ import net.bytebuddy.utility.RandomString;
 public class UserService {
 
 	private final UserRepository userRepository;
+	private JavaMailSender javaMailSender;
 
 	@Autowired
-	public UserService(UserRepository userRepository) {
+	public UserService(UserRepository userRepository, JavaMailSender javaMailSender) {
 		this.userRepository = userRepository;
+		this.javaMailSender = javaMailSender;
 	}
 
 	/*
@@ -157,7 +161,20 @@ public class UserService {
 		else throw new IncorrectTokenException();
 	}
 
+	public Void forgotPassword(String email) {
+		
+		if (!userRepository.findUserByEmail(email).isPresent()) throw new UserNotFoundException(email);
+		User user = userRepository.findUserByEmail(email).get();
 	
+		SimpleMailMessage mail = new SimpleMailMessage();
+		mail.setTo(email);
+		mail.setFrom("bookspace.application@gmail.com");
+		mail.setSubject("Your BookSpace password");
+		mail.setText("Hello " + user.getName() + ", \n Somebody requested the password for the BookSpace account associated with " + user.getEmail() + ". \n No changes have been made to your account. \n Here you have your BookSpace password: " + user.getPassword() + " \n If you did not request a new password, please let us know immediately by replying to this email. \n Yours, \n The BookSpace team.");
+	
+		javaMailSender.send(mail);
+		return null;
+	}
 
 	public void getProfilePic(Long userId) throws Exception {
 		throw new Exception("This endpoint is not implemented yet");
