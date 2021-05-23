@@ -4,8 +4,6 @@ import java.util.List;
 
 import com.example.bookspace.Inputs.TagInput;
 import com.example.bookspace.Output.TagOutput;
-import com.example.bookspace.models.Publication;
-import com.example.bookspace.models.User;
 import com.example.bookspace.services.TagService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -57,16 +54,13 @@ public class TagController {
 
     @PutMapping(path = "{tagName}") 
     //An endpoint that when is given an ID and some Tag details it updates the Tag associated with it in the DB and returns it
-    public void updateTag(@PathVariable("tagName") String tagName,
-                                      @RequestParam(required = false) User author,
-                                      @RequestParam(required = false) List<Publication> taggedPublications,
-                                      @RequestParam(required = false) List<User> favTags){
-        tagService.updateTag(tagName,author,taggedPublications,favTags);
+    public void updateTag(@RequestBody TagInput tagDetails){
+        tagService.updateTag(tagDetails);
     }
 
     @DeleteMapping(path = "{tagName}")
     //An endpoint that when is given an ID it deletes the Tag associated with it in the DB
-    public void deleteTag(@PathVariable("tagName") String tagName){
+    public void deleteTag(@PathVariable("tagName") String tagName) throws Exception{
         tagService.deleteTag(tagName);
     }
 }

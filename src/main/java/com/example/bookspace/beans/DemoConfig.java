@@ -49,7 +49,8 @@ public class DemoConfig {
             publication = new Publication(publicationDetails.getTitle(), publicationDetails.getContent(), user, category);
             publication = publicationRepository.save(publication);
             TagInput tagDetails = new TagInput("demoTag", user.getId(), publication.getId());
-            tag = new Tag(tagDetails.getName(), user, publication);
+            tag = new Tag(tagDetails.getName(), user);
+            tag.getPublications().add(publication);
             tagRepository.save(tag); 
             
             CommentInput commentDetails = new CommentInput("contentDemo", 1L, 1L, null, null);

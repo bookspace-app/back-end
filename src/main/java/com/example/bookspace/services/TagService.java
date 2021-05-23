@@ -76,35 +76,44 @@ public class TagService {
 	}
 
 	//It deletes the Tag associated with the given {tagName}
-	public void deleteTag(String tagName){
+	public void deleteTag(String tagName) throws Exception{
+		if (!tagRepository.findById(tagName).isPresent()) throw new Exception("It does not exists a tag with tagName " + tagName);
+		
+		Tag tag = tagRepository.getOne(tagName);
+
+		for (Publication p: tag.getPublications())  {
+			p.getTags().remove(tag);
+			publicationRepository.save(p);
+		}
+		for (User u: tag.getFavByUsers()){
+			u.getFavTags().remove(tag);
+			userRepository.save(u);
+		}
+		
+		User author = tag.getAuthor();
+		author.getCreatedTags().remove(tag);
+		userRepository.save(author);
+				
+
+
 		tagRepository.deleteById(tagName);
 	}
 
 	@Transactional
 	//Given a {tagName} and some Tag Details it updates the Tag associated with the {tagName} with the given details
-	public void updateTag(String tagName, User author, List<Publication> publications, List<User> users) {
+	public void updateTag(TagInput tagDetails) {
 
 		//If the Tag associated with {tagName} doesn't exist --> Error: Tag with tagName " + tagName + " does not exist
-		Tag tag = tagRepository.findById(tagName)
+		Tag tag = tagRepository.findById(tagDetails.getName())
 					.orElseThrow(() -> new IllegalStateException(
-						"Tag with tagName " + tagName + " does not exist"));
+						"Tag with tagName " + tagDetails.getName() + " does not exist"));
 		
 		//If attribute {author} is not null and not equal with the Tag actual author --> It sets the new author
+		User author = userRepository.getOne(tagDetails.getAuthorId());
+
 		if (author != null &&
 			!Objects.equals(tag.getAuthor(), author)){
 				tag.setAuthor(author);
-			}
-
-		//If attribute {publications} is not null and not equal with the Tag actual publications --> It sets the new publications
-		if (publications != null &&
-			!Objects.equals(tag.getPublications(), publications)){
-				tag.setPublications(publications);
-			}
-
-		//If attribute {users} is not null and not equal with the Tag actual users --> It sets the new users
-		if (users != null &&
-			!Objects.equals(tag.getUsers(), users)){
-				tag.setUsers(users);
 			}
 
 		tagRepository.save(tag);

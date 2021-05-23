@@ -2,7 +2,7 @@ package com.example.bookspace.models;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.Column;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -16,8 +16,7 @@ import javax.persistence.Table;
 //Tag model class
 public class Tag {
 
-    @Id  
-    @Column(name = "tag", unique = true)
+    @Id 
     private String name;
 
     @ManyToOne
@@ -28,18 +27,13 @@ public class Tag {
     private List<Publication> publications = new ArrayList<>();
 
     @ManyToMany(mappedBy = "favTags")
-    private List<User> users = new ArrayList<>();
+    private List<User> favByUsers;
 
+ 
     //Default constructor
     public Tag() {}
 
-    //Constructor given attributes --> {name, authorId, publication}
-    public Tag (String name, User author, Publication publication) {
-        this.name = name;
-        this.author = author;
-        this.publications.add(publication);
-    }
-
+    
     //Constructor given attributes --> {name, authorId}
     public Tag (String name, User author) {
         this.name = name;
@@ -77,13 +71,13 @@ public class Tag {
         this.publications = publications;
     }
 
-    //Getter of {users} attribute
-    public List<User> getUsers() {
-        return this.users;
+    public List<User> getFavByUsers() {
+        return this.favByUsers;
     }
 
-    //Setter of {users} attribute
-    public void setUsers(List<User> users) {
-        this.users = users;
+    public void setFavByUsers(List<User> favByUsers) {
+        this.favByUsers = favByUsers;
     }
+
+
 }
