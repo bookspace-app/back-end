@@ -57,16 +57,16 @@ public class Publication {
     @JoinColumn(name = "authorId", nullable = false)
     private User author;
 
-    @ManyToMany(mappedBy = "likedPublications")
+    @ManyToMany(mappedBy = "likedPublications", cascade = CascadeType.REMOVE)
     private List<User> likedBy = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "dislikedPublications")
+    @ManyToMany(mappedBy = "dislikedPublications", cascade = CascadeType.REMOVE)
     private List<User> dislikedBy = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "favouritePublications")
+    @ManyToMany(mappedBy = "favouritePublications", cascade = CascadeType.REMOVE)
     private List<User> favouriteBy = new ArrayList<>();
 
-    @OneToMany(mappedBy = "publication", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "publication", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
 
     @Column(name = "directComments")

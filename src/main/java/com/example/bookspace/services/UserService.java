@@ -164,7 +164,7 @@ public class UserService {
 	public Void forgotPassword(String email) {
 		
 		if (!userRepository.findUserByEmail(email).isPresent()) throw new UserNotFoundException(email);
-		User user = userRepository.findUserByEmail(email).get();
+		User user = userRepository.getUserByEmail(email);
 	
 		SimpleMailMessage mail = new SimpleMailMessage();
 		mail.setTo(email);

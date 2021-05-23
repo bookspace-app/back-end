@@ -90,8 +90,8 @@ public class UserController {
         userService.deleteUser(userId, token);
     }
 
-    @RequestMapping("/forgotPassword")  
-    public Void forgotPassword(@RequestHeader(value = "email", required = true) String email) {
+    @PostMapping("/forgotPassword")  
+    public Void forgotPassword(@RequestBody (required = true) String email) {
         return userService.forgotPassword(email);
     }
 
