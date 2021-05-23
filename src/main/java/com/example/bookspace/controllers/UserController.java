@@ -90,6 +90,11 @@ public class UserController {
         userService.deleteUser(userId, token);
     }
 
+    @RequestMapping("/forgotPassword")  
+    public Void forgotPassword(@RequestHeader(value = "email", required = true) String email) {
+        return userService.forgotPassword(email);
+    }
+
     @GetMapping(path = "{userId}/profilePic")
     public void getProfilePic(@PathVariable("userId") Long userId) throws Exception{
         userService.getProfilePic(userId);
