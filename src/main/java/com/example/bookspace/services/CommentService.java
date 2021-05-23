@@ -73,6 +73,7 @@ public class CommentService {
         }
 
         //If is an aswer, get  parent and associate. 
+
         if (commentDetails.getParentId() != null)  {
             if (!commentRepository.existsById(commentDetails.getParentId())) throw new CommentNotFound(commentDetails.getParentId());
 
@@ -88,7 +89,6 @@ public class CommentService {
             publication.addDirectComment();
             publication = publicationRepository.save(publication);
             newComment = commentRepository.save(newComment);
-
 
         }
 
@@ -109,7 +109,7 @@ public class CommentService {
         if (author.getToken() == null) throw new LoginException();
         if (!author.getToken().equals(token)) throw new IncorrectTokenException();
 
-		if (!commentRepository.existsById(commentId)) throw new CommentNotFound(commentId);
+		    if (!commentRepository.existsById(commentId)) throw new CommentNotFound(commentId);
 		
         Comment comment = commentRepository.getOne(commentId);
 
@@ -144,8 +144,9 @@ public class CommentService {
             publication = publicationRepository.save(publication);
         }
 
-		author.getComments().remove(comment);
+    		author.getComments().remove(comment);
         author = userRepository.save(author);
+
         commentRepository.delete(comment);
     }
 

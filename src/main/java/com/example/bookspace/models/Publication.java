@@ -265,8 +265,6 @@ public class Publication {
     public void removeMention(User u) {
         this.mentions.remove(u);
     }
-
-
     public Integer getDirectComments() {
         return this.directComments;
     }
@@ -283,9 +281,6 @@ public class Publication {
         this.directComments--;
     }
 
-
-    
-    
 
 
 
