@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import com.example.bookspace.Exceptions.AlreadyLoginException;
 import com.example.bookspace.Exceptions.IncorrectTokenException;
 import com.example.bookspace.Exceptions.LoginException;
 import com.example.bookspace.Exceptions.UserNotFoundException;
@@ -25,6 +26,8 @@ import com.example.bookspace.models.Publication;
 import com.example.bookspace.models.Tag;
 import com.example.bookspace.models.User;
 import com.example.bookspace.repositories.UserRepository;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -37,10 +40,12 @@ import net.bytebuddy.utility.RandomString;
 public class UserService {
 
 	private final UserRepository userRepository;
+	private JavaMailSender javaMailSender;
 
 	@Autowired
-	public UserService(UserRepository userRepository) {
+	public UserService(UserRepository userRepository, JavaMailSender javaMailSender) {
 		this.userRepository = userRepository;
+		this.javaMailSender = javaMailSender;
 	}
 
 	/*
@@ -157,19 +162,45 @@ public class UserService {
 		else throw new IncorrectTokenException();
 	}
 
+	public Void forgotPassword(String email) {
+		
+		if (!userRepository.findUserByEmail(email).isPresent()) throw new UserNotFoundException(email);
+		User user = userRepository.getUserByEmail(email);
 	
-
-	public void getProfilePic(Long userId) throws Exception {
-		throw new Exception("This endpoint is not implemented yet");
-    }
-
-	public void postProfilePic(Long userId) throws Exception {
-		throw new Exception("This endpoint is not implemented yet");
+		SimpleMailMessage mail = new SimpleMailMessage();
+		mail.setTo(email);
+		mail.setFrom("bookspace.application@gmail.com");
+		mail.setSubject("Your BookSpace password");
+		mail.setText("Hello " + user.getName() + ", \n Somebody requested the password for the BookSpace account associated with " + user.getEmail() + ". \n No changes have been made to your account. \n Here you have your BookSpace password: " + user.getPassword() + " \n If you did not request a new password, please let us know immediately by replying to this email. \n Yours, \n The BookSpace team.");
+	
+		javaMailSender.send(mail);
+		return null;
 	}
 
-    public void deleteProfilePic(Long userId) throws Exception {
-		throw new Exception("This endpoint is not implemented yet");
+	
+	public String getProfilePic(Long userId) throws Exception {
+		User user = userRepository.getOne(userId);
+		return user.getProfilePic();
+    }
 
+	public String getProfilePicPath(Long userId) throws Exception{
+		User user = userRepository.getOne(userId);
+		return user.getProfilePicPath();
+	}
+
+	public UserOutput postProfilePic(Long userId, String profilePic) throws Exception {
+		User user = userRepository.getOne(userId);
+		user.setProfilePic(profilePic);
+		user = userRepository.save(user);
+		return new UserOutput(user);
+
+	}
+
+    public UserOutput deleteProfilePic(Long userId) throws Exception {
+		User user = userRepository.getOne(userId);
+		user.setProfilePic("");
+		user = userRepository.save(user);
+		return new UserOutput(user);
     }    
 	
     public List<String> getFavCategoriesUser(Long id) {
@@ -359,7 +390,7 @@ public class UserService {
 		if (!userRepository.findUserByEmail(email).isPresent()) throw new UserNotFoundException(email);
 		User user = userRepository.getUserByEmail(email);
 
-		
+		if (user.getToken() != null) throw new AlreadyLoginException();
 	
 		if (user.getPassword().equals(userDetails.getPassword())) {
 

@@ -4,8 +4,6 @@ import java.util.List;
 
 import com.example.bookspace.Inputs.TagInput;
 import com.example.bookspace.Output.TagOutput;
-import com.example.bookspace.models.Publication;
-import com.example.bookspace.models.User;
 import com.example.bookspace.services.TagService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -37,10 +34,10 @@ public class TagController {
         return tagService.getTags();
     }
 
-    @GetMapping(path = "{idTag}")  
+    @GetMapping(path = "{tagName}")  
     //An endpoint that when is given an ID returns the Tag associated with it in the DB 
-	public TagOutput getTagById(@PathVariable("idTag") Long idTag) {
-        return tagService.getTag(idTag);
+	public TagOutput getTagById(@PathVariable("tagName") String tagName) {
+        return tagService.getTag(tagName);
     }
 
     @GetMapping(path = "/tagname/{tagName}")  
@@ -55,18 +52,15 @@ public class TagController {
         return tagService.postTag(tagDetails);
     }
 
-    @PutMapping(path = "{IdTag}") 
+    @PutMapping(path = "{tagName}") 
     //An endpoint that when is given an ID and some Tag details it updates the Tag associated with it in the DB and returns it
-    public void updateTag(@PathVariable("IdTag") Long IdTag,
-                                      @RequestParam(required = false) User author,
-                                      @RequestParam(required = false) List<Publication> taggedPublications,
-                                      @RequestParam(required = false) List<User> favTags){
-        tagService.updateTag(IdTag,author,taggedPublications,favTags);
+    public void updateTag(@RequestBody TagInput tagDetails){
+        tagService.updateTag(tagDetails);
     }
 
-    @DeleteMapping(path = "{idTag}")
+    @DeleteMapping(path = "{tagName}")
     //An endpoint that when is given an ID it deletes the Tag associated with it in the DB
-    public void deleteTag(@PathVariable("idTag") Long idTag){
-        tagService.deleteTag(idTag);
+    public void deleteTag(@PathVariable("tagName") String tagName) throws Exception{
+        tagService.deleteTag(tagName);
     }
 }

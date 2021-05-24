@@ -2,11 +2,12 @@ package com.example.bookspace.Exceptions;
 
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.client.HttpClientErrorException;
 
-@ResponseStatus(value = HttpStatus.UNAUTHORIZED, reason = "The token is incorrect")
-public class IncorrectTokenException extends RuntimeException{
+public class IncorrectTokenException extends HttpClientErrorException{
 
-    public IncorrectTokenException() {}
+    public IncorrectTokenException() {
+        super(HttpStatus.UNAUTHORIZED, "The token is incorrect");
+    }
     
 }
