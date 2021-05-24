@@ -128,8 +128,10 @@ public class UserController {
              throw new IOException("Could not save uploaded file: " + fileName);
          }
          
-         userService.postProfilePic(userId,fileName);
-         return uploadPath.resolve(fileName).toFile().getAbsolutePath();
+         
+         String absolutePath = uploadPath.resolve(fileName).toFile().getAbsolutePath();
+         userService.postProfilePic(userId,absolutePath);
+         return absolutePath;
 
         
     }
@@ -212,10 +214,10 @@ public class UserController {
         return userService.deleteBlockedUsers(id, blockedUserid, token);
     }
 
-    @GetMapping(path = "{userId}/profilePicPath")   
+    /*@GetMapping(path = "{userId}/profilePicPath")   
 	public String getProfilePicPath(@PathVariable("userId") Long id) throws Exception {
         return userService.getProfilePicPath(id);
-    }
+    }*/
 
 
  
