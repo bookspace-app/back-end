@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import com.example.bookspace.Exceptions.AlreadyLoginException;
 import com.example.bookspace.Exceptions.IncorrectTokenException;
 import com.example.bookspace.Exceptions.LoginException;
 import com.example.bookspace.Exceptions.UserNotFoundException;
@@ -389,7 +390,7 @@ public class UserService {
 		if (!userRepository.findUserByEmail(email).isPresent()) throw new UserNotFoundException(email);
 		User user = userRepository.getUserByEmail(email);
 
-		
+		if (user.getToken() != null) throw new AlreadyLoginException();
 	
 		if (user.getPassword().equals(userDetails.getPassword())) {
 
