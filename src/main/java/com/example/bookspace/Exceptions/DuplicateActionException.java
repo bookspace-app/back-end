@@ -1,12 +1,11 @@
 package com.example.bookspace.Exceptions;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.client.HttpClientErrorException;
 
-@ResponseStatus(value = HttpStatus.CONFLICT)
-public class DuplicateActionException extends RuntimeException {
+public class DuplicateActionException extends HttpClientErrorException {
     public DuplicateActionException(String message) {
-        super(message);
+        super(HttpStatus.CONFLICT, message);
     }
     
 }
