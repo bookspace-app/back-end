@@ -1,17 +1,16 @@
 package com.example.bookspace.Exceptions;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.client.HttpClientErrorException;
 
-@ResponseStatus(value = HttpStatus.NOT_FOUND)
-public class UserNotFoundException extends Exception {
+public class UserNotFoundException extends HttpClientErrorException {
 
     public UserNotFoundException(Long id) {
-        super("The user with id " + id + " does not exists!");
+        super(HttpStatus.NOT_FOUND, "The user with id " + id + " does not exists!");
     }
 
     public UserNotFoundException(String email) {
-        super("The user with email [" + email + "] does not exists!");
+        super(HttpStatus.NOT_FOUND, "The user with email [" + email + "] does not exists!");
     }
     
 }

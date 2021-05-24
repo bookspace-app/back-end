@@ -393,7 +393,6 @@ public class UserService {
 		User user = userRepository.getUserByEmail(email);
 
 		if (user.getToken() != null) throw new AlreadyLoginException();
-		
 	
 		if (user.getPassword().equals(userDetails.getPassword())) {
 
