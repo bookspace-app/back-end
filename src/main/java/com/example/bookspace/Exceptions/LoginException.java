@@ -1,9 +1,11 @@
 package com.example.bookspace.Exceptions;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.client.HttpClientErrorException;
 
-@ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "The user is not logged in")
-public class LoginException extends RuntimeException{
+public class LoginException extends HttpClientErrorException{
+    public LoginException() {
+        super(HttpStatus.NOT_FOUND, "The user is not logged in");
+    }
     
 }
