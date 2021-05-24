@@ -6,23 +6,20 @@ import com.example.bookspace.models.Tag;
 public class TagOutput extends OutputManager {
 
     private String self = getURL() + "/tags/";
-    private Long id;
     private String name;
     private UserOutput author;
-    private String publications;
-    private String users;
+    private String publicationsUri;
+    private String usersUri;
 
     //Default constructor
     public TagOutput() {}
 
     //Constructor given a Tag
     public TagOutput(Tag tag) {
-        this.id = tag.getId();
         this.name = tag.getName();
         this.author = new UserOutput(tag.getAuthor());
-        this.self = self + this.id;
-        this.publications = this.self + "/publications";
-        this.users = this.self + "/users";
+        this.publicationsUri = this.self + "/publications";
+        this.usersUri = this.self + "/users";
     }
 
     //Getter of {self} attribute
@@ -35,15 +32,6 @@ public class TagOutput extends OutputManager {
         this.self = self;
     }
 
-    //Getter of {id} attribute
-    public Long getId() {
-        return this.id;
-    }
-
-    //Setter of {id} attribute
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     //Getter of {name} attribute
     public String getName() {
@@ -67,21 +55,21 @@ public class TagOutput extends OutputManager {
 
     //Getter of {publication} attribute
     public String getPublications() {
-        return this.publications;
+        return this.publicationsUri;
     }
 
     //Setter of {publication} attribute
     public void setPublications(String publications) {
-        this.publications = publications;
+        this.publicationsUri = publications;
     }
 
     //Getter of {users} attribute
     public String getUsers() {
-        return this.users;
+        return this.usersUri;
     }
 
     //Setter of {users} attribute
     public void setUsers(String users) {
-        this.users = users;
+        this.usersUri = users;
     }
 }

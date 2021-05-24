@@ -7,10 +7,10 @@ public class PublicationInput {
     private String content; 
     private Long authorId; 
     private String category;
-    private List<Long> tags;
+    private List<String> tags;
     private List<String> mentions;
 
-    public PublicationInput(String title, String content, Long authorId, String category, List<String> mentions, List<Long> tags) {
+    public PublicationInput(String title, String content, Long authorId, String category, List<String> mentions, List<String> tags) {
         this.title = title;
         this.content = content;
         this.authorId = authorId;
@@ -53,13 +53,15 @@ public class PublicationInput {
         this.category = category;
     }
 
-    public List<Long> getTags() {
+
+    public List<String> getTags() {
         return this.tags;
     }
 
-    public void setTags(List<Long> tags) {
+    public void setTags(List<String> tags) {
         this.tags = tags;
     }
+    
 
     public List<String> getMentions() {
         return this.mentions;

@@ -1,5 +1,11 @@
 package com.example.bookspace.controllers;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +23,7 @@ import com.example.bookspace.services.UserService;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,9 +33,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping(path = "api/users")
@@ -91,19 +100,44 @@ public class UserController {
         userService.deleteUser(userId, token);
     }
 
+    @PostMapping("/forgotPassword")  
+    public Void forgotPassword(@RequestBody (required = true) String email) throws UserNotFoundException {
+        return userService.forgotPassword(email);
+    }
+
     @GetMapping(path = "{userId}/profilePic")
-    public void getProfilePic(@PathVariable("userId") Long userId) throws Exception {
-        userService.getProfilePic(userId);
+    public String getProfilePic(@PathVariable("userId") Long userId) throws Exception{
+       //System.out.println(userService.getProfilePic(userId));
+        return userService.getProfilePic(userId);
     }
 
     @PostMapping(path = "{userId}/profilePic")
-    public void postProfilePic(@PathVariable("userId") Long userId) throws Exception {
-        userService.postProfilePic(userId);
+    public String postProfilePic(@PathVariable("userId") Long userId, @RequestParam("profilePic") MultipartFile profilePic) throws Exception{
+         String fileName = StringUtils.cleanPath(profilePic.getOriginalFilename());
+ 
+         String uploadDir = "./user-images/" + userId;
+         Path uploadPath = Paths.get(uploadDir);
+         if(!Files.exists(uploadPath)){
+             Files.createDirectories(uploadPath);
+         }
+ 
+         try (InputStream inputStream = profilePic.getInputStream()){
+             Path filePath = uploadPath.resolve(fileName);
+             //System.out.println(filePath.toFile().getAbsolutePath());
+             Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+         } catch (IOException e){
+             throw new IOException("Could not save uploaded file: " + fileName);
+         }
+         
+         userService.postProfilePic(userId,fileName);
+         return uploadPath.resolve(fileName).toFile().getAbsolutePath();
+
+        
     }
 
     @DeleteMapping(path = "{userId}/profilePic")
-    public void deleteProfilePic(@PathVariable("userId") Long userId) throws Exception {
-        userService.deleteProfilePic(userId);
+    public UserOutput deleteProfilePic(@PathVariable("userId") Long userId) throws Exception{
+        return userService.deleteProfilePic(userId);
     }
 
     @GetMapping(path = "{userId}/categories")   
@@ -178,6 +212,13 @@ public class UserController {
 	public UserOutput deleteBlockedUser(@PathVariable(name = "userId", required = true) Long id, @PathVariable(name = "blockedUserId", required = true) Long blockedUserid, @RequestHeader(name = "auth", required = true) String token) throws UserNotFoundException  {
         return userService.deleteBlockedUsers(id, blockedUserid, token);
     }
+
+    @GetMapping(path = "{userId}/profilePicPath")   
+	public String getProfilePicPath(@PathVariable("userId") Long id) throws Exception {
+        return userService.getProfilePicPath(id);
+    }
+
+
  
 
  

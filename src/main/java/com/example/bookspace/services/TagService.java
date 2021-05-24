@@ -6,7 +6,6 @@ import java.util.Objects;
 import javax.transaction.Transactional;
 
 import com.example.bookspace.Exceptions.DuplicateActionException;
-import com.example.bookspace.Exceptions.TagNotFoundException;
 import com.example.bookspace.Inputs.TagInput;
 import com.example.bookspace.Output.TagOutput;
 import com.example.bookspace.models.Publication;
@@ -63,50 +62,59 @@ public class TagService {
 		return result;
 	}
 
-	//It returns the Tag associated with the given {idTag}
-    public TagOutput getTag(Long idTag) {
-        Tag t = tagRepository.getOne(idTag);
+	//It returns the Tag associated with the given {tagName}
+    public TagOutput getTag(String tagName) {
+        Tag t = tagRepository.getOne(tagName);
 		return new TagOutput(t);
     }
 
 	//It returns the Tag associated with the given {tagName}
-    public TagOutput getTagByTagName(String name) {
-		if (!tagRepository.findTagByName(name).isPresent()) throw new TagNotFoundException("It does not exists a tag with tagName " + name);
-		Tag tag = tagRepository.getTagByName(name);
+    public TagOutput getTagByTagName(String name) throws Exception {
+		if (!tagRepository.findTagByName(name).isPresent()) throw new Exception("It does not exists a tag with tagName " + name);
+		Tag tag = tagRepository.getOne(name);
 		return new TagOutput(tag);
 		
 	}
 
-	//It deletes the Tag associated with the given {idTag}
-	public void deleteTag(Long IdTag){
-		tagRepository.deleteById(IdTag);
+	//It deletes the Tag associated with the given {tagName}
+	public void deleteTag(String tagName) throws Exception{
+		if (!tagRepository.findById(tagName).isPresent()) throw new Exception("It does not exists a tag with tagName " + tagName);
+		
+		Tag tag = tagRepository.getOne(tagName);
+
+		for (Publication p: tag.getPublications())  {
+			p.getTags().remove(tag);
+			publicationRepository.save(p);
+		}
+		for (User u: tag.getFavByUsers()){
+			u.getFavTags().remove(tag);
+			userRepository.save(u);
+		}
+		
+		User author = tag.getAuthor();
+		author.getCreatedTags().remove(tag);
+		userRepository.save(author);
+				
+
+
+		tagRepository.deleteById(tagName);
 	}
 
 	@Transactional
-	//Given a {idTag} and some Tag Details it updates the Tag associated with the {idTag} with the given details
-	public void updateTag(Long IdTag, User author, List<Publication> publications, List<User> users) {
+	//Given a {tagName} and some Tag Details it updates the Tag associated with the {tagName} with the given details
+	public void updateTag(TagInput tagDetails) {
 
-		//If the Tag associated with {idTag} doesn't exist --> Error: Tag with IdTag " + IdTag + " does not exist
-		Tag tag = tagRepository.findById(IdTag)
+		//If the Tag associated with {tagName} doesn't exist --> Error: Tag with tagName " + tagName + " does not exist
+		Tag tag = tagRepository.findById(tagDetails.getName())
 					.orElseThrow(() -> new IllegalStateException(
-						"Tag with IdTag " + IdTag + " does not exist"));
+						"Tag with tagName " + tagDetails.getName() + " does not exist"));
 		
 		//If attribute {author} is not null and not equal with the Tag actual author --> It sets the new author
+		User author = userRepository.getOne(tagDetails.getAuthorId());
+
 		if (author != null &&
 			!Objects.equals(tag.getAuthor(), author)){
 				tag.setAuthor(author);
-			}
-
-		//If attribute {publications} is not null and not equal with the Tag actual publications --> It sets the new publications
-		if (publications != null &&
-			!Objects.equals(tag.getPublications(), publications)){
-				tag.setPublications(publications);
-			}
-
-		//If attribute {users} is not null and not equal with the Tag actual users --> It sets the new users
-		if (users != null &&
-			!Objects.equals(tag.getUsers(), users)){
-				tag.setUsers(users);
 			}
 
 		tagRepository.save(tag);

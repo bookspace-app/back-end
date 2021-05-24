@@ -13,7 +13,6 @@ public class UserOutput extends OutputManager{
     private String email;
     private String name;
     private String username;
-    private String password;
     private Integer age;
     private String description;
     private LocalDate dor;
@@ -44,7 +43,6 @@ public class UserOutput extends OutputManager{
         this.age = u.getAge();
         this.description = u.getDescription();
         this.dor = u.getDor();
-        this.password = u.getPassword();
         this.rank = u.getRank().name();
         this.selfUri = getURL() + "/users/" + this.id;
         this.publicationsUri =  this.selfUri + "/publications";
@@ -249,13 +247,6 @@ public class UserOutput extends OutputManager{
         this.selfUri = selfUri;
     }
 
-    public String getPassword() {
-        return this.password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     
 
