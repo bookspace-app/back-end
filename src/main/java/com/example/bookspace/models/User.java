@@ -1,5 +1,6 @@
 package com.example.bookspace.models;
 
+import java.beans.Transient;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
@@ -69,7 +70,7 @@ public class User {
 
     //@Lob
     @Column(name = "profilePic")
-    private byte[] profilePic;
+    private String profilePic = "";
 
     @Column(name = "rank", nullable = false)
     private Rank rank = Rank.WORKER; 
@@ -266,11 +267,11 @@ public class User {
         this.description = description;
     }
 
-    public byte[] getProfilePic() {
+    public String getProfilePic() {
         return this.profilePic;
     }
 
-    public void setProfilePic(byte[] profilePic) {
+    public void setProfilePic(String profilePic) {
         this.profilePic = profilePic;
     }
 
@@ -484,12 +485,9 @@ public class User {
         this.token = token;
     }
 
-    public AuthenticationProvider getAuthProvider () {
-        return this.authProvider;
-    }
-    
-    public void setAuthProvider(AuthenticationProvider authProvider) {
-        this.authProvider = authProvider;
+    @Transient
+    public String getProfilePicPath(){
+        return "/user-images/" + this.id + "/" + this.profilePic;
     }
 
 

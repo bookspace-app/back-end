@@ -176,17 +176,30 @@ public class UserService {
 		return null;
 	}
 
-	public void getProfilePic(Long userId) throws Exception {
-		throw new Exception("This endpoint is not implemented yet");
+	
+	public String getProfilePic(Long userId) throws Exception {
+		User user = userRepository.getOne(userId);
+		return user.getProfilePic();
     }
 
-	public void postProfilePic(Long userId) throws Exception {
-		throw new Exception("This endpoint is not implemented yet");
+	public String getProfilePicPath(Long userId) throws Exception{
+		User user = userRepository.getOne(userId);
+		return user.getProfilePicPath();
 	}
 
-    public void deleteProfilePic(Long userId) throws Exception {
-		throw new Exception("This endpoint is not implemented yet");
+	public UserOutput postProfilePic(Long userId, String profilePic) throws Exception {
+		User user = userRepository.getOne(userId);
+		user.setProfilePic(profilePic);
+		user = userRepository.save(user);
+		return new UserOutput(user);
 
+	}
+
+    public UserOutput deleteProfilePic(Long userId) throws Exception {
+		User user = userRepository.getOne(userId);
+		user.setProfilePic("");
+		user = userRepository.save(user);
+		return new UserOutput(user);
     }    
 	
     public List<String> getFavCategoriesUser(Long id) {
