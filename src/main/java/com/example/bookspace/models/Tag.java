@@ -79,5 +79,7 @@ public class Tag {
         this.favByUsers = favByUsers;
     }
 
-
+    public void removePublication(Publication publication) {
+        this.publications.remove(publication);
+    }
 }

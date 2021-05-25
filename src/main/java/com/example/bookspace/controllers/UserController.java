@@ -104,6 +104,12 @@ public class UserController {
         return userService.forgotPassword(email);
     }
 
+    @PostMapping(path = "{userId}/reportPublication/{publicationId}")
+    @ResponseStatus(value = HttpStatus.OK, reason = "The publication has been reported")
+    public void postReportPublication(@PathVariable(name = "userId", required = true) Long userId, @PathVariable(name = "publicationId", required = true) Long publicationId, @RequestHeader(value = "auth", required = true) String token) throws Exception {
+        userService.postReportPublication(userId, publicationId, token);
+    }
+
     @GetMapping(path = "{userId}/profilePic")
     public String getProfilePic(@PathVariable("userId") Long userId) throws Exception{
        //System.out.println(userService.getProfilePic(userId));

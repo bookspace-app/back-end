@@ -28,6 +28,9 @@ import com.example.bookspace.models.User;
 import com.example.bookspace.repositories.UserRepository;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import com.example.bookspace.Exceptions.PublicationNotFound;
+import com.example.bookspace.repositories.PublicationRepository;
+import com.example.bookspace.repositories.TagRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -40,12 +43,16 @@ import net.bytebuddy.utility.RandomString;
 public class UserService {
 
 	private final UserRepository userRepository;
+	private final PublicationRepository publicationRepository;
+	private final TagRepository tagRepository;
 	private JavaMailSender javaMailSender;
 
 	@Autowired
-	public UserService(UserRepository userRepository, JavaMailSender javaMailSender) {
+	public UserService(UserRepository userRepository, JavaMailSender javaMailSender, PublicationRepository publicationRepository, TagRepository tagRepository) {
 		this.userRepository = userRepository;
 		this.javaMailSender = javaMailSender;
+		this.publicationRepository = publicationRepository;
+		this.tagRepository = tagRepository;
 	}
 
 	/*
@@ -174,6 +181,76 @@ public class UserService {
 		mail.setText("Hello " + user.getName() + ", \n Somebody requested the password for the BookSpace account associated with " + user.getEmail() + ". \n No changes have been made to your account. \n Here you have your BookSpace password: " + user.getPassword() + " \n If you did not request a new password, please let us know immediately by replying to this email. \n Yours, \n The BookSpace team.");
 	
 		javaMailSender.send(mail);
+		return null;
+	}
+
+	/* Reports a new publication for the user in the system 
+	*/
+	public Void postReportPublication(Long userId, Long publicationId, String token) throws Exception {
+		
+		if (!userRepository.existsById(userId)) throw new UserNotFoundException(userId);
+		User user = userRepository.getOne(userId);
+
+		if (!user.getToken().equals(token)) throw new IncorrectTokenException();
+		if (!publicationRepository.existsById(publicationId)) throw new PublicationNotFound(publicationId);
+		Publication publication = publicationRepository.getOne(publicationId);
+
+		List<Publication> reportedPublications = user.getReportedPublications();
+			if (reportedPublications.contains(publication)) throw new Exception("This publication has already been reported by this User");
+			else {
+				user.addReportedPublication(publication);
+				publication.addUserReport(user);
+
+				if (publication.getReports().size() >= 5) {
+
+					//Deleting the publication for users attribute {reportedPublications}
+					for (User u: publication.getReports()) {
+						u.removeReportedPublication(publication);
+						userRepository.save(u);
+					}
+
+					//Deleting the publication for users attribute {likedPublications}
+					for (User u: publication.getLikedBy()) {
+						u.removeLikedPublication(publication);
+						userRepository.save(u);
+					}
+
+					//Deleting the publication for users attribute {dislikedPublications}
+					for (User u: publication.getDislikedBy()) {
+						u.removeDislikedPublication(publication);
+						userRepository.save(u);
+					}
+
+					//Deleting the publication for users attribute {favouritePublications}
+					for (User u: publication.getFavouriteBy()) {
+						u.removeFavPublication(publication);
+						userRepository.save(u);
+					}
+
+					//Deleting the publication for users attribute {mentions}
+					for (User u: publication.getMentions()) {
+						u.removeMention(publication);
+						userRepository.save(u);
+					}
+
+					//Deleting the publication for tag attribute {tags}
+					for (Tag t: publication.getTags()) {
+						t.removePublication(publication);
+						tagRepository.save(t);
+					}
+
+					//Deleting the publication for users attribute {Publications}
+					User author = publication.getAuthor();
+					author.removePublication(publication);
+					userRepository.save(author);
+
+					publicationRepository.delete(publication);
+				}
+				else {
+					userRepository.save(user);
+					publicationRepository.save(publication);
+				}
+			}
 		return null;
 	}
 

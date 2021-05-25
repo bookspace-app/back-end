@@ -57,13 +57,13 @@ public class Publication {
     @JoinColumn(name = "authorId", nullable = false)
     private User author;
 
-    @ManyToMany(mappedBy = "likedPublications", cascade = CascadeType.REMOVE)
+    @ManyToMany(mappedBy = "likedPublications")
     private List<User> likedBy = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "dislikedPublications", cascade = CascadeType.REMOVE)
+    @ManyToMany(mappedBy = "dislikedPublications")
     private List<User> dislikedBy = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "favouritePublications", cascade = CascadeType.REMOVE)
+    @ManyToMany(mappedBy = "favouritePublications")
     private List<User> favouriteBy = new ArrayList<>();
 
     @OneToMany(mappedBy = "publication", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
@@ -71,6 +71,9 @@ public class Publication {
 
     @Column(name = "directComments")
     private Integer directComments = 0;
+
+    @ManyToMany(mappedBy = "reportedPublications")
+    private List<User> reports = new ArrayList<>();
 
     @ManyToMany
     @JoinTable (
@@ -281,10 +284,15 @@ public class Publication {
         this.directComments--;
     }
 
-
-
-
+    public List<User> getReports() {
+        return this.reports;
+    }
     
- 
+    public void setReports(List<User> reports) {
+        this.reports = reports;
+    }
     
+    public void addUserReport(User user) {
+        this.reports.add(user);
+    }    
 }
