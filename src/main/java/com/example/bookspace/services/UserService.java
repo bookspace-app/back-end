@@ -473,7 +473,7 @@ public class UserService {
 
 			Map<String, String> result = new HashMap<String, String>(); 
 			// String token = RandomString.make();
-			String token = "admin";
+			String token = "AUTH";
 			user.setToken(token);
 			user = userRepository.save(user);
 			result.put("userId", user.getId().toString());
