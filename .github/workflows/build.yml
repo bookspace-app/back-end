@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - deployement
+      - development
 
   pull_request:
     types: [opened, synchronize, reopened]
