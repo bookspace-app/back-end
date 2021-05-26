@@ -2,8 +2,8 @@ name: Build
 on:
   push:
     branches:
-      - deployement #change branch to update on push
-      - development
+      - deployement
+
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
