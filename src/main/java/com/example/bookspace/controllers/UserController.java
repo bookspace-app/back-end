@@ -105,6 +105,12 @@ public class UserController {
         return userService.forgotPassword(email);
     }
 
+    @PostMapping("/deactivateUser/{userId}")  
+    @ResponseStatus(value = HttpStatus.OK, reason = "The user has been deactivated")
+    public Void deactivateUser(@PathVariable(name = "userId", required = true) Long userId, @RequestHeader(value = "auth", required = true) String token) throws Exception{
+        return userService.deactivateUser(userId, token);
+    }
+
     @PostMapping(path = "{userId}/reportPublication/{publicationId}")
     @ResponseStatus(value = HttpStatus.OK, reason = "The publication has been reported")
     public void postReportPublication(@PathVariable(name = "userId", required = true) Long userId, @PathVariable(name = "publicationId", required = true) Long publicationId, @RequestHeader(value = "auth", required = true) String token) throws Exception {

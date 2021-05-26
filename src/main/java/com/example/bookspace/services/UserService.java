@@ -78,6 +78,7 @@ public class UserService {
 	
 		if (userDetails.getEmail() == null) throw new HttpMessageConversionException("The email cannot be empty");
 		else if (userRepository.findUserByEmail(userDetails.getEmail()).isPresent()) throw new HttpMessageConversionException("This email is already used");
+		else if (userDetails.getPassword().equals("deactivated")) throw new HttpMessageConversionException("This password isn't safe enough");
 		else if (userDetails.getName() == null) throw new HttpMessageConversionException("The name can't be empty");
 		else if (userDetails.getUsername() == null) throw new HttpMessageConversionException("The username can't be empty");
 		else if (userRepository.findUserByUsername(userDetails.getUsername()).isPresent()) throw new HttpMessageConversionException("This username is already used");
@@ -108,6 +109,7 @@ public class UserService {
 		User user = new User();
 
 		if (!userRepository.existsById(id)) throw new UserNotFoundException(id);
+		if (userDetails.getPassword().equals("deactivated")) throw new HttpMessageConversionException("This password isn't safe enough");
 		user = userRepository.getOne(id);
 		if (user.getToken() != null) {
 			if (user.getToken().equals(token)) {
@@ -183,6 +185,22 @@ public class UserService {
 		mail.setText("Hello " + user.getName() + ", \n Somebody requested the password for the BookSpace account associated with " + user.getEmail() + ". \n No changes have been made to your account. \n Here you have your BookSpace password: " + user.getPassword() + " \n If you did not request a new password, please let us know immediately by replying to this email. \n Yours, \n The BookSpace team.");
 	
 		javaMailSender.send(mail);
+		return null;
+	}
+
+	public Void deactivateUser(Long userId, String token) {
+		
+		if (!userRepository.existsById(userId)) throw new UserNotFoundException(userId);
+		User user = userRepository.getOne(userId);
+
+		logout(userId, token);
+
+		user.setPassword("deactivated");
+		user.setUsername("User" + user.getId());
+		user.setEmail("user." + user.getId() + "@bookspace.com");
+		user.setName("User " + user.getId());
+		userRepository.save(user);
+
 		return null;
 	}
 
@@ -468,6 +486,7 @@ public class UserService {
 
 		if (!userRepository.findUserByEmail(email).isPresent()) throw new UserNotFoundException(email);
 		User user = userRepository.getUserByEmail(email);
+		if (user.getPassword().equals("deactivated")) throw new UserNotFoundException(email);
 
 		if (user.getToken() != null) throw new AlreadyLoginException();
 	
