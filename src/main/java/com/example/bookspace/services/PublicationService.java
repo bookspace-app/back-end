@@ -175,8 +175,8 @@ public class PublicationService {
 
                 
         if (publicationDetails.getTitle() != null) publication.setTitle(publicationDetails.getTitle());
-        else if (publicationDetails.getContent() != null) publication.setContent(publicationDetails.getContent());
-        else if (publicationDetails.getCategory() != null) {
+        if (publicationDetails.getContent() != null) publication.setContent(publicationDetails.getContent());
+        if (publicationDetails.getCategory() != null) {
 
             if (!Category.existsCategory(publicationDetails.getCategory())) throw new CategoryNotFoundException(publicationDetails.getCategory());
             

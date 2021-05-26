@@ -126,6 +126,18 @@ public class User {
     )
     private List<Publication> favouritePublications = new ArrayList<>();
 
+    /*
+    User reproted publications
+    New table is created
+    */
+    @ManyToMany
+    @JoinTable (
+        name = "reportedPublications", 
+        joinColumns = @JoinColumn(name = "userId", referencedColumnName = "id"), 
+        inverseJoinColumns = @JoinColumn(name = "publicationId")
+    )
+    private List<Publication> reportedPublications = new ArrayList<>();
+
     @ManyToMany(mappedBy = "mentions")
     private List<Publication> mentions = new ArrayList<>();
 
@@ -490,17 +502,19 @@ public class User {
         return "/user-images/" + this.id + "/" + this.profilePic;
     }
 
-
+    public List<Publication> getReportedPublications() {
+        return this.reportedPublications;
+    }
     
-
+    public void setReportedPublications(List<Publication> reportedPublications) {
+        this.reportedPublications = reportedPublications;
+    }
     
+    public void addReportedPublication(Publication publication) {
+        this.reportedPublications.add(publication);
+    }
     
-
-
-    
-    
-
-
-       
-
+    public void removeReportedPublication(Publication publication) {
+        this.reportedPublications.remove(publication);
+    }
 }
