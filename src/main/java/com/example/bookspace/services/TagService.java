@@ -64,23 +64,23 @@ public class TagService {
 
 	//It returns the Tag associated with the given {tagName}
     public TagOutput getTag(String tagName) {
-        Tag t = tagRepository.getOne(tagName);
+        Tag t = tagRepository.getTagByName(tagName);
 		return new TagOutput(t);
     }
 
 	//It returns the Tag associated with the given {tagName}
     public TagOutput getTagByTagName(String name) throws Exception {
 		if (!tagRepository.findTagByName(name).isPresent()) throw new Exception("It does not exists a tag with tagName " + name);
-		Tag tag = tagRepository.getOne(name);
+		Tag tag = tagRepository.getTagByName(name);
 		return new TagOutput(tag);
 		
 	}
 
 	//It deletes the Tag associated with the given {tagName}
 	public void deleteTag(String tagName) throws Exception{
-		if (!tagRepository.findById(tagName).isPresent()) throw new Exception("It does not exists a tag with tagName " + tagName);
+		if (!tagRepository.findTagByName(tagName).isPresent()) throw new Exception("It does not exists a tag with tagName " + tagName);
 		
-		Tag tag = tagRepository.getOne(tagName);
+		Tag tag = tagRepository.getTagByName(tagName);
 
 		for (Publication p: tag.getPublications())  {
 			p.getTags().remove(tag);
@@ -97,7 +97,7 @@ public class TagService {
 				
 
 
-		tagRepository.deleteById(tagName);
+		tagRepository.delete(tag);
 	}
 
 	@Transactional
@@ -105,7 +105,7 @@ public class TagService {
 	public void updateTag(TagInput tagDetails) {
 
 		//If the Tag associated with {tagName} doesn't exist --> Error: Tag with tagName " + tagName + " does not exist
-		Tag tag = tagRepository.findById(tagDetails.getName())
+		Tag tag = tagRepository.findTagByName(tagDetails.getName())
 					.orElseThrow(() -> new IllegalStateException(
 						"Tag with tagName " + tagDetails.getName() + " does not exist"));
 		
