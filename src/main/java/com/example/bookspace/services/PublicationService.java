@@ -109,7 +109,7 @@ public class PublicationService {
 
                 Publication publication = new Publication(publicationDetails.getTitle(), publicationDetails.getContent(), author, category);
 
-                Boolean enoughRank = true;
+                //Boolean enoughRank = true;
                 if (publicationDetails.getTags() != null) {
                     for (String tagName: publicationDetails.getTags()) {
                         if (tagRepository.findTagByName(tagName).isPresent()) {
@@ -129,7 +129,7 @@ public class PublicationService {
                                 publication.addTag(tag);
                                 author.addFavTag(tag); 
                             }
-                            else enoughRank = false;
+                            //else enoughRank = false;
                            
                         }
                         
@@ -153,7 +153,7 @@ public class PublicationService {
                 publication = publicationRepository.save(publication);
                 author = userRepository.save(author);
 
-                if (!enoughRank) throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED, "Can't create more tags with rank: [" + author.getRank().name() + "]");
+                //if (!enoughRank) throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED, "Can't create more tags with rank: [" + author.getRank().name() + "]");
 
 
                 return new PublicationOutput(publication); 
