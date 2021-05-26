@@ -472,7 +472,8 @@ public class UserService {
 		if (user.getPassword().equals(userDetails.getPassword())) {
 
 			Map<String, String> result = new HashMap<String, String>(); 
-			String token = RandomString.make();
+			// String token = RandomString.make();
+			String token = "admin";
 			user.setToken(token);
 			user = userRepository.save(user);
 			result.put("userId", user.getId().toString());
