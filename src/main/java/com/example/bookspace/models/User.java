@@ -517,4 +517,14 @@ public class User {
     public void removeReportedPublication(Publication publication) {
         this.reportedPublications.remove(publication);
     }
+
+
+    public boolean canCreateTags() {
+        if (this.rank == Rank.WORKER && this.createdTags.size() < 2) return true;
+        if (this.rank == Rank.SOLDIER && this.createdTags.size() < 7) return true;
+        if (this.rank == Rank.HAREM && this.createdTags.size() < 15) return true;
+        if (this.rank == Rank.QUEEN) return true;
+        else return false; 
+    
+    }
 }

@@ -27,9 +27,10 @@ import com.example.bookspace.models.User;
 import com.example.bookspace.repositories.PublicationRepository;
 import com.example.bookspace.repositories.TagRepository;
 import com.example.bookspace.repositories.UserRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 @Service
 public class PublicationService {
@@ -106,25 +107,30 @@ public class PublicationService {
 
                 Publication publication = new Publication(publicationDetails.getTitle(), publicationDetails.getContent(), author, category);
 
-
+                Boolean enoughRank = true;
                 if (publicationDetails.getTags() != null) {
                     for (String tagName: publicationDetails.getTags()) {
-                        Tag tag = new Tag();
-                        if (tagRepository.findById(tagName).isPresent()) {
-                            tag = tagRepository.getOne(tagName);
+                        if (tagRepository.findTagByName(tagName).isPresent()) {
+                            Tag tag = tagRepository.getTagByName(tagName);
                             tag.getPublications().add(publication);
                             tag = tagRepository.save(tag);
+                            publication.addTag(tag);
+                            author.addFavTag(tag); 
 
                         }
                         else {
-                            tag = new Tag(tagName, author);
-                            tag.getPublications().add(publication);
-                            tag = tagRepository.save(tag);
-                            author.addCreatedTag(tag);
-                            
+                            if (author.canCreateTags()){
+                                Tag tag = new Tag(tagName, author);
+                                tag.getPublications().add(publication);
+                                author.addCreatedTag(tag); 
+                                tag = tagRepository.save(tag);
+                                publication.addTag(tag);
+                                author.addFavTag(tag); 
+                            }
+                            else enoughRank = false;
+                           
                         }
-                        publication.addTag(tag);
-                        author.addFavTag(tag); 
+                        
 
 
                     }
@@ -145,7 +151,8 @@ public class PublicationService {
                 publication = publicationRepository.save(publication);
                 author = userRepository.save(author);
 
-                
+                if (!enoughRank) throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED, "Can't create more tags with rank: [" + author.getRank().name() + "]");
+
 
                 return new PublicationOutput(publication); 
             }
