@@ -14,6 +14,7 @@ public class UserInput {
     private List<String> favCategories;
 
     public UserInput() {}
+    
 
 
     public UserInput(String email, String name, String username, String password, LocalDate dob, String description, List<String> favCategories) {

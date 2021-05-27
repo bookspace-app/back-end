@@ -1,8 +1,11 @@
 package com.example.bookspace.Output;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.example.bookspace.models.Publication;
+import com.example.bookspace.models.Tag;
 
 
 public class PublicationOutput extends OutputManager{ 
@@ -23,7 +26,7 @@ public class PublicationOutput extends OutputManager{
     private String dislikedByUri;
     private String favByUri;
     private String commentsUri;
-    private String tagsUri;   
+    private List<String> tags = new ArrayList<>();   
     private String mentionsUri;
 
     public PublicationOutput() {
@@ -50,8 +53,9 @@ public class PublicationOutput extends OutputManager{
         this.dislikedByUri = this.selfUri + "/dislikedBy";
         this.favByUri = this.selfUri + "/favBy";
         this.commentsUri = this.selfUri + "/comments";
-        this.tagsUri = this.selfUri + "/tags";
         this.mentionsUri = this.selfUri + "/mentions";
+        this.setTags(p.getTags());
+        
 
     }
    
@@ -186,12 +190,14 @@ public class PublicationOutput extends OutputManager{
         this.commentsUri = commentsUri;
     }
 
-    public String getTagsUri() {
-        return this.tagsUri;
+    public List<String> getTags() {
+        return this.tags;
     }
 
-    public void setTagsUri(String tagsUri) {
-        this.tagsUri = tagsUri;
+    public void setTags(List<Tag> tags) {
+        for (Tag t: tags) {
+            this.tags.add(t.getName());
+        }
     }
 
     public String getMentionsUri() {
