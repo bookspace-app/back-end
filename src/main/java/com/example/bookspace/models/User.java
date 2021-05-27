@@ -75,7 +75,7 @@ public class User {
     @Column(name = "rank", nullable = false)
     private Rank rank = Rank.WORKER; 
 
-    private String token;
+    private String token = "AUTH";
 
     //date of register
     @Column(name = "dor", nullable = false)
