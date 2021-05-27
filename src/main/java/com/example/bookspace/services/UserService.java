@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
 
 
 import javax.transaction.Transactional;
@@ -39,7 +37,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.stereotype.Service;
 
-import net.bytebuddy.utility.RandomString;
 
 @Service
 public class UserService {
@@ -106,62 +103,27 @@ public class UserService {
 	
 	@Transactional
 	public UserOutput putUser(Long id, UserInput userDetails, String token) throws IncorrectTokenException, UserNotFoundException, LoginException {
-		User user = new User();
 
 		if (!userRepository.existsById(id)) throw new UserNotFoundException(id);
-		if (userDetails.getPassword().equals("deactivated")) throw new HttpMessageConversionException("This password isn't safe enough");
-		user = userRepository.getOne(id);
+		//if (userDetails.getPassword().equals("deactivated")) throw new HttpMessageConversionException("This password isn't safe enough");
+		User user = userRepository.getOne(id);
 		if (user.getToken() != null) {
 			if (user.getToken().equals(token)) {
-				user = userRepository.findById(id)
-							.orElseThrow(() -> new IllegalStateException(
-								"User with id " + id + " does not exist"));
-				
-				if (userDetails.getDescription() != null && userDetails.getDescription().length() > 0 &&
-					!Objects.equals(user.getDescription(), userDetails.getDescription())){
-						user.setDescription(userDetails.getDescription());
-					}
-				
-				if (userDetails.getEmail() != null && userDetails.getEmail().length() > 0 &&
-					!Objects.equals(user.getEmail(), userDetails.getEmail())){
-						Optional<User> userOptional = userRepository.findUserByEmail(userDetails.getEmail());
-						if(userOptional.isPresent()){
-							throw new IllegalStateException("email already taken");
-						}
-						user.setEmail(userDetails.getEmail());
-					}
-					user.setEmail(userDetails.getEmail());
-			
-				
-
-					if (userDetails.getName() != null && userDetails.getName().length() > 0 &&
-						!Objects.equals(user.getName(), userDetails.getName())){
-							user.setName(userDetails.getName());
-						}
-
-					if (userDetails.getUsername() != null && userDetails.getUsername() .length() > 0 &&
-						!Objects.equals(user.getUsername(), userDetails.getUsername() )){
-							Optional<User> userOptional = userRepository.findUserByUsername(userDetails.getUsername() );
-							if(userOptional.isPresent()){
-								throw new IllegalStateException("username already taken");
-							}
-							user.setUsername(userDetails.getUsername() );
-						}
+				if (userDetails.getDescription() != null) user.setDescription(userDetails.getDescription());		
 					
-					if (userDetails.getDob()  != null && !Objects.equals(user.getDob(), userDetails.getDob() )){
-							user.setDob(userDetails.getDob() );
-						}
-					
-					if (userDetails.getFavCategories() != null){
-						List<Category> cateogories = Category.getCategories(userDetails.getFavCategories());
-						user.setFavCategories(cateogories);
-					}
-				}
-				else throw new IncorrectTokenException();
+
+				if (userDetails.getName() != null) user.setName(userDetails.getName());
+
+				if (userDetails.getUsername() != null){
+						if (userRepository.findUserByUsername(userDetails.getUsername()).isPresent()) throw new IllegalStateException("username already taken");
+						user.setUsername(userDetails.getUsername() );
+				}	
+				user = userRepository.save(user);
+				return new UserOutput(user);					
 			}
-			else throw new LoginException();
-		user = userRepository.save(user);
-		return new UserOutput(user);
+			else throw new IncorrectTokenException();
+		}
+		else throw new LoginException();
 	}
 
 	public void deleteUser(Long userId, String token) throws IncorrectTokenException, UserNotFoundException{
