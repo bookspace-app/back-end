@@ -109,21 +109,24 @@ public class UserService {
 		User user = userRepository.getOne(id);
 		if (user.getToken() != null) {
 			if (user.getToken().equals(token)) {
-				if (userDetails.getDescription() != null) user.setDescription(userDetails.getDescription());		
-					
+				
+				if (userDetails.getDescription() != null) user.setDescription(userDetails.getDescription());
+				if (userDetails.getName() != null) user.setName(userDetails.getName());					
+				if (userDetails.getUsername() != null && !userRepository.findUserByEmail(userDetails.getUsername()).isPresent()) user.setUsername(userDetails.getUsername() );		
+				if (userDetails.getFavCategories() != null){
+					List<Category> categories = new ArrayList<>();
+					for (String cat: userDetails.getFavCategories()) {
+						if (Category.existsCategory(cat)) categories.add(Category.getCategory(cat));
 
-				if (userDetails.getName() != null) user.setName(userDetails.getName());
-
-				if (userDetails.getUsername() != null){
-						if (userRepository.findUserByUsername(userDetails.getUsername()).isPresent()) throw new IllegalStateException("username already taken");
-						user.setUsername(userDetails.getUsername() );
-				}	
+					}
+					user.setFavCategories(categories);
+				}
 				user = userRepository.save(user);
-				return new UserOutput(user);					
+				return new UserOutput(user);
 			}
 			else throw new IncorrectTokenException();
 		}
-		else throw new LoginException();
+		else throw new LoginException();		
 	}
 
 	public void deleteUser(Long userId, String token) throws IncorrectTokenException, UserNotFoundException{
