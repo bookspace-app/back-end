@@ -12,6 +12,7 @@ import com.example.bookspace.Exceptions.CommentNotFound;
 import com.example.bookspace.Exceptions.IncorrectTokenException;
 import com.example.bookspace.Exceptions.LoginException;
 import com.example.bookspace.Exceptions.PublicationNotFound;
+import com.example.bookspace.Exceptions.UserNotFoundException;
 import com.example.bookspace.Inputs.CommentInput;
 import com.example.bookspace.Output.CommentOutput;
 import com.example.bookspace.Output.UserOutput;
@@ -47,6 +48,8 @@ public class CommentService {
 
     public CommentOutput postComment(CommentInput commentDetails, String token) throws LoginException, IncorrectTokenException, PublicationNotFound, CommentNotFound {
 
+        if (!userRepository.existsById(commentDetails.getAuthorId())) throw new UserNotFoundException(commentDetails.getAuthorId());
+
         User author = userRepository.getOne(commentDetails.getAuthorId());
 
         if (author.getToken() == null) throw new LoginException();
@@ -74,7 +77,7 @@ public class CommentService {
 
         //If is an aswer, get  parent and associate. 
 
-        if (commentDetails.getParentId() != null)  {
+        if (commentDetails.getParentId() != null && commentDetails.getParentId() != 0)  {
             if (!commentRepository.existsById(commentDetails.getParentId())) throw new CommentNotFound(commentDetails.getParentId());
 
             Comment parent = commentRepository.getOne(commentDetails.getParentId());
