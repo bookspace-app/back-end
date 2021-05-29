@@ -144,9 +144,9 @@ class PublicationServiceTest {
     void testgetPublication() {
 
         PublicationOutput result;
-		result = publicationService.getPublication(1L);
+		result = publicationService.getPublication(3L);
         assertThat(result).isNotNull();
-        assertThat(result.getTitle()).isEqualTo("title1");
+        assertThat(result.getTitle()).isEqualTo("title3");
     }
 
     @Test
