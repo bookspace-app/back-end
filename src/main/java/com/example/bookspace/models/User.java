@@ -75,7 +75,7 @@ public class User {
     @Column(name = "rank", nullable = false)
     private Rank rank = Rank.WORKER; 
 
-    private String token;
+    private String token = "AUTH";
 
     //date of register
     @Column(name = "dor", nullable = false)
@@ -125,6 +125,18 @@ public class User {
 
     )
     private List<Publication> favouritePublications = new ArrayList<>();
+
+    /*
+    User reproted publications
+    New table is created
+    */
+    @ManyToMany
+    @JoinTable (
+        name = "reportedPublications", 
+        joinColumns = @JoinColumn(name = "userId", referencedColumnName = "id"), 
+        inverseJoinColumns = @JoinColumn(name = "publicationId")
+    )
+    private List<Publication> reportedPublications = new ArrayList<>();
 
     @ManyToMany(mappedBy = "mentions")
     private List<Publication> mentions = new ArrayList<>();
@@ -490,17 +502,29 @@ public class User {
         return "https://storage.googleapis.com/bookspace-app.appspot.com/" + this.profilePic;
     }
 
-
+    public List<Publication> getReportedPublications() {
+        return this.reportedPublications;
+    }
     
-
+    public void setReportedPublications(List<Publication> reportedPublications) {
+        this.reportedPublications = reportedPublications;
+    }
     
+    public void addReportedPublication(Publication publication) {
+        this.reportedPublications.add(publication);
+    }
     
+    public void removeReportedPublication(Publication publication) {
+        this.reportedPublications.remove(publication);
+    }
 
 
+    public boolean canCreateTags() {
+        if (this.rank == Rank.WORKER && this.createdTags.size() < 2) return true;
+        if (this.rank == Rank.SOLDIER && this.createdTags.size() < 7) return true;
+        if (this.rank == Rank.HAREM && this.createdTags.size() < 15) return true;
+        if (this.rank == Rank.QUEEN) return true;
+        else return false; 
     
-    
-
-
-       
-
+    }
 }

@@ -57,7 +57,6 @@ public enum Category {
     public static List<Category> getCategories(List<String> favCategories) {
         List<Category> result = new ArrayList<>();
         for (String c: favCategories) {
-            System.out.println(c);
             result.add(getCategory(c));
         }
         return result;

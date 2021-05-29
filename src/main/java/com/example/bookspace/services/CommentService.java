@@ -12,6 +12,7 @@ import com.example.bookspace.Exceptions.CommentNotFound;
 import com.example.bookspace.Exceptions.IncorrectTokenException;
 import com.example.bookspace.Exceptions.LoginException;
 import com.example.bookspace.Exceptions.PublicationNotFound;
+import com.example.bookspace.Exceptions.UserNotFoundException;
 import com.example.bookspace.Inputs.CommentInput;
 import com.example.bookspace.Output.CommentOutput;
 import com.example.bookspace.Output.UserOutput;
@@ -45,7 +46,9 @@ public class CommentService {
         return result;
     }
 
-    public CommentOutput postComment(CommentInput commentDetails, String token) throws Exception {
+    public CommentOutput postComment(CommentInput commentDetails, String token) throws LoginException, IncorrectTokenException, PublicationNotFound, CommentNotFound {
+
+        if (!userRepository.existsById(commentDetails.getAuthorId())) throw new UserNotFoundException(commentDetails.getAuthorId());
 
         User author = userRepository.getOne(commentDetails.getAuthorId());
 
@@ -74,7 +77,7 @@ public class CommentService {
 
         //If is an aswer, get  parent and associate. 
 
-        if (commentDetails.getParentId() != null)  {
+        if (commentDetails.getParentId() != null && commentDetails.getParentId() != 0)  {
             if (!commentRepository.existsById(commentDetails.getParentId())) throw new CommentNotFound(commentDetails.getParentId());
 
             Comment parent = commentRepository.getOne(commentDetails.getParentId());
@@ -102,7 +105,7 @@ public class CommentService {
         return new CommentOutput(c);
     }
 
-    public CommentOutput putComment(Long commentId, CommentInput commentDetails, String token) throws Exception {
+    public CommentOutput putComment(Long commentId, CommentInput commentDetails, String token) {
         
         User author = userRepository.getOne(commentDetails.getAuthorId());
 
@@ -219,7 +222,7 @@ public class CommentService {
 
     }
 
-    public List<UserOutput> getDislikedUsers(Long commentId, Long userId) {
+    public List<UserOutput> getDislikedUsers(Long commentId) {
         Comment comment = commentRepository.getOne(commentId);
         List<UserOutput> result = new ArrayList<>();
         for (User dislikedUser: comment.getDislikedBy()) {

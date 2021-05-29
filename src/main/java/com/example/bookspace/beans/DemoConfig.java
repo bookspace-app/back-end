@@ -36,9 +36,10 @@ public class DemoConfig {
         return args ->  {
             UserInput userDetails = new UserInput("demoEmail", "demoName", "demoUsername", "demoPassword", LocalDate.of(1998, 12, 2), "demoDescriprion", List.of("action"));
             user = new User(userDetails.getEmail(), userDetails.getName(), userDetails.getUsername(), userDetails.getPassword(), userDetails.getDob());
-
+            user.setToken("AUTH");
             UserInput userDetails2 = new UserInput("demoEmail2", "demoName2", "demoUsername2", "demoPassword2", LocalDate.of(2000, 6, 1), "demoDescriprion2", List.of("romantic"));
             user2 = new User(userDetails2.getEmail(), userDetails2.getName(), userDetails2.getUsername(), userDetails2.getPassword(), userDetails2.getDob());
+            user2.setToken("AUTH");
 
             category = Category.action;
             user.addFavCategory(category);
@@ -50,6 +51,7 @@ public class DemoConfig {
             publication = publicationRepository.save(publication);
             TagInput tagDetails = new TagInput("demoTag", user.getId(), publication.getId());
             tag = new Tag(tagDetails.getName(), user);
+            publication.addTag(tag);
             tag.getPublications().add(publication);
             tagRepository.save(tag); 
             

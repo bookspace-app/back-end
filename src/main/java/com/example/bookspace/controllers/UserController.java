@@ -3,8 +3,9 @@ package com.example.bookspace.controllers;
 import java.util.List;
 import java.util.Map;
 
-
+import com.example.bookspace.Exceptions.AlreadyLoginException;
 import com.example.bookspace.Exceptions.IncorrectTokenException;
+import com.example.bookspace.Exceptions.LoginException;
 import com.example.bookspace.Exceptions.UserNotFoundException;
 import com.example.bookspace.Inputs.UserInput;
 import com.example.bookspace.Output.CommentOutput;
@@ -49,25 +50,25 @@ public class UserController {
     }
 
     @GetMapping(path = "/token/{userId}")
-    public Map<String, String> getToken(@PathVariable(name = "userId", required = true) Long id) throws Exception {
+    public Map<String, String> getToken(@PathVariable(name = "userId", required = true) Long id) throws UserNotFoundException  {
         return userService.getToken(id);
     }
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED, reason = "The user has been posted")
-    public UserOutput postUser(@RequestBody UserInput userDetails) throws Exception{
+    public UserOutput postUser(@RequestBody UserInput userDetails) {
        return userService.postUser(userDetails);
     }
 
     @PostMapping(path = "/login")
     @ResponseBody
-    public Map<String, String> loginUser(@RequestBody UserInput userDetails) throws Exception {
+    public Map<String, String> loginUser(@RequestBody UserInput userDetails) throws AlreadyLoginException, UserNotFoundException  {
         return userService.loginUser(userDetails);
     }
 
     @PostMapping(path = "{userId}/logout")
     @ResponseStatus(value = HttpStatus.OK, reason = "The user has successfully logout")
-    public void logoutUser(@PathVariable(name = "userId", required = true) Long userId, @RequestHeader(value = "auth", required = true) String token) throws Exception {
+    public void logoutUser(@PathVariable(name = "userId", required = true) Long userId, @RequestHeader(value = "auth", required = true) String token) throws IncorrectTokenException, LoginException, UserNotFoundException  {
         userService.logout(userId, token);
     }
     
@@ -77,13 +78,13 @@ public class UserController {
     }
 
     @GetMapping(path = "/username/{username}")   
-	public UserOutput getUserByUsername(@PathVariable("username") String username) throws Exception {
+	public UserOutput getUserByUsername(@PathVariable("username") String username) throws UserNotFoundException  {
         return userService.getUserByUsername(username);
     }
 
     @PutMapping(path = "{userId}") 
     @ResponseStatus(code = HttpStatus.ACCEPTED)
-    public UserOutput updateUser(@PathVariable(name = "userId", required = true) Long id, @RequestBody UserInput userDetails, @RequestHeader(value = "auth", required = true) String token) throws Exception{
+    public UserOutput updateUser(@PathVariable(name = "userId", required = true) Long id, @RequestBody UserInput userDetails, @RequestHeader(value = "auth", required = true) String token) throws IncorrectTokenException, LoginException, UserNotFoundException {
         return userService.putUser(id, userDetails, token);
     }
 
@@ -93,8 +94,20 @@ public class UserController {
     }
 
     @PostMapping("/forgotPassword")  
-    public Void forgotPassword(@RequestBody (required = true) String email) {
+    public Void forgotPassword(@RequestBody (required = true) String email) throws UserNotFoundException {
         return userService.forgotPassword(email);
+    }
+
+    @PostMapping("/deactivateUser/{userId}")  
+    @ResponseStatus(value = HttpStatus.OK, reason = "The user has been deactivated")
+    public Void deactivateUser(@PathVariable(name = "userId", required = true) Long userId, @RequestHeader(value = "auth", required = true) String token) throws Exception{
+        return userService.deactivateUser(userId, token);
+    }
+
+    @PostMapping(path = "{userId}/reportPublication/{publicationId}")
+    @ResponseStatus(value = HttpStatus.OK, reason = "The publication has been reported")
+    public void postReportPublication(@PathVariable(name = "userId", required = true) Long userId, @PathVariable(name = "publicationId", required = true) Long publicationId, @RequestHeader(value = "auth", required = true) String token) throws Exception {
+        userService.postReportPublication(userId, publicationId, token);
     }
 
     @GetMapping(path = "{userId}/profilePic")
@@ -130,43 +143,43 @@ public class UserController {
     }
 
     @GetMapping (path = "{userId}/likedPublications")
-    public List<PublicationOutput> getLikedPublications(@PathVariable("userId") Long id) throws Exception {
+    public List<PublicationOutput> getLikedPublications(@PathVariable("userId") Long id)  {
         return userService.getLikedPublications(id);
     }
 
     @GetMapping (path = "{userId}/dislikedPublications")
-    public List<PublicationOutput> getDislikedComments(@PathVariable("userId") Long id) throws Exception {
+    public List<PublicationOutput> getDislikedComments(@PathVariable("userId") Long id)  {
         return userService.getDislikedPublications(id);
     }
 
     @GetMapping (path = "{userId}/favPublications")
-    public List<PublicationOutput> getFavPublications(@PathVariable("userId") Long id) throws Exception {
+    public List<PublicationOutput> getFavPublications(@PathVariable("userId") Long id)  {
         return userService.getFavPublications(id);
     }
 
     @GetMapping (path = "{userId}/mentions")
-    public List<MentionOutput> getMentions(@PathVariable("userId") Long id) throws Exception {
+    public List<MentionOutput> getMentions(@PathVariable("userId") Long id)  {
 
         return userService.getMentions(id);
     }
 
     @GetMapping (path = "{userId}/comments")
-    public List<CommentOutput> getComments(@PathVariable("userId") Long id) throws Exception {
+    public List<CommentOutput> getComments(@PathVariable("userId") Long id)  {
         return userService.getComments(id);
     }
 
     @GetMapping (path = "{userId}/likedComments")
-    public List<CommentOutput> getLikedComments(@PathVariable("userId") Long id) throws Exception {
+    public List<CommentOutput> getLikedComments(@PathVariable("userId") Long id)  {
         return userService.getLikedComments(id);
     }
 
     @GetMapping (path = "{userId}/dislikedComments")
-    public List<CommentOutput> getDislikedPublications(@PathVariable("userId") Long id) throws Exception {
+    public List<CommentOutput> getDislikedPublications(@PathVariable("userId") Long id)  {
         return userService.getDislikedComments(id);
     }
 
     @GetMapping(path = "{userId}/tags")   
-	public List<TagOutput> getCreatedTags(@PathVariable("userId") Long id) throws Exception {
+	public List<TagOutput> getCreatedTags(@PathVariable("userId") Long id)  {
         return userService.getCreatedTags(id);
     }
 
@@ -176,19 +189,19 @@ public class UserController {
     }
 
     @GetMapping(path = "{userId}/blockedUsers")   
-	public List<UserOutput> getBlockedUsers(@PathVariable("userId") Long id) throws Exception {
+	public List<UserOutput> getBlockedUsers(@PathVariable("userId") Long id)  {
         return userService.getBlockedUsers(id);
     }
 
     @PostMapping(path = "{userId}/blockedUsers/{blockedUserId}")   
     @ResponseStatus(code = HttpStatus.ACCEPTED, reason = "User has been blocked")
-	public UserOutput postBlockedUsers(@PathVariable(name = "userId", required = true) Long id, @PathVariable(name = "blockedUserId", required = true) Long blockedUserid, @RequestHeader(name = "auth", required = true) String token) throws Exception {
+	public UserOutput postBlockedUsers(@PathVariable(name = "userId", required = true) Long id, @PathVariable(name = "blockedUserId", required = true) Long blockedUserid, @RequestHeader(name = "auth", required = true) String token) throws UserNotFoundException  {
         return userService.postBlockedUsers(id, blockedUserid, token);
     }
 
     @DeleteMapping(path = "{userId}/blockedUsers/{blockedUserId}")   
     @ResponseStatus(code = HttpStatus.ACCEPTED, reason = "User has been unblocked")
-	public UserOutput deleteBlockedUser(@PathVariable(name = "userId", required = true) Long id, @PathVariable(name = "blockedUserId", required = true) Long blockedUserid, @RequestHeader(name = "auth", required = true) String token) throws Exception {
+	public UserOutput deleteBlockedUser(@PathVariable(name = "userId", required = true) Long id, @PathVariable(name = "blockedUserId", required = true) Long blockedUserid, @RequestHeader(name = "auth", required = true) String token) throws UserNotFoundException  {
         return userService.deleteBlockedUsers(id, blockedUserid, token);
     }
 
