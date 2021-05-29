@@ -487,7 +487,7 @@ public class User {
 
     @Transient
     public String getProfilePicPath(){
-        return "/user-images/" + this.id + "/" + this.profilePic;
+        return "https://storage.googleapis.com/bookspace-app.appspot.com/" + this.profilePic;
     }
 
 

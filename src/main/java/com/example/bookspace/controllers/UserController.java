@@ -1,11 +1,5 @@
 package com.example.bookspace.controllers;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Map;
 
@@ -20,9 +14,7 @@ import com.example.bookspace.Output.TagOutput;
 import com.example.bookspace.Output.UserOutput;
 import com.example.bookspace.services.UserService;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +29,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
 
 @RestController
 @RequestMapping(path = "api/users")
@@ -112,29 +105,14 @@ public class UserController {
 
     @PostMapping(path = "{userId}/profilePic")
     public String postProfilePic(@PathVariable("userId") Long userId, @RequestParam("profilePic") MultipartFile profilePic) throws Exception{
-         String fileName = StringUtils.cleanPath(profilePic.getOriginalFilename());
- 
-         String uploadDir = "./user-images/" + userId;
-         Path uploadPath = Paths.get(uploadDir);
-         if(!Files.exists(uploadPath)){
-             Files.createDirectories(uploadPath);
-         }
- 
-         try (InputStream inputStream = profilePic.getInputStream()){
-             Path filePath = uploadPath.resolve(fileName);
-             //System.out.println(filePath.toFile().getAbsolutePath());
-             Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-         } catch (IOException e){
-             throw new IOException("Could not save uploaded file: " + fileName);
-         }
-         
-         
-         String absolutePath = uploadPath.resolve(fileName).toFile().getAbsolutePath();
-         userService.postProfilePic(userId,absolutePath);
-         return absolutePath;
-
+        return (String) userService.upload(userId,profilePic);
         
     }
+
+    // @PostMapping("/{userId}/downloadProfilePic/{fileName}")
+    // public Object downloadProfilePic(@PathVariable("userId") Long userId, @PathVariable("fileName") String fileName) throws Exception {
+    //     return userService.download(userId,fileName);
+    // }
 
     @DeleteMapping(path = "{userId}/profilePic")
     public UserOutput deleteProfilePic(@PathVariable("userId") Long userId) throws Exception{
@@ -214,10 +192,10 @@ public class UserController {
         return userService.deleteBlockedUsers(id, blockedUserid, token);
     }
 
-    /*@GetMapping(path = "{userId}/profilePicPath")   
+    @GetMapping(path = "{userId}/profilePicPath")   
 	public String getProfilePicPath(@PathVariable("userId") Long id) throws Exception {
         return userService.getProfilePicPath(id);
-    }*/
+    }
 
 
  
