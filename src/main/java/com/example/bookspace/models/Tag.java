@@ -44,13 +44,17 @@ public class Tag {
     private List<Publication> publications = new ArrayList<>();
 
     @ManyToMany(mappedBy = "favTags")
-    private List<User> favByUsers;
+    private List<User> favByUsers = new ArrayList<>();
 
  
     //Default constructor
     public Tag() {}
 
-    
+    //Constructor by name
+    public Tag(String name) {
+        this.name = name;
+    }
+
     //Constructor given attributes --> {name, authorId}
     public Tag (String name, User author) {
         this.name = name;

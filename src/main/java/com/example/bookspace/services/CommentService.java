@@ -222,7 +222,7 @@ public class CommentService {
 
     }
 
-    public List<UserOutput> getDislikedUsers(Long commentId, Long userId) {
+    public List<UserOutput> getDislikedUsers(Long commentId) {
         Comment comment = commentRepository.getOne(commentId);
         List<UserOutput> result = new ArrayList<>();
         for (User dislikedUser: comment.getDislikedBy()) {

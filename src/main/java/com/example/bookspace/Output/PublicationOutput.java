@@ -53,10 +53,10 @@ public class PublicationOutput extends OutputManager{
         this.dislikedByUri = this.selfUri + "/dislikedBy";
         this.favByUri = this.selfUri + "/favBy";
         this.commentsUri = this.selfUri + "/comments";
-        this.mentionsUri = this.selfUri + "/mentions";
-        this.setTags(p.getTags());
-        
-
+        this.mentionsUri = this.selfUri + "/mentions";        
+        for (Tag tag: p.getTags()) {
+            this.tags.add(tag.getName());
+        }
     }
    
 
