@@ -269,7 +269,11 @@ public class UserService {
 	
     public List<String> getFavCategoriesUser(Long id) {
 		User user = userRepository.getOne(id);
-		return Category.parseToString(user.getFavCategories());
+		List<String> categories = new ArrayList<>();
+		for (Category c: user.getFavCategories()) {
+			categories.add(c.name());
+		}
+		return categories;
 	}
 	
 	public List<PublicationOutput> getPublicationsUser(Long id) {
