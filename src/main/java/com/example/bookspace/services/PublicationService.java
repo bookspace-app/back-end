@@ -164,8 +164,9 @@ public class PublicationService {
     public PublicationOutput getPublication(Long id) {
         Publication p = publicationRepository.getOne(id);
         p.addView();
-        publicationRepository.save(p);
-        return new PublicationOutput(p);
+        p = publicationRepository.save(p);
+        PublicationOutput po = new PublicationOutput(p);
+        return po;
     }
 
     @Transactional

@@ -57,8 +57,6 @@ public class PublicationOutput extends OutputManager{
         for (Tag tag: p.getTags()) {
             this.tags.add(tag.getName());
         }
-        
-
     }
    
 
