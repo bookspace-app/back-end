@@ -85,8 +85,8 @@ public class CommentController {
     }
 
     @GetMapping(path = "{commentId}/dislike")   
-	public List<UserOutput> getDislikedUsers(@PathVariable("commentId") Long commentId, @PathVariable("userId") Long userId) {
-        return commentService.getDislikedUsers(commentId, userId);
+	public List<UserOutput> getDislikedUsers(@PathVariable("commentId") Long commentId) {
+        return commentService.getDislikedUsers(commentId);
     }
 
     @PostMapping(path = "{commentId}/dislike/{userId}")   

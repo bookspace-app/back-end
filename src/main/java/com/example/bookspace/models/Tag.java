@@ -44,7 +44,7 @@ public class Tag {
     private List<Publication> publications = new ArrayList<>();
 
     @ManyToMany(mappedBy = "favTags")
-    private List<User> favByUsers;
+    private List<User> favByUsers = new ArrayList<>();
 
  
     //Default constructor

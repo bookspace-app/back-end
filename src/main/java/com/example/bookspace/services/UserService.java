@@ -1,12 +1,18 @@
 package com.example.bookspace.services;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-
 
 import javax.transaction.Transactional;
 
@@ -28,6 +34,12 @@ import com.example.bookspace.models.Publication;
 import com.example.bookspace.models.Tag;
 import com.example.bookspace.models.User;
 import com.example.bookspace.repositories.UserRepository;
+import com.google.auth.Credentials;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.StorageOptions;
+
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import com.example.bookspace.Exceptions.PublicationNotFound;
@@ -38,6 +50,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import net.bytebuddy.utility.RandomString;
 
@@ -259,6 +272,60 @@ public class UserService {
 		return new UserOutput(user);
 
 	}
+
+	private String uploadFile(File file, String fileName) throws IOException {
+        BlobId blobId = BlobId.of("bookspace-app.appspot.com", fileName);
+        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("media").build();
+        Credentials credentials = GoogleCredentials.fromStream(new FileInputStream("src/main/resources/firebase.json"));
+        com.google.cloud.storage.Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+        ((com.google.cloud.storage.Storage) storage).create(blobInfo, Files.readAllBytes(file.toPath()));
+        return String.format("https://storage.googleapis.com/bookspace-app.appspot.com", URLEncoder.encode(fileName, StandardCharsets.UTF_8));
+    }
+
+    private File convertToFile(MultipartFile multipartFile, String fileName) throws IOException {
+        File tempFile = new File(fileName);
+        try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+            fos.write(multipartFile.getBytes());
+            fos.close();
+        }
+        return tempFile;
+    }
+
+    private String getExtension(String fileName) {
+        return fileName.substring(fileName.lastIndexOf("."));
+    }
+
+	public Object upload(Long id,MultipartFile multipartFile) {
+
+        try {
+            String fileName = multipartFile.getOriginalFilename();                        // to get original file name
+            fileName = id.toString().concat(this.getExtension(fileName));  // to generated random string values for file name. 
+			User u = userRepository.getOne(id);
+			u.setProfilePic(fileName);
+			userRepository.save(u);
+			
+            File file = this.convertToFile(multipartFile, fileName);                      // to convert multipartFile to File
+            var TEMP_URL = this.uploadFile(file, fileName);                                   // to get uploaded file link
+            file.delete();                                                                // to delete the copy of uploaded file stored in the project folder
+            return "Successfully Uploaded !" + TEMP_URL;                     // Your customized response
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "500" + e + "Unsuccessfully Uploaded!";
+        }
+
+    }
+    
+    // public Object download(Long id, String fileName) throws IOException {
+    //     String destFileName = id.toString().concat(this.getExtension(fileName));     // to set random strinh for destination file name
+    //     String destFilePath = "" + id.toString() + "/" + destFileName;                                    // to set destination file path
+        
+    //     ////////////////////////////////   Download  ////////////////////////////////////////////////////////////////////////
+    //     Credentials credentials = GoogleCredentials.fromStream(new FileInputStream(""));
+    //     com.google.cloud.storage.Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+    //     com.google.cloud.storage.Blob blob = storage.get(BlobId.of("bookspace-app.appspot.com", fileName));
+    //     blob.downloadTo(Paths.get(destFilePath));
+    //     return "200 Successfully Downloaded!";
+    // }
 
     public UserOutput deleteProfilePic(Long userId) throws Exception {
 		User user = userRepository.getOne(userId);

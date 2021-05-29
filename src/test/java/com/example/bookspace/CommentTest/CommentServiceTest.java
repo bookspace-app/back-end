@@ -163,7 +163,7 @@ class CommentServiceTest {
 
     @Test
     void testgetDislikedUsers() {
-        List<UserOutput> result = commentService.getDislikedUsers(1L, 1L);
+        List<UserOutput> result = commentService.getDislikedUsers(1L);
 
         assertThat(result.size()).isEqualTo(1);
         assertThat(result.get(0).getEmail()).isEqualTo("email2");
