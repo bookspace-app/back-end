@@ -105,7 +105,6 @@ public class UserService {
 	public UserOutput putUser(Long id, UserInput userDetails, String token) throws IncorrectTokenException, UserNotFoundException, LoginException {
 
 		if (!userRepository.existsById(id)) throw new UserNotFoundException(id);
-		//if (userDetails.getPassword().equals("deactivated")) throw new HttpMessageConversionException("This password isn't safe enough");
 		User user = userRepository.getOne(id);
 		if (user.getToken() != null) {
 			if (user.getToken().equals(token)) {
