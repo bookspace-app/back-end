@@ -523,13 +523,13 @@ public class UserService {
 		User user = userRepository.getUserByEmail(email);
 		if (user.getPassword().equals("deactivated")) throw new UserNotFoundException(email);
 
-		if (user.getToken() != null) throw new AlreadyLoginException();
+		if (user.getToken() != null && !user.getToken().equals("AUTH")) throw new AlreadyLoginException();
 	
 		if (user.getPassword().equals(userDetails.getPassword())) {
 
 			Map<String, String> result = new HashMap<String, String>(); 
-			// String token = RandomString.make();
-			String token = "AUTH";
+			String token = RandomString.make();
+			//String token = "AUTH";
 			user.setToken(token);
 			user = userRepository.save(user);
 			result.put("userId", user.getId().toString());
