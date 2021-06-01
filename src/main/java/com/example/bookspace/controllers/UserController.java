@@ -94,8 +94,8 @@ public class UserController {
     }
 
     @PostMapping("/forgotPassword")  
-    public Void forgotPassword(@RequestBody (required = true) String email) throws UserNotFoundException {
-        return userService.forgotPassword(email);
+    public Void forgotPassword(@RequestBody (required = true) UserInput userDetails) throws UserNotFoundException {
+        return userService.forgotPassword(userDetails);
     }
 
     @PostMapping("/deactivateUser/{userId}")  

@@ -152,7 +152,9 @@ public class UserService {
 		else throw new IncorrectTokenException();
 	}
 
-	public Void forgotPassword(String email) throws UserNotFoundException {
+	public Void forgotPassword(UserInput userDetails) throws UserNotFoundException {
+
+		String email = userDetails.getEmail();
 		
 		if (!userRepository.findUserByEmail(email).isPresent()) throw new UserNotFoundException(email);
 		User user = userRepository.getUserByEmail(email);
