@@ -56,6 +56,7 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED, reason = "The user has been posted")
+    @ResponseBody
     public UserOutput postUser(@RequestBody UserInput userDetails) {
        return userService.postUser(userDetails);
     }
