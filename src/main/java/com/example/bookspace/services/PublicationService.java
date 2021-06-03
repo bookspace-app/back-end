@@ -170,16 +170,16 @@ public class PublicationService {
     @Transactional
 	public PublicationOutput putPublication(Long id, PublicationInput publicationDetails, String token)  {
 
-        User author = userRepository.getOne(publicationDetails.getAuthorId());
+        if (!publicationRepository.existsById(id)) throw new PublicationNotFound(id);
+		
+        Publication publication = publicationRepository.getOne(id);
+        
+        User author = publication.getAuthor();
 
         if (author.getToken() == null) throw new LoginException();
         if (!author.getToken().equals(token)) throw new IncorrectTokenException();
 
-		if (!publicationRepository.existsById(id)) throw new PublicationNotFound(id);
-		
-        Publication publication = publicationRepository.getOne(id);
-
-                
+              
         if (publicationDetails.getTitle() != null) publication.setTitle(publicationDetails.getTitle());
         if (publicationDetails.getContent() != null) publication.setContent(publicationDetails.getContent());
         if (publicationDetails.getCategory() != null) {
