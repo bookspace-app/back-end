@@ -116,7 +116,7 @@ public class UserController {
     }
 
     @PostMapping(path = "{userId}/profilePic")
-    public String postProfilePic(@PathVariable("userId") Long userId, @RequestParam("profilePic") MultipartFile profilePic) throws Exception{
+    public String postProfilePic(@PathVariable("userId") Long userId, @RequestBody MultipartFile profilePic) throws Exception{
         return (String) userService.upload(userId,profilePic);
         
     }
