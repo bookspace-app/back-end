@@ -54,7 +54,7 @@ public class Publication {
     private Category category;
 
     @ManyToOne
-    @JoinColumn(name = "authorId", nullable = false)
+    @JoinColumn(name = "authorId")
     private User author;
 
     @ManyToMany(mappedBy = "likedPublications", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
