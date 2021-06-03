@@ -117,10 +117,10 @@ public class CommentService {
         Comment comment = commentRepository.getOne(commentId);
 
 
-        if (commentDetails.getAuthorId() != null && commentDetails.getAuthorId() != comment.getAuthor().getId()) new BadRequestCommentException("Can't change the comment's author");
-        if (commentDetails.getPublicationId() != null && commentDetails.getPublicationId() != comment.getPublication().getId()) throw new BadRequestCommentException("Can't change the comment's publication");
-        if (commentDetails.getParentId() != null && comment.getParent() == null) throw new BadRequestCommentException("Can't change a parent comment to a reply");
-        if (commentDetails.getParentId() != null && commentDetails.getParentId() != comment.getParent().getId()) throw new BadRequestCommentException("Can't change the parent of a comment");
+        if (!commentDetails.getAuthorId().equals(null) && !commentDetails.getAuthorId().equals(comment.getAuthor().getId())) throw new BadRequestCommentException("Can't change the comment's author");
+        if (!commentDetails.getPublicationId().equals(null) && !commentDetails.getPublicationId().equals(comment.getPublication().getId())) throw new BadRequestCommentException("Can't change the comment's publication");
+        if (!commentDetails.getParentId().equals(null) && comment.getParent().equals(null)) throw new BadRequestCommentException("Can't change a parent comment to a reply");
+        if (!commentDetails.getParentId().equals(null) && !commentDetails.getParentId().equals(comment.getParent().getId())) throw new BadRequestCommentException("Can't change the parent of a comment");
 
         if (commentDetails.getContent() != null) {
             comment.setContent(commentDetails.getContent());

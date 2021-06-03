@@ -17,6 +17,8 @@ import com.example.bookspace.services.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -79,28 +81,35 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                             UserInput userDetails = new UserInput(oauthUser.getEmail(), oauthUser.getName(), tempUsername, password, LocalDate.now(), null, null);
                             User user = new User();
                             try {
-                                if (!userRepository.existsUserByEmail(email)) userService.postUser(userDetails);
+                                if (!userRepository.existsUserByEmail(email)) {
+                                    userService.postUser(userDetails);
+                                    SimpleMailMessage mail = new SimpleMailMessage();
+                                    mail.setTo(email);
+                                    mail.setFrom("bookspace.application@gmail.com");
+                                    mail.setSubject("¡Enhorabuena!");
+                                    mail.setText("Hola " + userDetails.getName() + ", \n ¡Enhorabuena! Te has registrado correctamente en Book Space. \n Aquí tienes tu contraseña de BookSpace: " + userDetails.getPassword());
+                                
+                                    javaMailSender.send(mail);
+
+                                    String text = "¡Enhorabuena! Te has registrado correctamente en Book Space. Podras encontrar tu contraseña en tu mail.";
+
+                                    response.setContentType("text/plain");
+                                    response.setCharacterEncoding("UTF-8");
+                                    response.getWriter().write(text);
+                                }
                                 else {
                                     user = userRepository.getUserByEmail(email);
                                     userDetails.setPassword(user.getPassword());
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                user = userRepository.getUserByEmail(email);
-                                if (user.getToken() == null)  {
-                                    userService.loginUser(userDetails);
-                                    response.sendRedirect("/api/users/token/" + user.getId());
-                                }
-                                else response.sendRedirect("/api/users/" + user.getId());
 
+                                    String text = "Enter using the Login of the application with your username and password.";
+
+                                    response.setContentType("text/plain");
+                                    response.setCharacterEncoding("UTF-8");
+                                    response.getWriter().write(text);
+                                }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            
-                                                       
-                            
                         }
                 });
             }
@@ -116,4 +125,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private JavaMailSender javaMailSender;
 }
