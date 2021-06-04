@@ -54,16 +54,16 @@ public class Publication {
     private Category category;
 
     @ManyToOne
-    @JoinColumn(name = "authorId", nullable = false)
+    @JoinColumn(name = "authorId")
     private User author;
 
-    @ManyToMany(mappedBy = "likedPublications")
+    @ManyToMany(mappedBy = "likedPublications", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<User> likedBy = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "dislikedPublications")
+    @ManyToMany(mappedBy = "dislikedPublications", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<User> dislikedBy = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "favouritePublications")
+    @ManyToMany(mappedBy = "favouritePublications", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<User> favouriteBy = new ArrayList<>();
 
     @OneToMany(mappedBy = "publication", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
@@ -72,10 +72,10 @@ public class Publication {
     @Column(name = "directComments")
     private Integer directComments = 0;
 
-    @ManyToMany(mappedBy = "reportedPublications")
+    @ManyToMany(mappedBy = "reportedPublications", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<User> reports = new ArrayList<>();
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     @JoinTable (
         name = "mentionedUsers", 
         joinColumns = @JoinColumn(name = "publicationId"),
@@ -83,7 +83,7 @@ public class Publication {
     )
     private List<User> mentions = new ArrayList<>();
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     @JoinTable (
         name = "taggedPublications", 
         joinColumns = @JoinColumn(name = "publicationId"), 

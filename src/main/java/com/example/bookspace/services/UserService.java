@@ -471,7 +471,7 @@ public class UserService {
 		User userToBlock = userRepository.getOne(blockedUserid);
 
 		if (user.getToken().equals(token)) {
-			if (id == blockedUserid) throw new ActionNotPermited("You cannot block yourself!");
+			if (id.equals(blockedUserid)) throw new ActionNotPermited("You cannot block yourself!");
 			
 			List<User> blockedUsers = user.getBlockedUsers();
 			if (!blockedUsers.contains(userToBlock)){
@@ -516,10 +516,17 @@ public class UserService {
 		
 	}
 
+	public UserOutput getUserByEmail(String email) throws UserNotFoundException  {
+		if (!userRepository.findUserByEmail(email).isPresent()) throw new UserNotFoundException(email);
+		User user = userRepository.getUserByEmail(email);
+		return new UserOutput(user);
+		
+	}
+
 	public Map<String, String> loginUser(UserInput userDetails) throws AlreadyLoginException, UserNotFoundException {
 		
 		if (userDetails.getEmail() == null) throw new HttpMessageConversionException("The mail can't be null");
-		if (userDetails.getPassword() == null) new HttpMessageConversionException("The password can't be null");
+		if (userDetails.getPassword() == null) throw new HttpMessageConversionException("The password can't be null");
 
 		String email = userDetails.getEmail();
 
