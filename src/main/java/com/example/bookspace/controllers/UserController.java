@@ -81,6 +81,11 @@ public class UserController {
         return userService.getUserByUsername(username);
     }
 
+    @GetMapping(path = "/email/{email}")
+    public UserOutput getUserByEmail(@PathVariable("email") String email) {
+        return userService.getUserByEmail(email);
+    }
+
     @PutMapping(path = "{userId}") 
     @ResponseStatus(code = HttpStatus.ACCEPTED)
     public UserOutput updateUser(@PathVariable(name = "userId", required = true) Long id, @RequestBody UserInput userDetails, @RequestHeader(value = "auth", required = true) String token) throws IncorrectTokenException, LoginException, UserNotFoundException {
