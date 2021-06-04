@@ -330,7 +330,7 @@ public class UserService {
 
     public UserOutput deleteProfilePic(Long userId) throws Exception {
 		User user = userRepository.getOne(userId);
-		user.setProfilePic("");
+		user.setProfilePic("No_pic.png");
 		user = userRepository.save(user);
 		return new UserOutput(user);
     }    
