@@ -206,47 +206,7 @@ public class PublicationService {
         if (author.getToken() == null) throw new LoginException();
         if (!author.getToken().equals(token)) throw new IncorrectTokenException();
 
-        //Deleting the publication for users attribute {reportedPublications}
-        for (User u: publication.getReports()) {
-            u.removeReportedPublication(publication);
-            userRepository.save(u);
-        }
-
-        //Deleting the publication for users attribute {likedPublications}
-        for (User u: publication.getLikedBy()) {
-            u.removeLikedPublication(publication);
-            userRepository.save(u);
-        }
-
-        //Deleting the publication for users attribute {dislikedPublications}
-        for (User u: publication.getDislikedBy()) {
-            u.removeDislikedPublication(publication);
-            userRepository.save(u);
-        }
-
-        //Deleting the publication for users attribute {favouritePublications}
-        for (User u: publication.getFavouriteBy()) {
-            u.removeFavPublication(publication);
-            userRepository.save(u);
-        }
-
-        //Deleting the publication for users attribute {mentions}
-        for (User u: publication.getMentions()) {
-            u.removeMention(publication);
-            userRepository.save(u);
-        }
-
-        //Deleting the publication for tag attribute {tags}
-        for (Tag t: publication.getTags()) {
-            t.removePublication(publication);
-            tagRepository.save(t);
-        }
-
-        //Deleting the publication for users attribute {Publications}
-        author.removePublication(publication);
-        userRepository.save(author);
-
-        publicationRepository.delete(publication);
+        publicationRepository.deleteById(publicationId);
 	}
 
 
