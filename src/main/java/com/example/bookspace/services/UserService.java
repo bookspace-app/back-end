@@ -513,6 +513,13 @@ public class UserService {
 		
 	}
 
+	public UserOutput getUserByEmail(String email) throws UserNotFoundException  {
+		if (!userRepository.findUserByEmail(email).isPresent()) throw new UserNotFoundException(email);
+		User user = userRepository.getUserByEmail(email);
+		return new UserOutput(user);
+		
+	}
+
 	public Map<String, String> loginUser(UserInput userDetails) throws AlreadyLoginException, UserNotFoundException {
 		
 		if (userDetails.getEmail() == null) throw new HttpMessageConversionException("The mail can't be null");
